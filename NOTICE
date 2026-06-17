@@ -1,0 +1,22 @@
+ASK
+Copyright 2026 Andrew S Klug // ASK
+
+The ASK meta-brand public landing site — a reference implementation of the
+ASK design family.
+
+This product vendors foundations from design-system-ASK
+(github.com/apexSolarKiss/design-system-ASK):
+  - colors_and_type.css        — canonical tokens (Tier 1 + Tier 2)
+  - fonts/                      — Inter + JetBrains Mono variable webfonts (OFL; see fonts/*-OFL.txt)
+  - assets/logo-ASK.*          — the logo-ASK wordmark (ASK Tier 3)
+
+When this site and design-system-ASK disagree on a foundation value, the
+canonical design-system-ASK file (itself downstream of ASK's
+visual-identity-system.md) wins. This site adds layout only; it defines no
+new tokens.
+
+Licensed under the Apache License, Version 2.0.
+See the LICENSE file for the full license text.
+
+The Inter and JetBrains Mono fonts are licensed under the SIL Open Font
+License 1.1; see fonts/Inter-OFL.txt and fonts/JetBrainsMono-OFL.txt.

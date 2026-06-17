@@ -1,0 +1,139 @@
+/* =========================================================================
+   ASK — site layout layer
+
+   This is a reference implementation of design-system-ASK. It consumes the
+   canonical tokens (colors_and_type.css, vendored) and adds LAYOUT ONLY —
+   no new colors, type choices, or scale. Per the tier model, this surface
+   carries ASK's own Tier 3 (the logo-ASK wordmark + the ASK name) because
+   it IS the ASK meta-brand front door; everything else is inherited
+   Tier 1 (foundation) + Tier 2 (ASK design language).
+
+   Source of truth: github.com/apexSolarKiss/design-system-ASK.
+   ========================================================================= */
+
+.shell {
+  min-height: 100svh;
+  box-sizing: border-box;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--space-9) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-9);
+}
+
+/* ---------- Hero ---------- */
+.hero { text-align: center; }
+
+.wordmark { color: var(--ask-white); }            /* light-mode logo pairing = white */
+.wordmark svg {
+  width: min(460px, 72vw);
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+@media (prefers-color-scheme: dark) {
+  .wordmark { color: var(--ask-lavender-ask); }   /* dark-mode pairing = lavender-ASK */
+}
+
+.tagline {
+  font-family: var(--font-mono);
+  font-weight: var(--fw-light);
+  font-size: var(--fs-small);
+  letter-spacing: var(--tracking-wide);
+  color: var(--fg-2);
+  margin: var(--space-6) 0 0 0;
+}
+
+/* ---------- Tier cards ---------- */
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+@media (max-width: 780px) { .tiers { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-md);
+  transition:
+    transform var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out),
+    background var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out);
+}
+
+.tier {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 220px;
+}
+.tier:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  background: var(--surface-glass-2);
+}
+
+.tier-role { color: var(--fg-2); margin: 0; }
+
+.tier-name {
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-light);
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+}
+.tier-name a { border-bottom: none; }
+.tier-name a:hover { opacity: 0.82; }
+
+.tier-desc {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-regular);
+  color: var(--fg-3);
+  margin: 0;
+  letter-spacing: var(--tracking-normal);
+  text-transform: none;
+}
+
+.tier-links {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.chip {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-light);
+  letter-spacing: var(--tracking-normal);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--surface-glass-2);
+  border: 1px solid var(--line-2);
+  color: var(--fg-1);
+}
+.chip:hover { border-bottom: 1px solid var(--line-2); border-color: currentColor; opacity: 0.92; }
+
+/* ---------- Footer ---------- */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  letter-spacing: var(--tracking-wide);
+  color: var(--fg-2);
+}
+.footer a { color: var(--fg-2); border-bottom-color: var(--line-2); }
+.footer a:hover { color: var(--fg-1); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
