@@ -259,3 +259,22 @@
 .lb-prev, .lb-next { top: 50%; transform: translateY(-50%); font-size: 44px; }
 .lb-prev { left: 6px; } .lb-next { right: 6px; }
 .lb-close:hover, .lb-prev:hover, .lb-next:hover { opacity: 1; }
+
+/* ---------- Project cards (carousel triggers) ---------- */
+.gal-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-5); }
+.gal-card { display: flex; flex-direction: column; gap: var(--space-2); }
+.gal-card-trigger {
+  display: block; width: 100%; text-align: left; padding: 0; margin: 0; cursor: pointer;
+  background: var(--surface-glass);
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out);
+}
+.gal-card-trigger:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--line-2); }
+.gal-cover { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.gal-card-meta { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4) var(--space-5) var(--space-5); }
+.gal-card-title { font-size: var(--fs-h3); font-weight: var(--fw-light); letter-spacing: var(--tracking-tight); }
+.gal-card-credit { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-3); }
+.gal-card-count { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-2); }
+.gal-card .gal-link { align-self: flex-start; }
