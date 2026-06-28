@@ -134,6 +134,83 @@
 .footer a { color: var(--fg-2); border-bottom-color: var(--line-2); }
 .footer a:hover { color: var(--fg-1); }
 
+/* ---------- Sub-brand pages (migrated public-canonical content) ----------
+   Layout-only; reuses Tier-1/2 tokens. Sub-pages override .shell's vertical
+   centering for long, scrollable content. */
+.subpage {
+  justify-content: flex-start;
+  max-width: 880px;
+  gap: var(--space-7);
+}
+.subpage-head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+.wordmark-sm { color: var(--ask-white); }
+@media (prefers-color-scheme: dark) { .wordmark-sm { color: var(--ask-lavender-ask); } }
+.wordmark-sm svg { width: min(160px, 40vw); height: auto; display: block; }
+.wordmark-sm a { border-bottom: none; display: inline-block; }
+
+.subpage-title {
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-light);
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+}
+
+.prose { display: flex; flex-direction: column; gap: var(--space-4); }
+.prose p {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--fg-1);
+  margin: 0;
+  max-width: 64ch;
+}
+
+/* ---------- Credit lists (collapsible) ---------- */
+.credits { display: flex; flex-direction: column; gap: var(--space-3); }
+.credit-group {
+  background: var(--surface-glass);
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-lg);
+  padding: 0 var(--space-5);
+}
+.credit-group summary {
+  cursor: pointer;
+  list-style: none;
+  padding: var(--space-4) 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-light);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--fg-2);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-4);
+}
+.credit-group summary::-webkit-details-marker { display: none; }
+.credit-group[open] summary { color: var(--fg-1); border-bottom: 1px solid var(--line-2); }
+.credit-group .count { color: var(--fg-3); }
+
+.namelist {
+  columns: 170px auto;
+  column-gap: var(--space-6);
+  list-style: none;
+  margin: 0;
+  padding: var(--space-4) 0;
+}
+.namelist li {
+  font-size: var(--fs-caption);
+  color: var(--fg-1);
+  padding: 2px 0;
+  break-inside: avoid;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
