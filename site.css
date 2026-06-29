@@ -398,6 +398,7 @@
 
 /* refine: break Lightroom names only at <wbr> (camelCase), not mid-word */
 .ext-card-name { overflow-wrap: break-word; word-break: normal; }
-/* Signal + Noise chevron: larger, clearly a collapse control */
-.signal-summary .chev { font-size: 1.5em; line-height: 1; color: var(--fg-2); }
+/* Panel collapse chevron: glyph ▼ (U+25BC) at --fs-caption — exact-matches the
+   ▶ (U+25B6) used on ASKproduKtion's .gal-link chip (same weight, same 14px). */
+.signal-summary .chev { font-size: var(--fs-caption); line-height: 1; color: var(--fg-2); }
 .signal[open] .signal-summary .chev { color: var(--fg-1); }
