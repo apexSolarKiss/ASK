@@ -331,9 +331,9 @@
 .yt-iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: var(--radius-lg); display: block; }
 
 /* ---------- Asymptotic: external (Lightroom) cards ---------- */
-.ext-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-4); }
+.ext-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-4); grid-auto-rows: 1fr; }
 .ext-card {
-  display: flex; flex-direction: column; gap: var(--space-2); min-height: 110px; justify-content: space-between;
+  display: flex; flex-direction: column; gap: var(--space-2); min-height: 110px; height: 100%; justify-content: space-between;
   padding: var(--space-5); border: 1px solid var(--line-1); border-radius: var(--radius-lg);
   background: var(--surface-glass); border-bottom-color: var(--line-1);
   transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out);
@@ -342,7 +342,7 @@
 .ext-card-name { font-size: var(--fs-h3); font-weight: var(--fw-light); letter-spacing: var(--tracking-tight); }
 .ext-card-meta { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-3); }
 
-.section-note { margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.section-note { margin: var(--space-5) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
 
 /* ---------- Panels (Signal + Noise, Like Art) ---------- */
 .panel {
