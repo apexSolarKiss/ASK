@@ -32,10 +32,10 @@
 
     <section class="portfolio" aria-label="pixels sketches">
       <div class="p5-works">
-        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/S04yDa6O0" target="_blank" rel="noopener" aria-label="Open rectangles 3 2 12 5 7 12 17 ask purple fullscreen on p5.js"><iframe src="/assets/asymptotic/p5/gallery/S04yDa6O0/index.html" title="rectangles 3 2 12 5 7 12 17 ask purple preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>rectangles 3 2 12 5 7 12 17 ask purple</figcaption></figure>
-        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/VpS_s-sxV" target="_blank" rel="noopener" aria-label="Open rectangles 3 2 12 5 7 12 17 ask red purple blue white 9x16 fullscreen on p5.js"><iframe src="/assets/asymptotic/p5/gallery/VpS_s-sxV/index.html" title="rectangles 3 2 12 5 7 12 17 ask red purple blue white 9x16 preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>rectangles 3 2 12 5 7 12 17 ask red purple blue white 9x16</figcaption></figure>
-        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/-5QdSwPg1" target="_blank" rel="noopener" aria-label="Open rectangles 3 2 12 5 7 12 18 ask purple 9x16 fullscreen on p5.js"><iframe src="/assets/asymptotic/p5/gallery/-5QdSwPg1/index.html" title="rectangles 3 2 12 5 7 12 18 ask purple 9x16 preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>rectangles 3 2 12 5 7 12 18 ask purple 9x16</figcaption></figure>
-        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/e3sKmOMAg" target="_blank" rel="noopener" aria-label="Open rectangles 3 2 12 5 7 12 16 ask red purple blue white fullscreen on p5.js"><iframe src="/assets/asymptotic/p5/gallery/e3sKmOMAg/index.html" title="rectangles 3 2 12 5 7 12 16 ask red purple blue white preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>rectangles 3 2 12 5 7 12 16 ask red purple blue white</figcaption></figure>
+        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/S04yDa6O0" target="_blank" rel="noopener" aria-label="Open rectangles 3 2 12 5 7 12 17 ask purple fullscreen on p5.js"><iframe data-src="/assets/asymptotic/p5/gallery/S04yDa6O0/index.html" title="rectangles 3 2 12 5 7 12 17 ask purple preview" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>rectangles 3 2 12 5 7 12 17 ask purple</figcaption></figure>
+        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/VpS_s-sxV" target="_blank" rel="noopener" aria-label="Open rectangles 3 2 12 5 7 12 17 ask red purple blue white 9x16 fullscreen on p5.js"><iframe data-src="/assets/asymptotic/p5/gallery/VpS_s-sxV/index.html" title="rectangles 3 2 12 5 7 12 17 ask red purple blue white 9x16 preview" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>rectangles 3 2 12 5 7 12 17 ask red purple blue white 9x16</figcaption></figure>
+        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/-5QdSwPg1" target="_blank" rel="noopener" aria-label="Open rectangles 3 2 12 5 7 12 18 ask purple 9x16 fullscreen on p5.js"><iframe data-src="/assets/asymptotic/p5/gallery/-5QdSwPg1/index.html" title="rectangles 3 2 12 5 7 12 18 ask purple 9x16 preview" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>rectangles 3 2 12 5 7 12 18 ask purple 9x16</figcaption></figure>
+        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/e3sKmOMAg" target="_blank" rel="noopener" aria-label="Open rectangles 3 2 12 5 7 12 16 ask red purple blue white fullscreen on p5.js"><iframe data-src="/assets/asymptotic/p5/gallery/e3sKmOMAg/index.html" title="rectangles 3 2 12 5 7 12 16 ask red purple blue white preview" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>rectangles 3 2 12 5 7 12 16 ask red purple blue white</figcaption></figure>
       </div>
       <p class="section-note"><a class="chip" href="https://editor.p5js.org/asymptoticSystemKey/collections" target="_blank" rel="noopener">all sketches // p5.js collections &gt;&gt;</a></p>
     </section>
@@ -46,5 +46,13 @@
       <a href="mailto:hello@A-S-K.studio">hello@A-S-K.studio</a>
     </footer>
   </main>
+  <script>
+  (function(){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(e.isIntersecting){var f=e.target; f.src=f.dataset.src; io.unobserve(f);}
+    });},{rootMargin:"300px"});
+    document.querySelectorAll('iframe[data-src]').forEach(function(f){io.observe(f);});
+  })();
+  </script>
 </body>
 </html>

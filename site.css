@@ -371,6 +371,10 @@
 /* fix: long camelCase Lightroom names must wrap within the card */
 .ext-card-name { overflow-wrap: anywhere; word-break: break-word; min-width: 0; }
 .ext-card { overflow: hidden; }
+/* uniform-height (grid-auto-rows:1fr) is for the standalone studioLeoV grid; inside
+   a collapsible panel the 1fr rows collapse + overlap, so use content-sized rows there */
+.signal .ext-cards { grid-auto-rows: auto; }
+.signal .ext-card { height: auto; }
 
 /* ---------- p5 launch cards (live preview; click opens fullscreen new tab) ---------- */
 .p5-launch {

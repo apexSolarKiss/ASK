@@ -32,11 +32,11 @@
 
     <section class="portfolio" aria-label="algorithmic sketches">
       <div class="p5-works">
-        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/zrgcezfxb" target="_blank" rel="noopener" aria-label="Open gaussian 1 4 ask fullscreen on p5.js"><iframe src="/assets/asymptotic/p5/gallery/zrgcezfxb/index.html" title="gaussian 1 4 ask preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>gaussian 1 4 ask</figcaption></figure>
-        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/v4NIEPhg7" target="_blank" rel="noopener" aria-label="Open gaussian 1 5 ask furry ball fullscreen on p5.js"><iframe src="/assets/asymptotic/p5/gallery/v4NIEPhg7/index.html" title="gaussian 1 5 ask furry ball preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>gaussian 1 5 ask furry ball</figcaption></figure>
-        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/eHiAR6vNf" target="_blank" rel="noopener" aria-label="Open grid of lines 1 2 ask fullscreen on p5.js"><iframe src="/assets/asymptotic/p5/gallery/eHiAR6vNf/index.html" title="grid of lines 1 2 ask preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>grid of lines 1 2 ask</figcaption></figure>
-        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/PeCZXBgfM" target="_blank" rel="noopener" aria-label="Open noise 1 1 ask fullscreen on p5.js"><iframe src="/assets/asymptotic/p5/gallery/PeCZXBgfM/index.html" title="noise 1 1 ask preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>noise 1 1 ask</figcaption></figure>
-        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/n-c1K1IdW" target="_blank" rel="noopener" aria-label="Open substrate 1 2 ask fullscreen on p5.js"><iframe src="/assets/asymptotic/p5/gallery/n-c1K1IdW/index.html" title="substrate 1 2 ask preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>substrate 1 2 ask</figcaption></figure>
+        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/zrgcezfxb" target="_blank" rel="noopener" aria-label="Open gaussian 1 4 ask fullscreen on p5.js"><iframe data-src="/assets/asymptotic/p5/gallery/zrgcezfxb/index.html" title="gaussian 1 4 ask preview" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>gaussian 1 4 ask</figcaption></figure>
+        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/v4NIEPhg7" target="_blank" rel="noopener" aria-label="Open gaussian 1 5 ask furry ball fullscreen on p5.js"><iframe data-src="/assets/asymptotic/p5/gallery/v4NIEPhg7/index.html" title="gaussian 1 5 ask furry ball preview" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>gaussian 1 5 ask furry ball</figcaption></figure>
+        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/eHiAR6vNf" target="_blank" rel="noopener" aria-label="Open grid of lines 1 2 ask fullscreen on p5.js"><iframe data-src="/assets/asymptotic/p5/gallery/eHiAR6vNf/index.html" title="grid of lines 1 2 ask preview" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>grid of lines 1 2 ask</figcaption></figure>
+        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/PeCZXBgfM" target="_blank" rel="noopener" aria-label="Open noise 1 1 ask fullscreen on p5.js"><iframe data-src="/assets/asymptotic/p5/gallery/PeCZXBgfM/index.html" title="noise 1 1 ask preview" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>noise 1 1 ask</figcaption></figure>
+        <figure class="p5-frame"><a class="p5-launch" href="https://editor.p5js.org/asymptoticSystemKey/full/n-c1K1IdW" target="_blank" rel="noopener" aria-label="Open substrate 1 2 ask fullscreen on p5.js"><iframe data-src="/assets/asymptotic/p5/gallery/n-c1K1IdW/index.html" title="substrate 1 2 ask preview" tabindex="-1" aria-hidden="true"></iframe><span class="p5-hint">open fullscreen &#8599;</span></a><figcaption>substrate 1 2 ask</figcaption></figure>
       </div>
       <p class="section-note"><a class="chip" href="https://editor.p5js.org/asymptoticSystemKey/collections" target="_blank" rel="noopener">all sketches // p5.js collections &gt;&gt;</a></p>
     </section>
@@ -47,5 +47,13 @@
       <a href="mailto:hello@A-S-K.studio">hello@A-S-K.studio</a>
     </footer>
   </main>
+  <script>
+  (function(){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(e.isIntersecting){var f=e.target; f.src=f.dataset.src; io.unobserve(f);}
+    });},{rootMargin:"300px"});
+    document.querySelectorAll('iframe[data-src]').forEach(function(f){io.observe(f);});
+  })();
+  </script>
 </body>
 </html>
