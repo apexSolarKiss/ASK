@@ -395,3 +395,9 @@
 .signal-summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
 .signal-summary .chev { transition: transform var(--dur-2) var(--ease-out); }
 .signal:not([open]) .signal-summary .chev { transform: rotate(-90deg); }
+
+/* refine: break Lightroom names only at <wbr> (camelCase), not mid-word */
+.ext-card-name { overflow-wrap: break-word; word-break: normal; }
+/* Signal + Noise chevron: larger, clearly a collapse control */
+.signal-summary .chev { font-size: 1.5em; line-height: 1; color: var(--fg-2); }
+.signal[open] .signal-summary .chev { color: var(--fg-1); }
