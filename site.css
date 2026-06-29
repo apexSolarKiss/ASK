@@ -367,3 +367,31 @@
   .like-art .section-h { padding-right: 0; }
   .overlay-link { position: static; align-self: flex-start; margin-bottom: var(--space-2); }
 }
+
+/* fix: long camelCase Lightroom names must wrap within the card */
+.ext-card-name { overflow-wrap: anywhere; word-break: break-word; min-width: 0; }
+.ext-card { overflow: hidden; }
+
+/* ---------- p5 launch cards (live preview; click opens fullscreen new tab) ---------- */
+.p5-launch {
+  display: block; position: relative; aspect-ratio: 4 / 3;
+  border: 1px solid var(--line-1); border-radius: var(--radius-lg); overflow: hidden;
+  background: var(--surface-glass);
+  transition: border-color var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-out);
+}
+.p5-launch:hover { border-color: var(--line-2); transform: translateY(-4px); }
+.p5-launch iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none; }
+.p5-hint {
+  position: absolute; bottom: var(--space-3); right: var(--space-3);
+  font-family: var(--font-mono); font-size: var(--fs-caption); color: #fff;
+  background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.28);
+  border-radius: var(--radius-pill); padding: var(--space-2) var(--space-3);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  opacity: 0; transition: opacity var(--dur-2) var(--ease-out);
+}
+.p5-launch:hover .p5-hint, .p5-launch:focus-visible .p5-hint { opacity: 1; }
+
+/* ---------- Signal + Noise collapse chevron ---------- */
+.signal-summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.signal-summary .chev { transition: transform var(--dur-2) var(--ease-out); }
+.signal:not([open]) .signal-summary .chev { transform: rotate(-90deg); }
