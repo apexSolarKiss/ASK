@@ -2,6 +2,10 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/asymptotic", "destination": "/asymptotic-system-key", "permanent": true },
+    { "source": "/asymptotic/:path*", "destination": "/asymptotic-system-key/:path*", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",
