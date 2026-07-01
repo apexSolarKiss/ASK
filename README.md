@@ -28,12 +28,11 @@ no JS; the two diagonal gradients switch with the OS.
 
 | Tier | Surface | Links to |
 | --- | --- | --- |
-| builder | **apex solar kiss** | GitHub `@apexSolarKiss` + Notion (design portfolio · UI/UX comps · branding comps) |
-| artistic practice | **asymptotic system key** | Notion (portfolio) |
-| creative production | **ASKproduKtion** | Notion (portfolio) |
+| builder | **apex solar kiss** | GitHub `@apexSolarKiss` + Notion (design portfolio · UI/UX comps · branding comps — migration pending) |
+| artistic practice | **asymptotic system key** | native `/asymptotic-system-key/` (Lightroom stills + YouTube motion as named external media) |
+| creative production | **ASKproduKtion** | native `/askproduktion/` (Timberland films = named external-video exception) |
 
-Public Notion pages stay on Notion as the embed/depth layer; the site links out
-to them.
+Native repo surfaces (`/askproduktion/`, `/asymptotic-system-key/`) are the intended public canonical after the source-of-truth flip. **Notion is retained only as a legacy / staging / named-exception layer** — apex solar kiss's design portfolio + comps remain migration-pending, and ASKproduKtion's Timberland films remain a named external-video exception. Asymptotic system key uses named external media sources (Lightroom stills + YouTube motion) through ASK-native facades. Notion is no longer the general embed/depth layer.
 
 ## Files
 
