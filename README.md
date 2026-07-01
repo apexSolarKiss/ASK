@@ -32,7 +32,7 @@ no JS; the two diagonal gradients switch with the OS.
 | artistic practice | **asymptotic system key** | native `/asymptotic-system-key/` (Lightroom stills + YouTube motion as named external media) |
 | creative production | **ASKproduKtion** | native `/askproduktion/` (Timberland films = named external-video exception) |
 
-Native repo surfaces (`/askproduktion/`, `/asymptotic-system-key/`) are the intended public canonical after the source-of-truth flip. **Notion is retained only as a legacy / staging / named-exception layer** — apex solar kiss's design portfolio + comps (migration pending), plus the named external media on the native surfaces — **not the general embed/depth layer**. The site links out to the remaining Notion exceptions.
+Native repo surfaces (`/askproduktion/`, `/asymptotic-system-key/`) are the intended public canonical after the source-of-truth flip. **Notion is retained only as a legacy / staging / named-exception layer** — apex solar kiss's design portfolio + comps remain migration-pending, and ASKproduKtion's Timberland films remain a named external-video exception. Asymptotic system key uses named external media sources (Lightroom stills + YouTube motion) through ASK-native facades. Notion is no longer the general embed/depth layer.
 
 ## Files
 
