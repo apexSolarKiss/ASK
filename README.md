@@ -34,6 +34,8 @@ no JS; the two diagonal gradients switch with the OS.
 
 Native repo surfaces (`/askproduktion/`, `/asymptotic-system-key/`) are the intended public canonical after the source-of-truth flip. **Notion is retained only as a legacy / staging / named-exception layer** — apex solar kiss's design portfolio + comps remain migration-pending, and ASKproduKtion's Timberland films remain a named external-video exception. Asymptotic system key uses named external media sources (Lightroom stills + YouTube motion) through ASK-native facades. Notion is no longer the general embed/depth layer.
 
+One durable **child sub-surface** (not a fourth tier card): **studioLeoV** at `/studioleov/` — a conceptual / collaborative project under **asymptotic system key** (breadcrumbed and linked from `/asymptotic-system-key/`). It began with ASK sourcing discarded book-printing test paper from Arion Press and setting up an aperture for LeoV's expressive mark-making from early childhood onward; LeoV's drawings carry the live expressive judgment of the realized marks, while ASK's role is the project-level source of intent — substrate selection, body-making, curation, closure. In method terms, a bounded-generativity instance: ASK defines the grammar and governs the body; LeoV fills the aperture through expression. Lightroom collections + Instagram are its named external media/source surfaces.
+
 ## Files
 
 ```
@@ -42,6 +44,9 @@ site.css              layout layer on top of the tokens (no new tokens)
 colors_and_type.css   vendored from design-system-ASK (canonical tokens)
 fonts/                vendored Inter + JetBrains Mono (OFL)
 assets/logo-ASK.*     vendored wordmark (svg primary; white + lavender-ASK png pairings)
+askproduktion/        native creative-production subpage (Track A.1)
+asymptotic-system-key/  native artistic-practice subpage (Track A.2; per-category p5.js pages)
+studioleov/           studioLeoV child sub-surface (conceptual/collaborative project under asymptotic system key)
 NOTICE / LICENSE      Apache-2.0; provenance for the vendored foundations
 vercel.json           security headers + static config
 ```
