@@ -46,6 +46,7 @@ fonts/                vendored Inter + JetBrains Mono (OFL)
 assets/logo-ASK.*     vendored wordmark (svg primary; white + lavender-ASK png pairings)
 askproduktion/        native creative-production subpage (Track A.1)
 asymptotic-system-key/  native artistic-practice subpage (Track A.2; per-category p5.js pages)
+asymptotic-system-key/lineage/  public-safe influence lineage (canon as substrate: readymade >> pop >> appropriation >> generative systems)
 studioleov/           studioLeoV child sub-surface (conceptual/collaborative project under asymptotic system key)
 NOTICE / LICENSE      Apache-2.0; provenance for the vendored foundations
 vercel.json           security headers + static config
