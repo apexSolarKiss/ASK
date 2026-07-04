@@ -52,6 +52,8 @@ NOTICE / LICENSE      Apache-2.0; provenance for the vendored foundations
 vercel.json           security headers + static config
 ```
 
+For repo-to-repo citations, the canonical source is the file in this repo; `A-S-K.studio` is the rendered public view.
+
 ## Hosting
 
 Static deploy on **Vercel**; canonical domain **A-S-K.studio**. Also valid as
