@@ -17,6 +17,20 @@ assets/    images/ · thumbnails/ · video-posters/
 embeds/    p5js/ (self-hosted, archival) · external-live-links/ (YouTube, p5.js editor)
 ```
 
+## Front-door composition
+
+The root front door (`index.html`) renders the meta-brand identity as a fixed hierarchy — the practice-positioning band is subordinate to the protected tagline and sits above the three-mode cards, never becoming a fourth mode:
+
+```
+meta-brand identity
+  >> protected tagline           order from chaos // beauty in systems
+  >> practice-positioning band   governed domain architectures · bounded generativity ·
+                                 A deterministic governance architecture brackets the generative execution span
+  >> three-mode front door       builder · artistic practice · creative production
+```
+
+The band is layout-only over the vendored design-system tokens; the brand-canonical wording is maintained operator-side (`brand-architecture.md` §Governed domain architecture · §Bounded-generativity phrasings · §ASK positioning proposition). This surface *displays* that positioning; it does not redefine it.
+
 ## Authoring posture (Phase-2 decision, TBD)
 
 - Start **static-authored** (hand-written pages) for the easy-static bulk; introduce a generator only if/when volume warrants. Any generator/renderer is **ASK-repo-owned** (control-surface supplies requirements/templates only).
