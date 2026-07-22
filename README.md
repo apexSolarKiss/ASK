@@ -15,7 +15,7 @@ identity does not.
 
 ## What it is
 
-A single static page — no build step, no framework. It consumes the canonical
+The root front door is a single static page — no build step, no framework — within a multi-page static site. It consumes the canonical
 ASK design tokens (vendored `colors_and_type.css`, fonts, and the `logo-ASK`
 wordmark) and adds **layout only** — no new colors, type, or scale. It carries
 ASK's own **Tier 3** identity (the wordmark + the `ASK` name) and inherits
