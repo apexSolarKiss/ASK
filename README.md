@@ -28,11 +28,11 @@ no JS; the two diagonal gradients switch with the OS.
 
 | Tier | Surface | Links to |
 | --- | --- | --- |
-| builder | **apex solar kiss** | GitHub `@apexSolarKiss` + Notion (design portfolio · UI/UX comps · branding comps — migration pending) |
+| builder | **apex solar kiss** | native `/apex-solar-kiss/` (the object map) + GitHub `@apexSolarKiss` + Notion (design portfolio · UI/UX comps · branding comps — migration pending) |
 | artistic practice | **asymptotic system key** | native `/asymptotic-system-key/` (Lightroom stills + YouTube motion as named external media) |
 | creative production | **ASKproduKtion** | native `/askproduktion/` (Timberland films = named external-video exception) |
 
-Native repo surfaces (`/askproduktion/`, `/asymptotic-system-key/`) are the intended public canonical after the source-of-truth flip. **Notion is retained only as a legacy / staging / named-exception layer** — apex solar kiss keeps a retained **root** Notion exception page (design portfolio / apexSolarKiss assets · UI/UX comps WIP · logo/branding comps WIP), migration-pending, and ASKproduKtion's Timberland films remain a named external-video exception on their own root Notion page. Asymptotic system key uses named external media sources (Lightroom stills + YouTube motion) through ASK-native facades. Notion is no longer the general embed/depth layer.
+Native repo surfaces (`/apex-solar-kiss/`, `/askproduktion/`, `/asymptotic-system-key/`) are the intended public canonical after the source-of-truth flip. **Notion is retained only as a legacy / staging / named-exception layer** — apex solar kiss keeps a retained **root** Notion exception page whose scope is the **portfolio / assets / comps content** (design portfolio / apexSolarKiss assets · UI/UX comps WIP · logo/branding comps WIP), migration-pending; the builder **object map** is native at `/apex-solar-kiss/` and is not part of that exception. ASKproduKtion's Timberland films remain a named external-video exception on their own root Notion page. Asymptotic system key uses named external media sources (Lightroom stills + YouTube motion) through ASK-native facades. Notion is no longer the general embed/depth layer.
 
 One durable **child sub-surface** (not a fourth tier card): **studioLeoV** at `/studioleov/` — a conceptual / collaborative project under **asymptotic system key** (breadcrumbed and linked from `/asymptotic-system-key/`). It began with ASK sourcing discarded book-printing test paper from Arion Press and setting up an aperture for LeoV's expressive mark-making from early childhood onward; LeoV's drawings carry the live expressive judgment of the realized marks, while ASK's role is the project-level source of intent — substrate selection, body-of-work framing (continuity, collection, presentation, curation), and closure. **The marks are not instructed or specified by ASK; LeoV's drawing span is live expressive judgment inside the authored conditions.** In method terms, a bounded-generativity instance with a high-discretion human middle: ASK authors the aperture and governs the body; LeoV's expression generates the work inside it. Lightroom collections + Instagram are its named external media/source surfaces.
 
@@ -44,6 +44,7 @@ site.css              layout layer on top of the tokens (no new tokens)
 colors_and_type.css   vendored from design-system-ASK (canonical tokens)
 fonts/                vendored Inter + JetBrains Mono (OFL)
 assets/logo-ASK.*     vendored wordmark (svg primary; white + lavender-ASK png pairings)
+apex-solar-kiss/      native builder subpage — the object map (practice + two domain applications + the builder machine)
 askproduktion/        native creative-production subpage (Track A.1)
 asymptotic-system-key/  native artistic-practice subpage (Track A.2; per-category p5.js pages)
 asymptotic-system-key/lineage/  public-safe influence lineage (canon as substrate: readymade >> pop >> appropriation >> generative systems)
