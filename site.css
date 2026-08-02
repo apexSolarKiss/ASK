@@ -390,7 +390,10 @@ html:has(> body > .shell:not(.subpage)) { overflow-x: clip; }
 .philosophy[open] > summary { color: var(--fg-1); }
 
 /* ---------- Asymptotic: p5 generative frames ---------- */
-.p5-works { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--space-5); }
+/* min(320px, 100%): keep the 320px minimum wherever the content column can hold
+   it, but let the track shrink to the available width on narrow phones — a bare
+   320px minimum overflows a 311px column at 375px and a 256px column at 320px. */
+.p5-works { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: var(--space-5); }
 .p5-frame { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); }
 .p5-frame iframe {
   width: 100%; aspect-ratio: 4 / 3; border: 1px solid var(--line-1); border-radius: var(--radius-lg);
