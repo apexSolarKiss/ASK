@@ -46,12 +46,46 @@
   margin: var(--space-6) 0 0 0;
 }
 
+/* ---------- Tagline marquee ----------
+   Full-bleed scrolling band under the wordmark. The wordmark is the one
+   deliberate centered exception; this band spans edge to edge and carries the
+   eye from the centered mark down to the flush-left stack below.
+   CSS-only (the page stays JS-free): two identical halves translate -50%, so
+   the loop point is invisible. Static, non-scrolling under reduced motion. */
+.tagline-marquee {
+  margin: var(--space-6) calc(50% - 50vw) 0;   /* full-bleed out of .shell's max-width */
+  overflow: hidden;
+}
+/* 100vw counts the scrollbar on platforms with classic (layout-consuming)
+   scrollbars, so the band would sit ~15px wider than the client area and give
+   the page a horizontal scrollbar. Clip it at the root — front door only, so
+   subpages are untouched. `clip` (not `hidden`) creates no scroll container. */
+html:has(> body > .shell:not(.subpage)) { overflow-x: clip; }
+.tagline-track {
+  display: flex;
+  width: max-content;
+  animation: tagline-scroll 320s linear infinite;
+}
+.tagline-half {                 /* typography inherited from .tagline */
+  white-space: pre;
+  margin: 0;
+}
+@keyframes tagline-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.tagline-static { display: none; margin: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .tagline-track  { display: none; }
+  .tagline-static { display: block; }
+}
+
 /* ---------- Practice-positioning band (subordinate to hero; not a tier) ---------- */
 .positioning {
-  text-align: center;
+  text-align: left;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-3);
 }
 .positioning-category {
@@ -76,7 +110,6 @@
   line-height: var(--lh-body);
   color: var(--fg-high-contrast);
   margin: 0;
-  max-width: 42ch;
 }
 /* Band text contrast: --fg-1/--fg-2 fall below WCAG AA (4.5:1 for normal text) on the light
    gradient, so light mode uses --fg-high-contrast (#201D26, ~10:1). Dark mode restores the
@@ -181,6 +214,9 @@
 }
 .footer a { color: var(--fg-2); border-bottom-color: var(--line-2); }
 .footer a:hover { color: var(--fg-1); }
+/* Front door only: flush-left per the alignment canon. Subpages keep the
+   centered footer until they are re-aligned in their own scoped change. */
+.shell:not(.subpage) .footer { justify-content: flex-start; }
 
 /* ---------- Sub-brand pages (migrated public-canonical content) ----------
    Layout-only; reuses Tier-1/2 tokens. Sub-pages override .shell's vertical
