@@ -4,16 +4,26 @@ Copyright 2026 Andrew S Klug // ASK
 The ASK meta-brand public landing site — a reference implementation of the
 ASK design family.
 
-This product vendors foundations from design-system-ASK
+This product vendors foundations and one pattern from design-system-ASK
 (github.com/apexSolarKiss/design-system-ASK):
   - colors_and_type.css        — canonical tokens (Tier 1 + Tier 2)
   - fonts/                      — Inter + JetBrains Mono variable webfonts (OFL; see fonts/*-OFL.txt)
   - assets/logo-ASK.*          — the logo-ASK wordmark (ASK Tier 3)
+  - surface-shell.css          — the surface-shell pattern: the shared page
+                                 shell, vendored as a pinned byte-identical
+                                 copy and not modified here
 
-When this site and design-system-ASK disagree on a foundation value, the
-canonical design-system-ASK file (itself downstream of ASK's
-visual-identity-system.md) wins. This site adds layout only; it defines no
-new tokens.
+design-system-ASK owns the shared page shell. It governs the page container,
+the header layout, the wordmark slot, the structural title and lede, the header
+rule, and the footer's alignment and link interaction. This site supplies its
+own Tier 3 identity into the shell's mark slot, and adds instance-specific
+payload and layout adaptations around the shell — it does not add all of its
+own layout, and it defines no new tokens. The homepage is the explicit
+exception: it keeps its own composition and does not consume the shell.
+
+When this site and design-system-ASK disagree on a foundation value or on the
+shell, the canonical design-system-ASK file (itself downstream of ASK's
+visual-identity-system.md) wins.
 
 Licensed under the Apache License, Version 2.0.
 See the LICENSE file for the full license text.

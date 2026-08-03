@@ -748,13 +748,21 @@ Before changing this repo, read:
 - `index.html`
 - `site.css`
 - vendored design-system foundations: `colors_and_type.css`, fonts, and `logo-ASK` assets
+- vendored design-system surface pattern: `surface-shell.css`
 - any file directly touched by the change
 
 When operating from the ASK/control-surface ecology, also read the current ASK grounding note and the relevant inheritable identity files as needed: `brand-architecture.md`, `visual-identity-system.md`, and `voice-style-typography.md`.
 
 ## Repo-specific rules
 
-- **No-new-token rule.** This site vendors the `design-system-ASK` foundations and adds layout only. Do not create local design tokens, fork foundation values, or reinterpret the design language here. Re-sync from `design-system-ASK`; do not make the site the upstream source.
+- **No-new-token / vendored-shell rule.** This site vendors the
+  `design-system-ASK` foundations and the `surface-shell` pattern, then adds
+  ASK-specific payload and layout adaptations around them. Do not create local
+  design tokens, fork foundation values, reinterpret the design language, or
+  hand-edit `surface-shell.css`. All non-home content pages consume the
+  vendored shell; the homepage is the explicit composition exception.
+  Re-sync vendored files from `design-system-ASK`; do not make this site the
+  upstream source.
 - **Tier 3 origin case.** `ASK` is ASK-the-entity. It carries ASK’s own Tier 3 as the origin/reference case; it is not a downstream child-inheritance proof.
 - **Production caution.** Treat even docs/CSS/asset changes as production-affecting until verified. Check both light and dark modes for any visual change.
 - **Public-surface restraint.** Do not add private-context details, operator-only paths, unpublished strategy, or Notion-replacement claims unless ASK explicitly authorizes the public wording.

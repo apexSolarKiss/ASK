@@ -17,18 +17,35 @@ identity does not.
 
 The root front door is a single static page — no build step, no framework — within a multi-page static site. It consumes the canonical
 ASK design tokens (vendored `colors_and_type.css`, fonts, and the `logo-ASK`
-wordmark) and adds **layout only** — no new colors, type, or scale. It carries
+wordmark) — no new colors, type, or scale. It carries
 ASK's own **Tier 3** identity (the wordmark + the `ASK` name) and inherits
 Tier 1 (foundation) and Tier 2 (ASK design language, incl. the tagline).
 
+**Page chrome is inherited, not local.** Every content page except the homepage
+consumes the vendored `surface-shell` **pattern** (`surface-shell.css`) — a
+pinned, byte-identical copy of the canonical file in `design-system-ASK`, never
+hand-edited here. The shell owns the page container, the header, the wordmark
+slot, the structural title and lede, the header rule, and the footer's alignment
+and link behavior. `site.css` adds ASK's own payload layout and instance
+adaptations around it; it no longer owns a shared page shell of its own.
+
+The 68 p5 sketch runners under `assets/asymptotic/p5/gallery/` are not content
+pages and are outside the shell: they are full-viewport canvas embeds loaded in
+iframes, with no site chrome by design.
+
+**The homepage is the explicit exception.** `/index.html` keeps its own centered,
+viewport-height composition and does not adopt the shell.
+
 Light/dark follows the system preference (`prefers-color-scheme`) — no toggle,
-no JS; the two diagonal gradients switch with the OS.
+no theme control, no JS for theming; the two diagonal gradients switch with the
+OS. The design system's style-guide theme selector is **not** vendored here and
+no page loads it.
 
 ## Structure — three-tier front door
 
 | Tier | Surface | Links to |
 | --- | --- | --- |
-| builder | **apex solar kiss** | native `/apex-solar-kiss/` (the object map) + GitHub `@apexSolarKiss` + Notion (design portfolio · UI/UX comps · branding comps — migration pending) |
+| builder | **apex solar kiss** | native `/apex-solar-kiss/` (the object map) + GitHub `@apexSolarKiss` + native `/apex-solar-kiss/design/` (live design-system surfaces + the retained design portfolio / UI/UX / branding boards) |
 | artistic practice | **asymptotic system key** | native `/asymptotic-system-key/` (Lightroom stills + YouTube motion as named external media) |
 | creative production | **ASKproduKtion** | native `/askproduktion/` (Timberland films = named external-video exception) |
 
@@ -39,12 +56,14 @@ One durable **child sub-surface** (not a fourth tier card): **studioLeoV** at `/
 ## Files
 
 ```
-index.html            the page (inline logo-ASK wordmark; three tier cards; footer)
-site.css              layout layer on top of the tokens (no new tokens)
+index.html            the homepage (inline logo-ASK wordmark; three tier cards; footer) — the explicit shell exception
+site.css              ASK payload layout + shell instance adaptations, on top of the tokens (no new tokens)
+surface-shell.css     vendored from design-system-ASK — the surface-shell PATTERN, pinned + byte-identical; every non-home content page consumes it
 colors_and_type.css   vendored from design-system-ASK (canonical tokens)
 fonts/                vendored Inter + JetBrains Mono (OFL)
 assets/logo-ASK.*     vendored wordmark (svg primary; white + lavender-ASK png pairings)
 apex-solar-kiss/      native builder subpage — the object map (practice + two domain applications + the builder machine)
+apex-solar-kiss/design/  native design gateway — live design-system surfaces + retained external comp boards
 askproduktion/        native creative-production subpage (Track A.1)
 asymptotic-system-key/  native artistic-practice subpage (Track A.2; per-category p5.js pages)
 asymptotic-system-key/lineage/  public-safe influence lineage (canon as substrate: readymade >> pop >> appropriation >> generative systems)
@@ -63,8 +82,10 @@ plain static hosting anywhere (e.g. GitHub Pages with a `.nojekyll`).
 ## Provenance
 
 A reference implementation of the [ASK design family](https://github.com/apexSolarKiss/design-system-ASK):
-it vendors the canonical foundations (tokens, fonts, wordmark) and adds layout
-only. When this site and `design-system-ASK` disagree on a foundation value, the
-canonical file wins — see `NOTICE`.
+it vendors the canonical foundations (tokens, fonts, wordmark) **and the
+`surface-shell` pattern**, then adds its own payload layout and instance
+adaptations around them. The shared page chrome is owned upstream, not here.
+When this site and `design-system-ASK` disagree on a foundation value or on the
+shell, the canonical file wins — see `NOTICE`.
 
 Licensed under the Apache License 2.0 // see [LICENSE](LICENSE).
