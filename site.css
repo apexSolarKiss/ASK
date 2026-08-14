@@ -71,6 +71,17 @@
   display: block;
   margin: 0 auto;
 }
+/* The mobile homepage wordmark. `min(460px, 72vw)` stops resolving to 460px at
+   about 639px (460 / 0.72), so the mark starts shrinking with the viewport
+   right around here — this rule takes over at that point and lets it fill the
+   homepage content column instead of reading as a shrunken logo. The tier-grid
+   breakpoint below is a separate layout decision and is not the reason for
+   this one. HOMEPAGE composition only: `.wordmark` exists on index.html and
+   nowhere else, and the vendored shell's `.surface-mark` is a fixed 116px at
+   every breakpoint, untouched by this rule. */
+@media (max-width: 640px) {
+  .wordmark svg { width: 100%; }
+}
 @media (prefers-color-scheme: dark) {
   .wordmark { color: var(--ask-lavender-ask); }   /* dark-mode pairing = lavender-ASK */
 }
