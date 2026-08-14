@@ -28,13 +28,6 @@
    The homepage is the explicit exception: it keeps its own composition below
    and does not adopt the shell. */
 
-/* The wordmark slot is a link home on every shell page. The foundation
-   underlines anchors; a wordmark is not body copy. Making the slot itself the
-   anchor also fixes a live defect in the retired markup, where role="img" on
-   the wrapper pruned its subtree and hid the home link from assistive
-   technology on all thirteen subpages. */
-.surface-mark { border-bottom: none; }
-
 /* ASK's tier classification occupies the shell's optional badge slot. The
    shell defaults that slot to --ask-emphasis-magenta; on this surface the
    classification is a quiet label, so it takes --fg-2 — the same color the
@@ -180,6 +173,13 @@ html:has(> body > .shell) { overflow-x: clip; }
 }
 @media (max-width: 780px) { .tiers { grid-template-columns: 1fr; } }
 
+/* A tier card is an inert container: the actionable things inside it are the
+   tier-name anchor and the chips, and those carry their own treatment. It
+   therefore declares no hover state and no transition — the transition here
+   previously existed only to animate a container lift that the surface no
+   longer performs. `.card` is homepage-only; the gallery and external-link
+   cards are `.gal-card-trigger` and `.ext-card`, which are genuinely
+   actionable and own their own transitions. */
 .card {
   background: var(--surface-glass);
   backdrop-filter: blur(20px);
@@ -188,11 +188,6 @@ html:has(> body > .shell) { overflow-x: clip; }
   border-radius: var(--radius-lg);
   padding: var(--space-6);
   box-shadow: var(--shadow-md);
-  transition:
-    transform var(--dur-2) var(--ease-out),
-    box-shadow var(--dur-2) var(--ease-out),
-    background var(--dur-2) var(--ease-out),
-    border-color var(--dur-2) var(--ease-out);
 }
 
 .tier {
@@ -201,12 +196,6 @@ html:has(> body > .shell) { overflow-x: clip; }
   gap: var(--space-3);
   min-height: 220px;
 }
-.tier:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-  background: var(--surface-glass-2);
-}
-
 .tier-role { color: var(--fg-2); margin: 0; }
 
 .tier-name {
@@ -350,7 +339,10 @@ html:has(> body > .shell) { overflow-x: clip; }
 }
 .portfolio { display: flex; flex-direction: column; gap: var(--space-7); }
 .gal-project { display: flex; flex-direction: column; gap: var(--space-3); }
-.gal-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2) var(--space-3); }
+/* Title and its repository chips share this row. They are centered rather than
+   baseline-aligned: the chips are bordered pills, not text, so a shared text
+   baseline sits their box visibly low against the title. */
+.gal-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
 .gal-title {
   font-size: var(--fs-h3);
   font-weight: var(--fw-light);
