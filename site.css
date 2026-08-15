@@ -28,10 +28,15 @@
    The homepage is the explicit exception: it keeps its own composition below
    and does not adopt the shell. */
 
-/* ASK's tier classification occupies the shell's optional badge slot. The
+/* ASK's tier classification occupies the shell's optional status-note slot. The
    shell defaults that slot to --ask-emphasis-magenta; on this surface the
    classification is a quiet label, so it takes --fg-2 — the same color the
-   homepage's .tier-role carries. Color only; the shell keeps the geometry. */
+   homepage's .tier-role carries.
+
+   Color only. The shell owns the note's family, size, tracking, wrapping, and
+   its decorative leading `///`; this override reaches none of them, and it
+   should stay that way — a local size or family here would fork the note from
+   the pattern every other consuming surface renders. */
 .surface-badge { color: var(--fg-2); }
 
 /* Payload rhythm. The shell declares NO payload layout by contract, so the
@@ -146,7 +151,12 @@ html:has(> body > .shell) { overflow-x: clip; }
   color: var(--fg-high-contrast);
   margin: 0;
 }
+/* The primitive is named in mono — the same family the shell's structural title
+   carries. It is a term of art, not prose: mono marks it as something the
+   system names rather than something the sentence says. Size stays on Body;
+   only the family changes. */
 .positioning-primitive {
+  font-family: var(--font-mono);
   font-size: var(--fs-body);
   font-weight: var(--fw-light);
   letter-spacing: var(--tracking-tight);
@@ -218,9 +228,14 @@ html:has(> body > .shell) { overflow-x: clip; }
 .tier-name a { border-bottom: none; }
 .tier-name a:hover { opacity: 0.82; }
 
+/* The card's supporting line takes the foundation's Small supporting-text role
+   whole — 18px at 300, on --lh-body — not just its size. That is the same role
+   the shell gives .surface-lede, so a tier card and a content page describe
+   themselves in one voice. */
 .tier-desc {
-  font-size: var(--fs-caption);
-  font-weight: var(--fw-regular);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-body);
   color: var(--fg-3);
   margin: 0;
   letter-spacing: var(--tracking-normal);
@@ -249,14 +264,20 @@ html:has(> body > .shell) { overflow-x: clip; }
 /* ---------- Footer ---------- */
 /* Right-aligned on every page: the footer is the terminal element, and the
    reader's eye travels top-left to bottom-right, so it sits where the reading
-   path ends. */
+   path ends.
+
+   This is the HOMEPAGE footer — the shell's .surface-footer closes every other
+   page. The two track each other on size: both now sit on the Small supporting
+   step, so the homepage and the content pages close in the same voice. Keep
+   this in step with the vendored .surface-footer rather than letting the front
+   door drift a step away from the family. */
 .footer {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: var(--space-5);
   font-family: var(--font-mono);
-  font-size: var(--fs-caption);
+  font-size: var(--fs-small);
   letter-spacing: var(--tracking-wide);
   color: var(--fg-2);
 }
@@ -353,7 +374,12 @@ html:has(> body > .shell) { overflow-x: clip; }
 /* Title and its repository chips share this row. They are centered rather than
    baseline-aligned: the chips are bordered pills, not text, so a shared text
    baseline sits their box visibly low against the title. */
-.gal-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
+/* The row gap is the WRAPPED case only — it is inert while the title and its
+   chip share a line, and it is the whole spacing when they do not. At a 390px
+   viewport this row needs 381px of inline space against 326px available, so on
+   a phone the chip drops below a 28px title; 8px left it crowding the heading.
+   --space-4 gives it room without touching the inline arrangement. */
+.gal-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-3); }
 .gal-title {
   font-size: var(--fs-h3);
   font-weight: var(--fw-light);
