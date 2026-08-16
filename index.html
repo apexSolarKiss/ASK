@@ -31,8 +31,13 @@
   <meta name="twitter:description" content="Andrew S Klug // ASK >> governed domain architectures + artistic practice + creative production">
   <meta name="twitter:image" content="https://a-s-k.studio/og-image.png">
 
-  <!-- Canonical design-system-ASK tokens (vendored — see NOTICE) -->
+  <!-- Vendored design-system-ASK foundations, then the vendored visual rules the
+       homepage consumes (see NOTICE), then ASK-local composition. The homepage is
+       the documented shell exception: it consumes surface-panel and surface-action,
+       and deliberately not surface-shell. -->
   <link rel="stylesheet" href="colors_and_type.css">
+  <link rel="stylesheet" href="surface-panel.css">
+  <link rel="stylesheet" href="surface-action.css">
   <link rel="stylesheet" href="site.css">
 </head>
 <body>
@@ -65,33 +70,36 @@
     </section>
 
     <section class="tiers" aria-label="ASK surfaces">
-      <article class="tier card">
+      <article class="tier surface-panel">
         <span class="tier-role caption">builder</span>
-        <h2 class="tier-name"><a href="/apex-solar-kiss/">apex solar kiss</a></h2>
-        <p class="tier-desc">governed domain architectures</p>
+        <h2 class="tier-name surface-panel-title"><a href="/apex-solar-kiss/">apex solar kiss</a></h2>
+        <p class="tier-desc surface-panel-support">governed domain architectures</p>
         <nav class="tier-links" aria-label="apex solar kiss links">
-          <a class="chip" href="/apex-solar-kiss/">projects</a>
-          <a class="chip" href="https://github.com/apexSolarKiss" target="_blank" rel="noopener">GitHub</a>
-          <a class="chip" href="/apex-solar-kiss/design/">design</a>
+          <a class="chip surface-action" href="/apex-solar-kiss/">projects</a>
+          <a class="chip surface-action" href="https://github.com/apexSolarKiss" target="_blank" rel="noopener">GitHub</a>
+          <a class="chip surface-action" href="/apex-solar-kiss/design/">design</a>
         </nav>
       </article>
 
-      <article class="tier card">
+      <article class="tier surface-panel">
         <span class="tier-role caption">artistic practice</span>
-        <h2 class="tier-name"><a href="/asymptotic-system-key/">asymptotic system key</a></h2>
-        <p class="tier-desc">generative + abstract + conceptual</p>
+        <h2 class="tier-name surface-panel-title"><a href="/asymptotic-system-key/">asymptotic system key</a></h2>
+        <!-- Each plus binds to the word after it with a non-breaking space, so a
+             wrap falls before `+ abstract` or `+ conceptual` and never strands a
+             plus at the end of a line. Visible copy is unchanged. -->
+        <p class="tier-desc surface-panel-support">generative +&nbsp;abstract +&nbsp;conceptual</p>
         <nav class="tier-links" aria-label="asymptotic system key links">
-          <a class="chip" href="/asymptotic-system-key/">works</a>
-          <a class="chip" href="/asymptotic-system-key/lineage/">lineage</a>
+          <a class="chip surface-action" href="/asymptotic-system-key/">works</a>
+          <a class="chip surface-action" href="/asymptotic-system-key/lineage/">lineage</a>
         </nav>
       </article>
 
-      <article class="tier card">
+      <article class="tier surface-panel">
         <span class="tier-role caption">creative production</span>
-        <h2 class="tier-name"><a href="/askproduktion/">ASKproduKtion</a></h2>
-        <p class="tier-desc">photography + video</p>
+        <h2 class="tier-name surface-panel-title"><a href="/askproduktion/">ASKproduKtion</a></h2>
+        <p class="tier-desc surface-panel-support">photography + video</p>
         <nav class="tier-links" aria-label="ASKproduKtion links">
-          <a class="chip" href="/askproduktion/">portfolio</a>
+          <a class="chip surface-action" href="/askproduktion/">portfolio</a>
         </nav>
       </article>
     </section>

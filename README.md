@@ -33,8 +33,20 @@ The 68 p5 sketch runners under `assets/asymptotic/p5/gallery/` are not content
 pages and are outside the shell: they are full-viewport canvas embeds loaded in
 iframes, with no site chrome by design.
 
+**Two visual rules are inherited too.** `surface-panel.css` (the shared visual
+contract for live content panels) and `surface-action.css` (the shared
+compact-action contract) are vendored the same way — pinned, byte-identical, never
+hand-edited here. The homepage's three tier panels consume the panel rule; every
+page's compact controls consume the action rule. Both own presentation — and the
+action rule its interaction as well — but neither owns markup or semantics. ASK
+keeps its own element semantics, destinations, copy, row and placement decisions.
+The panel rule deliberately leaves support-copy foreground local; the action rule
+owns its base foreground, with only the bounded `gal-link` on-image paint
+adaptation described below.
+
 **The homepage is the explicit exception.** `/index.html` keeps its own centered,
-viewport-height composition and does not adopt the shell.
+viewport-height composition and does not adopt the shell. It does consume both
+visual rules.
 
 Light/dark follows the system preference (`prefers-color-scheme`) — no toggle,
 no theme control, no JS for theming; the two diagonal gradients switch with the
@@ -56,9 +68,11 @@ One durable **child sub-surface** (not a fourth tier card): **studioLeoV** at `/
 ## Files
 
 ```
-index.html            the homepage (inline logo-ASK wordmark; three tier cards; footer) — the explicit shell exception
+index.html            the homepage (inline logo-ASK wordmark; three tier panels; footer) — the explicit shell exception
 site.css              ASK payload layout + shell instance adaptations, on top of the tokens (no new tokens)
 surface-shell.css     vendored from design-system-ASK — the surface-shell PATTERN, pinned + byte-identical; every non-home content page consumes it
+surface-panel.css     vendored from design-system-ASK — the live-content-panel VISUAL RULE, pinned + byte-identical; the homepage tier panels consume it (presentation only — ASK keeps its own markup, semantics, and support foreground)
+surface-action.css    vendored from design-system-ASK — the compact-action VISUAL RULE, pinned + byte-identical; every page's compact controls consume it (the owner owns the base surface, foreground, border, geometry and interaction; ASK keeps the element semantics, destination, copy, row and placement)
 colors_and_type.css   vendored from design-system-ASK (canonical tokens)
 fonts/                vendored Inter + JetBrains Mono (OFL)
 assets/logo-ASK.*     vendored wordmark (svg primary; white + lavender-ASK png pairings)
@@ -82,10 +96,33 @@ plain static hosting anywhere (e.g. GitHub Pages with a `.nojekyll`).
 ## Provenance
 
 A reference implementation of the [ASK design family](https://github.com/apexSolarKiss/design-system-ASK):
-it vendors the canonical foundations (tokens, fonts, wordmark) **and the
-`surface-shell` pattern**, then adds its own payload layout and instance
-adaptations around them. The shared page chrome is owned upstream, not here.
-When this site and `design-system-ASK` disagree on a foundation value or on the
-shell, the canonical file wins — see `NOTICE`.
+it vendors the canonical foundations (tokens, fonts, wordmark), **the
+`surface-shell` pattern**, and **the `surface-panel` and `surface-action` visual
+rules**, then adds its own payload layout and instance adaptations around them.
+The shared page chrome is owned upstream, not here.
+
+The homepage tier panels and every page's compact controls inherit their
+presentation from the two vendored visual rules. The split is not identical
+across the two, and stating it precisely matters more than stating it briefly:
+
+- **Panel.** The owner governs the panel's arrangement and paint and the type
+  roles of its title and supporting copy. It deliberately sets **no** supporting
+  foreground, so **ASK owns the support-copy foreground** — a value the
+  consuming surface is meant to choose.
+- **Action.** The owner governs the **base surface, foreground, border,
+  geometry and interaction** — it disclaims none of those. **ASK owns the
+  element semantics, destination, copy, and the row and placement** around the
+  control. One bounded exception exists and is deliberate: the gallery
+  `gal-link` carries an **on-image contextual-paint adaptation** — a scrim, a
+  brighter translucent border, and a white foreground — layered over that
+  canonical base so the control stays legible above a photograph.
+
+That split is the point of those modules. So an inert panel carrying its own
+links and a panel that is itself a link can share one look without sharing a
+structure, and an anchor that navigates and a button that acts can share one
+control without either stopping being what it is.
+
+When this site and `design-system-ASK` disagree on a foundation value, on the
+shell, or on a vendored visual rule, the canonical file wins — see `NOTICE`.
 
 Licensed under the Apache License 2.0 // see [LICENSE](LICENSE).

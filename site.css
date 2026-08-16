@@ -5,11 +5,15 @@
    canonical tokens (colors_and_type.css, vendored) and defines NO new colors,
    type choices, or scale.
 
-   It no longer owns all layout. The shared page chrome is vendored: every page
-   except the homepage consumes surface-shell.css, a pinned byte-identical copy
-   of the canonical pattern. What this file owns is the homepage composition,
-   page payload layout, and a small set of instance adaptations around the
-   shell. Per the tier model, this surface carries ASK's own Tier 3 (the
+   It no longer owns all layout. Three canonical files are vendored as pinned
+   byte-identical copies and never hand-edited here: surface-shell.css, the page
+   chrome, which every page except the homepage consumes; surface-panel.css, the
+   live-content-panel visual rule, which the homepage's three tier panels
+   consume; and surface-action.css, the compact-action visual rule, which every
+   page's compact controls consume. What this file owns is the homepage
+   composition, page payload layout, row and placement decisions around the
+   vendored controls, and a small set of instance adaptations around the shell.
+   Per the tier model, this surface carries ASK's own Tier 3 (the
    logo-ASK wordmark + the ASK name) because it IS the ASK meta-brand front
    door; everything else is inherited Tier 1 (foundation) + Tier 2 (ASK design
    language).
@@ -151,14 +155,17 @@ html:has(> body > .shell) { overflow-x: clip; }
   color: var(--fg-high-contrast);
   margin: 0;
 }
-/* The primitive is named in mono — the same family the shell's structural title
-   carries. It is a term of art, not prose: mono marks it as something the
-   system names rather than something the sentence says. Size stays on Body;
-   only the family changes. */
+/* The named primitive is a primary label, and it carries the family's shared
+   primary-label role whole — the same five declarations the vendored
+   `.surface-panel-title` and the vendored shell's `.surface-title` carry. Mono
+   marks it as a term the system names rather than something the sentence says.
+   They are declared locally rather than by adopting the panel class, because
+   this band is not a panel: the role is the same, the container is not. */
 .positioning-primitive {
   font-family: var(--font-mono);
   font-size: var(--fs-body);
   font-weight: var(--fw-light);
+  line-height: var(--lh-heading);
   letter-spacing: var(--tracking-tight);
   color: var(--fg-high-contrast);
   margin: 0;
@@ -194,72 +201,50 @@ html:has(> body > .shell) { overflow-x: clip; }
 }
 @media (max-width: 780px) { .tiers { grid-template-columns: 1fr; } }
 
-/* A tier card is an inert container: the actionable things inside it are the
-   tier-name anchor and the chips, and those carry their own treatment. It
-   therefore declares no hover state and no transition — the transition here
-   previously existed only to animate a container lift that the surface no
-   longer performs. `.card` is homepage-only; the gallery and external-link
-   cards are `.gal-card-trigger` and `.ext-card`, which are genuinely
-   actionable and own their own transitions. */
-.card {
-  background: var(--surface-glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--line-1);
-  border-radius: var(--radius-lg);
-  padding: var(--space-6);
-  box-shadow: var(--shadow-md);
-}
+/* The local `.card` rule is RETIRED. Its glass, border, radius, padding and
+   shadow are the vendored surface-panel contract's, and the three tier articles
+   now carry `.surface-panel` instead of re-deriving them here.
 
+   A tier panel stays an inert `<article>`: the actionable things inside it are
+   the tier-name anchor and the compact actions, and those carry their own
+   treatment. The vendored module gives panel-level interaction only to
+   `a.surface-panel`, which this is not, so no hover or transition arrives with
+   it. The gallery and external-link cards are `.gal-card-trigger` and
+   `.ext-card` — genuinely actionable, and owners of their own transitions.
+
+   Only the local limb survives below. The column arrangement, the 12px stack,
+   and every paint declaration resolve from the vendored module; the min-height
+   is this page's own, keeping three panels of unequal copy on one baseline. */
 .tier {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
   min-height: 220px;
 }
 .tier-role { color: var(--fg-2); margin: 0; }
 
-.tier-name {
-  font-size: var(--fs-h3);
-  font-weight: var(--fw-light);
-  letter-spacing: var(--tracking-tight);
-  margin: 0;
-}
+/* The tier title takes the vendored `.surface-panel-title` role in the markup,
+   so no local size, weight, tracking or margin is declared for it. What remains
+   is ASK's own anchor treatment inside that title. */
 .tier-name a { border-bottom: none; }
 .tier-name a:hover { opacity: 0.82; }
 
-/* The card's supporting line takes the foundation's Small supporting-text role
-   whole — 18px at 300, on --lh-body — not just its size. That is the same role
-   the shell gives .surface-lede, so a tier card and a content page describe
-   themselves in one voice. */
+/* Foreground stays ASK-local. The vendored surface-panel contract owns the
+   supporting-text role — 18px at 300, on --lh-body, the same role the shell
+   gives .surface-lede — but deliberately sets no foreground, so this value is
+   the consuming surface's to choose and to change. */
 .tier-desc {
-  font-size: var(--fs-small);
-  font-weight: var(--fw-light);
-  line-height: var(--lh-body);
   color: var(--fg-3);
-  margin: 0;
-  letter-spacing: var(--tracking-normal);
   text-transform: none;
 }
 
+/* Row layout only. The compact controls inside carry `.surface-action` and take
+   their type, geometry, paint and interaction from the vendored module; the
+   vendored module owns the controls and never the composition around them, so
+   this row's placement, wrapping and gap stay here. */
 .tier-links {
   margin-top: auto;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
 }
-.chip {
-  font-family: var(--font-mono);
-  font-size: var(--fs-caption);
-  font-weight: var(--fw-light);
-  letter-spacing: var(--tracking-normal);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-pill);
-  background: var(--surface-glass-2);
-  border: 1px solid var(--line-2);
-  color: var(--fg-1);
-}
-.chip:hover { border-bottom: 1px solid var(--line-2); border-color: currentColor; opacity: 0.92; }
 
 /* ---------- Footer ---------- */
 /* Right-aligned on every page: the footer is the terminal element, and the
@@ -270,7 +255,11 @@ html:has(> body > .shell) { overflow-x: clip; }
    page. The two track each other on size: both now sit on the Small supporting
    step, so the homepage and the content pages close in the same voice. Keep
    this in step with the vendored .surface-footer rather than letting the front
-   door drift a step away from the family. */
+   door drift a step away from the family — including its tracking, which is
+   normal rather than wide: at this step wide tracking added 1.44px between
+   letters, and mono's fixed advances are already wider than the lede's Inter,
+   so a footer measuring the same size as the supporting text above it read
+   visibly larger. The family carries the distinction on its own. */
 .footer {
   display: flex;
   flex-wrap: wrap;
@@ -278,7 +267,7 @@ html:has(> body > .shell) { overflow-x: clip; }
   gap: var(--space-5);
   font-family: var(--font-mono);
   font-size: var(--fs-small);
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: var(--tracking-normal);
   color: var(--fg-2);
 }
 .footer a { color: var(--fg-2); border-bottom-color: var(--line-2); }
@@ -441,13 +430,25 @@ html:has(> body > .shell) { overflow-x: clip; }
 .gal-cover { flex-shrink: 0; }                        /* fixed 4:3 cover */
 .gal-card-meta { flex: 1 1 auto; }                   /* fills remaining height */
 .gal-card-credit { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-/* link as a legible overlay on the cover (no height impact) */
+/* An ASK-LOCAL ON-IMAGE LEGIBILITY ADAPTATION, layered over the canonical
+   compact-action base. The control carries `.surface-action` and takes the
+   vendored type, geometry and interaction from it; this rule then lifts it out
+   of flow onto the cover and re-paints it for a photograph underneath — a
+   darkened scrim, a brighter translucent border, and a white foreground, none
+   of which would be legible at the module's own surface and line values over an
+   arbitrary image. The module does own that base paint; this is a deliberate
+   local override of it for one placement, not a gap the module leaves open. */
 .gal-card .gal-link {
   position: absolute; top: var(--space-3); right: var(--space-3); margin: 0; align-self: auto;
   background: rgba(0,0,0,.55); border-color: rgba(255,255,255,.28); color: #fff;
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
 }
-.gal-card .gal-link:hover { background: rgba(0,0,0,.72); border-color: rgba(255,255,255,.45); opacity: 1; }
+/* Hover adapts the SCRIM ONLY. The canonical `opacity: 0.92` limb is no longer
+   overridden here: holding it at 1 forked this one control away from the family
+   hover the module defines, for no on-image reason — the scrim already carries
+   the legibility work. The border stays a local value because a photograph is
+   underneath and the two white steps are what read against it. */
+.gal-card .gal-link:hover { background: rgba(0,0,0,.72); border-color: rgba(255,255,255,.45); }
 
 /* ---------- Asymptotic: philosophy (collapsible, default open) ---------- */
 .philosophy { border-top: 1px solid var(--line-1); padding-top: var(--space-4); margin-top: var(--space-2); }
@@ -512,15 +513,19 @@ html:has(> body > .shell) { overflow-x: clip; }
 .signal > summary::-webkit-details-marker { display: none; }
 .signal[open] > summary { color: var(--fg-1); margin-bottom: var(--space-4); }
 /* Like Art panel: chevron sits top-right like every other panel (no reserved
-   gap); the Facebook link is an in-flow chip at the bottom-right of the panel. */
+   gap); the Facebook link is an in-flow compact action at the bottom-right of
+   the panel.
+
+   PLACEMENT ONLY. The control carries `.surface-action`, so its type, padding,
+   radius, surface, border, foreground and interaction all resolve from the
+   vendored module. The old local `white-space: nowrap` is gone with them: the
+   contract declares `normal` deliberately, so a long label wraps inside the
+   control instead of pushing past the panel edge. What stays here is where the
+   panel puts it. */
 .overlay-link {
-  align-self: flex-end; margin-top: var(--space-2);
-  font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: var(--fw-light);
-  letter-spacing: var(--tracking-normal); padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-pill); background: var(--surface-glass-2);
-  border: 1px solid var(--line-2); color: var(--fg-1); white-space: nowrap;
+  align-self: flex-end;
+  margin-top: var(--space-2);
 }
-.overlay-link:hover { border-color: currentColor; opacity: 0.92; }
 
 /* fix: long camelCase Lightroom names must wrap within the card */
 .ext-card-name { overflow-wrap: anywhere; word-break: break-word; min-width: 0; }
