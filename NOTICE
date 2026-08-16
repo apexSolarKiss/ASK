@@ -4,26 +4,51 @@ Copyright 2026 Andrew S Klug // ASK
 The ASK meta-brand public landing site — a reference implementation of the
 ASK design family.
 
-This product vendors foundations and one pattern from design-system-ASK
-(github.com/apexSolarKiss/design-system-ASK):
+This product vendors foundations, one pattern, and two visual rules from
+design-system-ASK (github.com/apexSolarKiss/design-system-ASK):
   - colors_and_type.css        — canonical tokens (Tier 1 + Tier 2)
   - fonts/                      — Inter + JetBrains Mono variable webfonts (OFL; see fonts/*-OFL.txt)
   - assets/logo-ASK.*          — the logo-ASK wordmark (ASK Tier 3)
   - surface-shell.css          — the surface-shell pattern: the shared page
                                  shell, vendored as a pinned byte-identical
                                  copy and not modified here
+  - surface-panel.css          — the shared visual contract for live content
+                                 panels, vendored as a pinned byte-identical
+                                 copy and not modified here. Presentation
+                                 only: it owns no markup and no semantics
+  - surface-action.css         — the shared compact-action visual contract,
+                                 vendored as a pinned byte-identical copy and
+                                 not modified here. It owns the base surface,
+                                 foreground, border, geometry and interaction;
+                                 the consuming surface keeps the element
+                                 semantics, destination, copy, row and
+                                 placement
 
 design-system-ASK owns the shared page shell. It governs the page container,
 the header layout, the wordmark slot, the structural title and lede, the header
-rule, and the footer's alignment and link interaction. This site supplies its
-own Tier 3 identity into the shell's mark slot, and adds instance-specific
-payload and layout adaptations around the shell — it does not add all of its
-own layout, and it defines no new tokens. The homepage is the explicit
-exception: it keeps its own composition and does not consume the shell.
+rule, and the footer's alignment and link interaction. It also owns the panel
+and compact-action appearance through the two vendored visual rules, and the two
+splits differ:
 
-When this site and design-system-ASK disagree on a foundation value or on the
-shell, the canonical design-system-ASK file (itself downstream of ASK's
-visual-identity-system.md) wins.
+  - the panel contract governs a panel's arrangement and paint and the type
+    roles of its title and supporting copy, but sets no supporting foreground —
+    that value is this site's to choose;
+  - the action contract governs a compact control's base surface, foreground,
+    border, geometry and interaction, disclaiming none of them; this site keeps
+    the element semantics, destination, copy, row and placement. One bounded
+    exception is deliberate: the gallery link carries an on-image
+    contextual-paint adaptation over that canonical base so it stays legible
+    above a photograph.
+
+This site supplies its own Tier 3 identity into the shell's mark slot, keeps its
+own markup and semantics, and adds instance-specific payload and layout
+adaptations — it does not add all of its own layout, and it defines no new
+tokens. The homepage is the explicit exception: it keeps its own composition and
+does not consume the shell, though it does consume both visual rules.
+
+When this site and design-system-ASK disagree on a foundation value, on the
+shell, or on a vendored visual rule, the canonical design-system-ASK file
+(itself downstream of ASK's visual-identity-system.md) wins.
 
 Licensed under the Apache License, Version 2.0.
 See the LICENSE file for the full license text.
