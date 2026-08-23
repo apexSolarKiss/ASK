@@ -109,6 +109,16 @@
   letter-spacing: var(--tracking-tight);
   color: var(--fg-2);
   margin: var(--space-6) 0 0 0;
+  /* iOS Safari inflates text inside a block far wider than the viewport, so it
+     would still be readable if you zoomed that block to fit. `.tagline-track`
+     is `width: max-content` — about 6,900px of marquee against a 390px phone —
+     which is exactly that condition, while the primitive sits in an ordinary
+     block and is left alone. The result was one band rendering visibly larger
+     than the label it is supposed to match, on the device only. `100%` (not
+     `none`) suppresses that automatic boost while keeping the authored 24px,
+     and it leaves the reader's own Dynamic Type and pinch-zoom untouched. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* ---------- Tagline marquee ----------
