@@ -95,13 +95,27 @@
   .wordmark { color: var(--ask-lavender-ask); }   /* dark-mode pairing = lavender-ASK */
 }
 
+/* The band sits on the same metric as `.positioning-primitive` below it —
+   24 / 300 / 1.12 / -0.02em — so the two read as one measure down the page.
+   `line-height` is declared rather than inherited: without it the foundation's
+   `p` rule supplies --lh-body (1.45), and at 24px that alone made the band's
+   line box ~29% taller than the primitive's at an identical font-size. The
+   quieter --fg-2 foreground is what still separates them, and it stays. */
 .tagline {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-weight: var(--fw-light);
-  font-size: var(--fs-small);
-  letter-spacing: var(--tracking-wide);
+  font-size: var(--fs-body);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--tracking-tight);
   color: var(--fg-2);
   margin: var(--space-6) 0 0 0;
+  /* iOS Safari can inflate text inside a block much wider than the viewport.
+     `.tagline-track` is `width: max-content`, while the primitive sits in an
+     ordinary-width block, so the marquee alone rendered larger on iPhone.
+     `100%` suppresses that automatic inflation while preserving the authored
+     24px size. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* ---------- Tagline marquee ----------
@@ -132,7 +146,13 @@ html:has(> body > .shell) { overflow-x: clip; }
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
-.tagline-static { display: none; margin: 0; }
+/* `pre-wrap`, not `pre`. `.tagline-half` renders the doubled separator spaces
+   because it declares `white-space: pre`; this one declares none, and default
+   handling collapses a run of spaces back to one — so without this the
+   reduced-motion reader would silently get different copy from everyone else.
+   `pre-wrap` preserves the spaces AND still wraps, so the static string cannot
+   overflow its clipped band on a narrow viewport. */
+.tagline-static { display: none; margin: 0; white-space: pre-wrap; }
 @media (prefers-reduced-motion: reduce) {
   .tagline-track  { display: none; }
   .tagline-static { display: block; }
@@ -147,7 +167,7 @@ html:has(> body > .shell) { overflow-x: clip; }
   gap: var(--space-3);
 }
 .positioning-category {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-weight: var(--fw-light);
   font-size: var(--fs-caption);
   letter-spacing: var(--tracking-wide);
@@ -155,14 +175,18 @@ html:has(> body > .shell) { overflow-x: clip; }
   color: var(--fg-high-contrast);
   margin: 0;
 }
-/* The named primitive is a primary label, and it carries the family's shared
-   primary-label role whole — the same five declarations the vendored
-   `.surface-panel-title` and the vendored shell's `.surface-title` carry. Mono
-   marks it as a term the system names rather than something the sentence says.
-   They are declared locally rather than by adopting the panel class, because
-   this band is not a panel: the role is the same, the container is not. */
+/* The named primitive is a primary label on the family's shared METRIC —
+   24 / 300 / 1.12 / -0.02em, the four declarations the vendored
+   `.surface-panel-title` and the vendored shell's `.surface-title` both carry.
+   FAMILY is not part of that shared object; it is owned per selector upstream,
+   where `.surface-panel-title` is Inter and `.surface-title` is the mono
+   structural locator. This is neither of those: it is an ASK-home-local Inter
+   primary label. Family is never inferred from what a label says.
+
+   Declared locally rather than by adopting the panel class, because this band
+   is not a panel: the metric is shared, the container is not. */
 .positioning-primitive {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: var(--fs-body);
   font-weight: var(--fw-light);
   line-height: var(--lh-heading);
