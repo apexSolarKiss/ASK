@@ -276,21 +276,27 @@ html:has(> body > .shell) { overflow-x: clip; }
    path ends.
 
    This is the HOMEPAGE footer — the shell's .surface-footer closes every other
-   page. The two track each other on size: both now sit on the Small supporting
-   step, so the homepage and the content pages close in the same voice. Keep
-   this in step with the vendored .surface-footer rather than letting the front
-   door drift a step away from the family — including its tracking, which is
-   normal rather than wide: at this step wide tracking added 1.44px between
-   letters, and mono's fixed advances are already wider than the lede's Inter,
-   so a footer measuring the same size as the supporting text above it read
-   visibly larger. The family carries the distinction on its own. */
+   page. The two track each other on size, and both now sit on the CAPTION SIZE
+   step at 14px, the step the compact action also takes: terminal navigation and
+   compact controls are both operative chrome a reader clicks rather than prose
+   a reader reads. Keep this in step with the vendored .surface-footer rather
+   than letting the front door drift a step away from the family.
+
+   Sharing that size merges no roles. This footer stays terminal navigation: it
+   takes no pill geometry, no fill, no border, and none of surface-action.css's
+   interaction contract. It is not Caption either — never uppercased, and it
+   declares neither --fw-regular nor wide tracking. It stays JetBrains Mono with
+   NORMAL tracking: at this step wide tracking would add 1.12px between letters
+   — 0.08em of 14px — and mono's fixed advances already carry the terminal
+   distinction on their own, so normal tracking is what keeps the footer from
+   overstating it. */
 .footer {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: var(--space-5);
   font-family: var(--font-mono);
-  font-size: var(--fs-small);
+  font-size: var(--fs-caption);
   letter-spacing: var(--tracking-normal);
   color: var(--fg-2);
 }
