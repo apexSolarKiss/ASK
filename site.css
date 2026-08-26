@@ -390,15 +390,15 @@ html:has(> body > .shell) { overflow-x: clip; }
 }
 .portfolio { display: flex; flex-direction: column; gap: var(--space-7); }
 .gal-project { display: flex; flex-direction: column; gap: var(--space-3); }
-/* Title and its repository chips share this row. They are centered rather than
-   baseline-aligned: the chips are bordered pills, not text, so a shared text
-   baseline sits their box visibly low against the title. */
-/* The row gap is the WRAPPED case only — it is inert while the title and its
-   chip share a line, and it is the whole spacing when they do not. At a 390px
-   viewport this row needs 381px of inline space against 326px available, so on
-   a phone the chip drops below a 28px title; 8px left it crowding the heading.
-   --space-4 gives it room without touching the inline arrangement. */
+/* Title and its action group share this row. They are centered rather than
+   baseline-aligned: compact actions are bordered pills, not text, so a shared
+   text baseline sits their box visibly low against the title. */
+/* The parent row gap applies when the action group wraps below the title. */
 .gal-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-3); }
+/* Keep repo + explore controls inside one wrapping flex item. They may wrap
+   within the group at narrow widths, but neither can remain beside the title
+   while the other drops below. */
+.gal-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
 .gal-title {
   font-size: var(--fs-h3);
   font-weight: var(--fw-light);
