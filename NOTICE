@@ -16,6 +16,12 @@ design-system-ASK (github.com/apexSolarKiss/design-system-ASK):
                                  panels, vendored as a pinned byte-identical
                                  copy and not modified here. Presentation
                                  only: it owns no markup and no semantics
+  - spectral-state.css         — the spectral-state primitive, vendored as a
+                                 pinned byte-identical copy and not modified
+                                 here. It is carried by the CFW mind-map route
+                                 under apex-solar-kiss/consciousness-free-will/,
+                                 which requires its governed-state custom
+                                 properties
   - surface-action.css         — the shared compact-action visual contract,
                                  vendored as a pinned byte-identical copy and
                                  not modified here. It owns the base surface,
@@ -45,6 +51,13 @@ own markup and semantics, and adds instance-specific payload and layout
 adaptations — it does not add all of its own layout, and it defines no new
 tokens. The homepage is the explicit exception: it keeps its own composition and
 does not consume the shell, though it does consume both visual rules.
+
+One further route is a named exception: the CFW mind map at
+apex-solar-kiss/consciousness-free-will/ is a fixed full-viewport interactive
+application, not a scrolling document, and does not consume the shell. It
+carries ASK Tier 3 in its application bar and orientation footer and follows the
+design-system interactive-diagram family grammar. The exception is specific to
+that route; ordinary non-home content pages continue to consume the shell.
 
 When this site and design-system-ASK disagree on a foundation value, on the
 shell, or on a vendored visual rule, the canonical design-system-ASK file

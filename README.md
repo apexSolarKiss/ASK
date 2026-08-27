@@ -33,6 +33,14 @@ The 68 p5 sketch runners under `assets/asymptotic/p5/gallery/` are not content
 pages and are outside the shell: they are full-viewport canvas embeds loaded in
 iframes, with no site chrome by design.
 
+One top-level route is a **named full-viewport interactive-application
+exception**: `/apex-solar-kiss/consciousness-free-will/`, the CFW mind map over
+its typed relation atlas. It is a fixed full-viewport application rather than a
+scrolling document, so it does not consume `surface-shell`; it follows the
+design-system interactive-diagram family grammar and carries ASK Tier 3 in its
+application bar and its orientation footer. The exception applies only to this
+named route and creates no exemption for ordinary non-home content pages.
+
 **Two visual rules are inherited too.** `surface-panel.css` (the shared visual
 contract for live content panels) and `surface-action.css` (the shared
 compact-action contract) are vendored the same way — pinned, byte-identical, never
@@ -78,6 +86,7 @@ fonts/                vendored Inter + JetBrains Mono (OFL)
 assets/logo-ASK.*     vendored wordmark (svg primary; white + lavender-ASK png pairings)
 apex-solar-kiss/      native builder subpage — the object map (practice + two domain applications + the builder machine)
 apex-solar-kiss/design/  native design gateway — live design-system surfaces + retained external comp boards
+apex-solar-kiss/consciousness-free-will/  CFW mind map + typed relation atlas — a named full-viewport interactive-application exception to the shell; vendors spectral-state.css from design-system-ASK (pinned + byte-identical)
 askproduktion/        native creative-production subpage (Track A.1)
 asymptotic-system-key/  native artistic-practice subpage (Track A.2; per-category p5.js pages)
 asymptotic-system-key/lineage/  public-safe influence lineage (canon as substrate: readymade >> pop >> appropriation >> generative systems)
@@ -99,7 +108,9 @@ A reference implementation of the [ASK design family](https://github.com/apexSol
 it vendors the canonical foundations (tokens, fonts, wordmark), **the
 `surface-shell` pattern**, and **the `surface-panel` and `surface-action` visual
 rules**, then adds its own payload layout and instance adaptations around them.
-The shared page chrome is owned upstream, not here.
+The shared page chrome is owned upstream, not here. The CFW route named above is
+the one full-viewport application exception to that chrome, and it vendors one
+further design-system primitive, `spectral-state.css`, on the same terms.
 
 The homepage tier panels and every page's compact controls inherit their
 presentation from the two vendored visual rules. The split is not identical

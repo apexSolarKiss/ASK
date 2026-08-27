@@ -881,6 +881,15 @@ When operating from the ASK/control-surface ecology, also read the current ASK g
   vendored shell; the homepage is the explicit composition exception.
   Re-sync vendored files from `design-system-ASK`; do not make this site the
   upstream source.
+- **Named full-viewport application exception.** The top-level CFW mind-map /
+  relation-atlas route, `/apex-solar-kiss/consciousness-free-will/`, is a named
+  full-viewport interactive-application exception to `surface-shell`. It carries
+  ASK Tier 3 in its application bar and orientation footer and follows the
+  design-system interactive-diagram family grammar. The exception applies only to
+  this named route and creates no exemption for ordinary non-home content pages,
+  which continue to consume the vendored shell. The route vendors
+  `spectral-state.css` from `design-system-ASK` under the same pinned,
+  byte-identical, never-hand-edited terms as every other vendored file.
 - **Tier 3 origin case.** `ASK` is ASK-the-entity. It carries ASK’s own Tier 3 as the origin/reference case; it is not a downstream child-inheritance proof.
 - **Production caution.** Treat even docs/CSS/asset changes as production-affecting until verified. Check both light and dark modes for any visual change.
 - **Public-surface restraint.** Do not add private-context details, operator-only paths, unpublished strategy, or Notion-replacement claims unless ASK explicitly authorizes the public wording.

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>consciousness + free will // mind map // A-S-K.studio</title>
+  <meta name="description" content="Consciousness + free will — a mind map over a typed relation atlas. Release 1.0: a structured survey of 548 objects and 479 evidence owners. No question wholly answered.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="canonical" href="https://a-s-k.studio/apex-solar-kiss/consciousness-free-will/">
+  <meta property="og:title" content="consciousness + free will // mind map">
+  <meta property="og:description" content="A mind map over a typed relation atlas. Release 1.0 — a structured survey. No question wholly answered.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://a-s-k.studio/apex-solar-kiss/consciousness-free-will/">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta property="og:image" content="https://a-s-k.studio/apex-solar-kiss/consciousness-free-will/social-preview.png">
+  <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Consciousness and free will mind map on the ASK dark surface">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://a-s-k.studio/apex-solar-kiss/consciousness-free-will/social-preview.png">
+  <meta name="twitter:title" content="consciousness + free will // mind map">
+  <meta name="twitter:description" content="A mind map over a typed relation atlas. Release 1.0 — a structured survey. No question wholly answered.">
+  <!-- Foundations come from the ASK root, already vendored there from
+       design-system-ASK. This release adds NO second copy of the tokens, the
+       fonts, the shell, the panel rule or the action rule. spectral-state.css is
+       the one primitive the root does not yet carry, so it is vendored here,
+       byte-identical to its design-system-ASK owner and never hand-edited.
+       No CDN, no runtime fetch, no webfont host: the page renders from local
+       files only. -->
+  <link rel="stylesheet" href="/colors_and_type.css">
+  <link rel="stylesheet" href="/surface-action.css">
+  <link rel="stylesheet" href="./spectral-state.css">
+  <link rel="stylesheet" href="./cfw-atlas.css">
+  <link rel="stylesheet" href="./cfw-release.css">
+</head>
+<body>
+<a class="skip" href="#orient-title" id="skip">skip to what this research concluded</a>
+<div class="shell">
+
+  <header class="bar">
+    <a class="mark rel-mark" href="/apex-solar-kiss/" aria-label="apex solar kiss">
+      <img class="rel-mark-light" src="/assets/logo-ASK-white.png" alt="" aria-hidden="true" width="2160" height="974">
+      <img class="rel-mark-dark" src="/assets/logo-ASK-lavender-ASK.png" alt="" aria-hidden="true" width="2160" height="974">
+    </a>
+    <div class="title-block">
+      <h1 class="t">consciousness + free will</h1>
+      <p class="s">mind map // typed relation atlas</p>
+    </div>
+    <div class="spacer"></div>
+    <button class="atlasbtn rel-btn" id="orientbtn" type="button" aria-expanded="false"
+            aria-controls="orient">what this concluded</button>
+    <button class="atlasbtn" id="atlasbtn" type="button" aria-expanded="false"
+            aria-controls="atlas"><span class="dot2"></span>atlas</button>
+    <button class="themer" id="themer" type="button" aria-label="switch theme">dark</button>
+    <div class="stamp">
+      <span class="k">release 1.0</span><br>
+      structured survey // family generation v7
+    </div>
+  </header>
+
+  <main class="canvas-wrap" id="canvaswrap">
+    <!-- ACCESSIBILITY MODEL A. The rendered graph is a visual projection of data that
+         is fully available in structured form: the atlas search resolves all 1,027
+         objects by name or exact identifier, and the inspector reports each one in
+         text. The SVG is therefore marked presentational rather than given 548
+         undifferentiated tab stops, which would be a worse route to the same content. -->
+    <p class="sr-only">The mind map is a visual projection. Every object it draws is
+    reachable in text: use the atlas control to search all 1,027 objects by name or by
+    exact identifier, and the inspector reports the selected object in full.</p>
+    <div id="stage" role="presentation" aria-hidden="true"></div>
+
+    <div class="glass atlas-panel" id="atlas" aria-hidden="true" aria-label="atlas controls"></div>
+    <div class="glass inspector" id="insp"></div>
+    <div class="glass legend" id="legend" role="note" aria-label="map legend — colour, line and shape encoding"></div>
+
+    <div class="glass hud">
+      <button id="zout" type="button" title="zoom out" aria-label="zoom out">&minus;</button>
+      <span class="pct" id="pct" aria-label="zoom level">100%</span>
+      <button id="zin" type="button" title="zoom in" aria-label="zoom in">+</button>
+      <button id="zfit" type="button" title="fit" aria-label="fit">&#10530;</button>
+      <span class="lod" id="lod" aria-label="level of detail">regions</span>
+      <span class="fsep"></span>
+      <span class="fstate" id="filterstate" role="status" aria-label="filter state">no filter</span>
+    </div>
+
+    <div class="glass cfw-caption">
+      The mind map is the reading surface; the typed relation atlas is the machinery
+      underneath it.<br>
+      <b>What the geometry does not claim.</b> Radial distance encodes projection level
+      only; sector width encodes corpus weight only, never importance and never
+      authority; angular placement is compositional, and two sectors that touch carry
+      <b>no</b> relation to each other. Governed edges are the only relation encoding on
+      this surface.<br>
+      <b>Level of detail is not filtering.</b> Zoom reveals concept names, then
+      identifiers; all 548 primary objects stay on the map. A filter is explicit, bounds
+      the map to a section, and reports its census. The 479 evidence owners open from
+      <b>atlas</b> by exact identifier and never enter the graph.
+    </div>
+
+    <div class="corner-tick tl" aria-hidden="true"></div><div class="corner-tick tr" aria-hidden="true"></div>
+    <div class="corner-tick bl" aria-hidden="true"></div><div class="corner-tick br" aria-hidden="true"></div>
+  </main>
+
+  <!-- ORIENTATION. On a small screen this is the landing surface and the map is
+       entered deliberately; at any width it opens from "what this concluded".
+       Its content is rendered from the published payload, so the six rulings
+       cannot drift from the data they describe. -->
+  <section class="orient" id="orient" aria-label="what the research concluded" aria-hidden="true">
+    <div class="orient-inner">
+      <header class="orient-head">
+        <p class="orient-kicker">apex solar kiss // research artifacts</p>
+        <h1 class="orient-title" id="orient-title" tabindex="-1">consciousness + free will</h1>
+        <p class="orient-sub">mind map // typed relation atlas</p>
+        <button class="orient-close" id="orientclose" type="button">close and return to the map</button>
+        <p class="orient-status">
+          <span class="tag">release 1.0</span>
+          <span class="tag">structured survey</span>
+          <span class="tag">no question wholly answered</span>
+          <span class="tag">family generation v7</span>
+        </p>
+      </header>
+
+      <div class="orient-prose">
+        <p>A survey of what the obtained literature does and does not settle about
+        consciousness and free will, and where those questions touch ASK's own
+        source-of-intent architecture. It is <b>a structured survey, not method
+        doctrine</b>. Where ASK has ruled, the ruling is labelled as ASK's. Where ASK
+        did not rule, the question stays open and is shown as open.</p>
+      </div>
+
+      <h2 class="orient-h">what the research actually concluded</h2>
+      <p class="orient-note">Six held questions. None is wholly answered; two carry a
+      conditional ruling, one carries a partial ruling, and three are re-held in
+      sharper form.</p>
+      <ol class="rulings" id="rulings"></ol>
+
+      <h2 class="orient-h">what is in it</h2>
+      <ul class="counts" id="counts"></ul>
+
+      <h2 class="orient-h">look something up</h2>
+      <p class="orient-note">Search the objects and the evidence owners by name or by
+      exact identifier.</p>
+      <div class="orient-search">
+        <input id="oq" type="search" autocomplete="off" spellcheck="false"
+               placeholder="e.g. bounded discretion, CFW-Q-003, Dworkin"
+               aria-label="search objects and evidence owners">
+      </div>
+      <div class="orient-results" id="ores" role="region" aria-live="polite"></div>
+
+      <div class="orient-enter">
+        <button class="chip surface-action" id="entermap" type="button">explore the map &gt;&gt;</button>
+        <p class="orient-note">The full map is an interactive canvas: pan, zoom, filter
+        and inspect. It is built for a wide screen.</p>
+      </div>
+
+      <footer class="orient-foot"><nav aria-label="site">
+        <a href="/apex-solar-kiss/">apex solar kiss</a>
+        <a href="/">A-S-K.studio</a>
+        <a href="https://github.com/apexSolarKiss" target="_blank" rel="noopener">GitHub</a>
+      </nav></footer>
+    </div>
+  </section>
+
+</div>
+
+<div id="live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+<script src="./diagrams-fit.js"></script>
+<script src="./atlas-data.public.js"></script>
+<script src="./cfw-projection.js"></script>
+<script src="./cfw-controls.js"></script>
+<script src="./cfw-atlas.js"></script>
+<script src="./cfw-release.js"></script>
+</body>
+</html>
