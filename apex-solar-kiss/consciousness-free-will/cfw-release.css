@@ -1,0 +1,226 @@
+/* cfw-release.css — the ASK-local release layer.
+ *
+ * The engine's own stylesheet (cfw-atlas.css) is vendored byte-identical from the
+ * approved internal package and is NOT edited here. This file adds only what the
+ * public release needs: the ASK wordmark in the bar, the orientation surface, and
+ * the responsive contract. It defines NO token: every colour, size and spacing
+ * value below resolves to a design-system-ASK custom property.
+ *
+ * RESPONSIVE CONTRACT
+ *   wide    >= 1024   full interactive map + atlas; orientation on demand
+ *   tablet  768-1023  full map; legend and caption collapsed by default; touch
+ *   small   <  768    orientation IS the landing surface; the map is entered
+ *                     deliberately, never shrunk and presented as responsive
+ */
+
+/* ---- ASK wordmark in the engine bar ------------------------------------- */
+/* Both marks are img children of .rel-mark, so the geometry rule must NOT set
+   `display` — at (0,1,1) it would outrank the (0,1,0) swap selectors and paint
+   both. Geometry here, visibility on the mode selectors only. */
+.rel-mark { display: inline-flex; align-items: center; height: 22px; flex: none; }
+.rel-mark img { height: 100%; width: auto; }
+.rel-mark .rel-mark-light { display: block; }
+.rel-mark .rel-mark-dark  { display: none; }
+@media (prefers-color-scheme: dark) {
+  .rel-mark .rel-mark-light { display: none; }
+  .rel-mark .rel-mark-dark  { display: block; }
+}
+html[data-theme="dark"]  .rel-mark .rel-mark-light { display: none; }
+html[data-theme="dark"]  .rel-mark .rel-mark-dark  { display: block; }
+html[data-theme="light"] .rel-mark .rel-mark-light { display: block; }
+html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
+
+/* ---- orientation surface ------------------------------------------------ */
+.orient {
+  position: fixed; inset: 0; z-index: 40;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  background: var(--bg-gradient); background-attachment: fixed;
+  display: none;
+}
+.orient[data-open="1"] { display: block; }
+.orient-inner { max-width: 68ch; margin: 0 auto; padding: var(--space-6) var(--space-5) var(--space-7); }
+
+.orient-kicker {
+  font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: var(--fw-light);
+  letter-spacing: var(--tracking-wide); text-transform: uppercase;
+  color: var(--fg-2); margin: 0 0 var(--space-3);
+}
+.orient-title {
+  font-size: var(--fs-h1); font-weight: var(--fw-light);
+  letter-spacing: var(--tracking-tight); line-height: var(--lh-heading);
+  margin: 0 0 var(--space-2); color: var(--fg-1);
+}
+.orient-sub {
+  font-family: var(--font-mono); font-size: var(--fs-body); font-weight: var(--fw-light);
+  color: var(--fg-2); margin: 0 0 var(--space-4);
+}
+.orient-status { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 var(--space-5); }
+.orient-status .tag {
+  font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: var(--fw-light);
+  letter-spacing: var(--tracking-normal); text-transform: uppercase;
+  color: var(--fg-2); border: 1px solid var(--line-2);
+  border-radius: var(--radius-pill); padding: 2px var(--space-3);
+}
+.orient-prose p, .orient-note { color: var(--fg-2); line-height: var(--lh-body); }
+.orient-prose p { margin: 0 0 var(--space-4); color: var(--fg-1); }
+.orient-note { font-size: var(--fs-small); margin: 0 0 var(--space-4); }
+.orient-h {
+  font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: var(--fw-light);
+  letter-spacing: var(--tracking-wide); text-transform: uppercase;
+  color: var(--fg-2); margin: var(--space-6) 0 var(--space-3);
+}
+
+/* ---- the six rulings ---------------------------------------------------- */
+.rulings { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); }
+.rulings li { border: 1px solid var(--line-2); border-radius: var(--radius-2); padding: var(--space-4); }
+.rulings .rq {
+  font-family: var(--font-mono); font-size: var(--fs-caption);
+  color: var(--fg-3); letter-spacing: var(--tracking-normal);
+}
+.rulings .rtitle {
+  display: block; margin: var(--space-2) 0; color: var(--fg-1);
+  font-size: var(--fs-body); line-height: var(--lh-heading);
+}
+.rulings .rdisp {
+  display: inline-block; font-family: var(--font-mono); font-size: var(--fs-caption);
+  text-transform: uppercase; letter-spacing: var(--tracking-normal);
+  color: var(--fg-2); border: 1px solid var(--line-2);
+  border-radius: var(--radius-pill); padding: 1px var(--space-3); margin-bottom: var(--space-3);
+}
+.rulings dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: var(--space-2) var(--space-3); }
+.rulings dt {
+  font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase;
+  letter-spacing: var(--tracking-normal); color: var(--fg-3); white-space: nowrap;
+}
+.rulings dd { margin: 0; color: var(--fg-2); font-size: var(--fs-small); line-height: var(--lh-body); }
+.rulings .ask-note { margin-top: var(--space-3); font-size: var(--fs-caption); color: var(--fg-3); }
+
+/* ---- counts ------------------------------------------------------------- */
+.counts { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.counts li { display: flex; gap: var(--space-3); align-items: baseline; }
+.counts .n {
+  font-family: var(--font-mono); font-size: var(--fs-body); color: var(--fg-1);
+  min-width: 5ch; text-align: right;
+}
+.counts .w { color: var(--fg-2); font-size: var(--fs-small); }
+
+/* ---- search ------------------------------------------------------------- */
+.orient-search input {
+  width: 100%; box-sizing: border-box;
+  font-family: var(--font-mono); font-size: var(--fs-small); color: var(--fg-1);
+  background: transparent; border: 1px solid var(--line-2);
+  border-radius: var(--radius-2); padding: var(--space-3);
+}
+.orient-search input:focus-visible { outline: 2px solid var(--fg-2); outline-offset: 2px; }
+.orient-results { margin-top: var(--space-3); display: flex; flex-direction: column; gap: var(--space-2); }
+.orient-results .ores-r {
+  border: 1px solid var(--line-2); border-radius: var(--radius-2);
+  padding: var(--space-3); font-size: var(--fs-small); color: var(--fg-2);
+}
+.orient-results .ores-id {
+  font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-3);
+  display: block; margin-bottom: 2px;
+}
+.orient-results .ores-meta { display: block; margin-top: 4px; color: var(--fg-3); font-size: var(--fs-caption); }
+.orient-results .ores-none { color: var(--fg-3); font-size: var(--fs-small); }
+
+/* ---- enter + footer ----------------------------------------------------- */
+.orient-enter { margin-top: var(--space-6); }
+.orient-enter .orient-note { margin-top: var(--space-3); }
+.orient-foot {
+  margin-top: var(--space-7); padding-top: var(--space-4);
+  border-top: 1px solid var(--line-2);
+  display: flex; flex-wrap: wrap; gap: var(--space-4);
+  font-family: var(--font-mono); font-size: var(--fs-caption);
+}
+.orient-foot a { color: var(--fg-2); text-decoration: none; }
+.orient-foot a:hover { color: var(--fg-1); }
+
+/* ---- tablet: overlays collapsed by default ------------------------------ */
+@media (max-width: 1023px) and (min-width: 768px) {
+  .cfw-caption { display: none; }
+  .legend { display: none; }
+  body[data-overlays="1"] .cfw-caption,
+  body[data-overlays="1"] .legend { display: block; }
+}
+
+/* ---- small screen: orientation is the landing surface ------------------- */
+@media (max-width: 767px) {
+  .cfw-caption, .legend { display: none; }
+  .bar .stamp { display: none; }
+  .bar .title-block .s { display: none; }
+  /* the map is present but inert until it is entered deliberately */
+  body:not([data-map="1"]) .canvas-wrap { visibility: hidden; }
+  .orient-inner { padding: var(--space-5) var(--space-4) var(--space-6); }
+  .orient-title { font-size: var(--fs-h2); }
+  .rulings dl { grid-template-columns: 1fr; gap: var(--space-1) 0; }
+  .rulings dt { margin-top: var(--space-2); }
+}
+@media (min-width: 768px) {
+  /* above small, entering the map is not a mode: the map is already the surface */
+  .orient-enter { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orient { scroll-behavior: auto; }
+}
+
+/* The orientation covers the whole viewport, so while it is open the controls behind
+   it are made inert: tabbing must not land on a button the reader cannot see. That
+   removes the bar's toggle from the cycle, so the overlay carries its own way out.
+   On a small screen the orientation IS the landing surface and "explore the map"
+   already plays that role, so the close control appears only once the map exists. */
+.orient-close {
+  display: none; margin: 0 0 var(--space-4);
+  font-family: var(--font-mono); font-size: var(--fs-caption);
+  letter-spacing: var(--tracking-wide); text-transform: uppercase;
+  background: none; color: var(--fg-2); cursor: pointer;
+  border: 1px solid var(--line-1); border-radius: var(--radius-pill);
+  padding: var(--space-2) var(--space-3);
+}
+.orient-close:hover { color: var(--fg-1); }
+.orient-close:focus-visible { outline: 2px solid var(--fg-1); outline-offset: 2px; }
+@media (min-width: 768px) { .orient-close { display: inline-block; } }
+body[data-map="1"] .orient-close { display: inline-block; }
+
+/* ---- source links in the inspector --------------------------------------
+   The inspector now renders locators as either a "source link" or a "citation",
+   and both sit in the same monospace row. Underline carries that difference
+   without introducing a colour token the design system does not define.
+   Focus is already handled by `.inspector :focus-visible` in cfw-atlas.css. */
+.inspector a.loc { color: var(--fg-1); text-decoration: underline;
+                   text-underline-offset: 2px; text-decoration-thickness: 1px; }
+.inspector a.loc:hover { color: var(--fg-high-contrast); }
+
+/* ---- accessibility structure --------------------------------------------
+   The bar title is the document's single h1 and the subtitle a paragraph, so
+   neither may inherit the user agent's block margins inside the bar flex row.
+   (The h1 previously lived inside the orientation surface, which is display:none
+   above small — a wide screen reader met a page with no h1 at all.) */
+.bar .title-block .t, .bar .title-block .s { margin: 0; }
+
+/* Skip link: the first stop for a keyboard user, straight to the prose account of
+   what the research concluded. Visible only while focused. */
+.skip {
+  position: absolute; left: var(--space-3); top: var(--space-3); z-index: 100;
+  transform: translateY(-200%);
+  font-family: var(--font-mono); font-size: var(--fs-small);
+  background: var(--ask-surface); color: var(--fg-1);
+  border: 1px solid var(--line-1); border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3); text-decoration: none;
+}
+.skip:focus { transform: none; outline: 2px solid var(--fg-1); outline-offset: 2px; }
+
+/* Orientation search results are controls: they open the record in the inspector. */
+.orient-results button.ores-r {
+  display: block; width: 100%; text-align: left; font: inherit; color: inherit;
+  background: none; border: 0; cursor: pointer;
+}
+.orient-results button.ores-r:hover .ores-title { color: var(--fg-high-contrast); }
+.orient-results button.ores-r:focus-visible { outline: 2px solid var(--fg-1); outline-offset: 2px; }
+
+/* Opening the orientation moves focus to its heading so a screen reader lands on the
+   surface rather than on the button behind it. The heading is not a control, and a
+   mouse user who just clicked should not be shown a focus ring on a title — the
+   full-viewport surface change already says where they are. */
+.orient-title:focus { outline: none; }
