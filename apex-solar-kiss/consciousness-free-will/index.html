@@ -26,12 +26,18 @@
        the one primitive the root does not yet carry, so it is vendored here,
        byte-identical to its design-system-ASK owner and never hand-edited.
        No CDN, no runtime fetch, no webfont host: the page renders from local
-       files only. -->
+       files only.
+
+       The local references below are ABSOLUTE rather than directory-relative.
+       The host serves this route at its extensionless path and redirects the
+       trailing-slash form away, so a directory-relative reference resolves one
+       level too high and 404s. An absolute path does not depend on which of the
+       two URL shapes the reader lands on. -->
   <link rel="stylesheet" href="/colors_and_type.css">
   <link rel="stylesheet" href="/surface-action.css">
-  <link rel="stylesheet" href="./spectral-state.css">
-  <link rel="stylesheet" href="./cfw-atlas.css">
-  <link rel="stylesheet" href="./cfw-release.css">
+  <link rel="stylesheet" href="/apex-solar-kiss/consciousness-free-will/spectral-state.css">
+  <link rel="stylesheet" href="/apex-solar-kiss/consciousness-free-will/cfw-atlas.css">
+  <link rel="stylesheet" href="/apex-solar-kiss/consciousness-free-will/cfw-release.css">
 </head>
 <body>
 <a class="skip" href="#orient-title" id="skip">skip to what this research concluded</a>
@@ -165,11 +171,11 @@
 
 <div id="live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-<script src="./diagrams-fit.js"></script>
-<script src="./atlas-data.public.js"></script>
-<script src="./cfw-projection.js"></script>
-<script src="./cfw-controls.js"></script>
-<script src="./cfw-atlas.js"></script>
-<script src="./cfw-release.js"></script>
+<script src="/apex-solar-kiss/consciousness-free-will/diagrams-fit.js"></script>
+<script src="/apex-solar-kiss/consciousness-free-will/atlas-data.public.js"></script>
+<script src="/apex-solar-kiss/consciousness-free-will/cfw-projection.js"></script>
+<script src="/apex-solar-kiss/consciousness-free-will/cfw-controls.js"></script>
+<script src="/apex-solar-kiss/consciousness-free-will/cfw-atlas.js"></script>
+<script src="/apex-solar-kiss/consciousness-free-will/cfw-release.js"></script>
 </body>
 </html>
