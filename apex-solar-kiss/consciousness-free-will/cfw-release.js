@@ -11,16 +11,46 @@
   var TABLET = window.matchMedia("(min-width: 768px) and (max-width: 1023px)");
   var D = window.CFW_ATLAS;
 
-  /* ---- boot the vendored engine ---------------------------------------- */
+  /* ---- theme: a three-state CURRENT-MODE selector ------------------------
+     auto >> light >> dark >> auto. The visible word always names the state the
+     surface is IN, never the state a click would move to — which is what the
+     engine's own two-state control did, so it read "light" while painting dark.
+
+     AUTO removes data-theme entirely and lets colors_and_type.css resolve the
+     mode from prefers-color-scheme under its :not([data-theme]) guard. It is the
+     default on every load: an explicit light or dark is a deliberate override for
+     as long as the reader is here, not a new default, so nothing is persisted and
+     nothing is read back. The engine's legacy `cfw-theme` localStorage key is left
+     alone rather than cleaned up — it simply stops being consulted.
+
+     This reproduces the design-system style guide's ruled behaviour locally. That
+     controller declares itself style-guide-only and is deliberately NOT vendored,
+     and the vendored map engine is not modified to carry it. */
   var themer = document.getElementById("themer");
-  CFWAtlas.initTheme(themer);
-  /* initTheme writes the action word ("light"/"dark") as the button text. On its own
-     that does not say whether it names the current theme or the one it switches to. */
-  function themeLabel() {
-    if (themer) themer.setAttribute("aria-label", "switch to " + themer.textContent.trim() + " theme");
-  }
-  themeLabel();
-  if (themer) themer.addEventListener("click", function () { setTimeout(themeLabel, 0); });
+  var themeLbl = document.getElementById("themelabel");
+  (function () {
+    var STATES = ["auto", "light", "dark"];
+    var root = document.documentElement;
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    var state = "auto";
+    function apply(next) {
+      state = next;
+      if (state === "auto") root.removeAttribute("data-theme");
+      else root.setAttribute("data-theme", state);
+      if (themeLbl) themeLbl.textContent = state;
+    }
+    if (themer) themer.addEventListener("click", function () {
+      apply(STATES[(STATES.indexOf(state) + 1) % STATES.length]);
+    });
+    /* while auto is active an OS flip changes the painted mode with no click; the
+       label stays "auto" by design, but the attribute state must stay coherent */
+    var onSystem = function () { if (state === "auto") apply("auto"); };
+    if (mq.addEventListener) mq.addEventListener("change", onSystem);
+    else if (mq.addListener) mq.addListener(onSystem);
+    apply("auto");
+  })();
+
+  /* ---- boot the vendored engine ---------------------------------------- */
   var P = CFWProjection.build(D);
   CFWAtlas.mount({ projection: P });
 
