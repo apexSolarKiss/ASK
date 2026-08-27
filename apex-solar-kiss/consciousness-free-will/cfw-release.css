@@ -224,3 +224,30 @@ body[data-map="1"] .orient-close { display: inline-block; }
    mouse user who just clicked should not be shown a focus ring on a title — the
    full-viewport surface change already says where they are. */
 .orient-title:focus { outline: none; }
+
+/* ---- theme selector -----------------------------------------------------
+   Conformed to the design-system style guide's theme-selector grammar: a quiet
+   lowercase mono caption in a glass pill, not the uppercase transparent chip the
+   engine ships. ASK asked for the compact form, so the visible word "theme" is
+   dropped and only the glyph and the current state show; the word survives as
+   screen-reader-only text so the control still has a name rather than announcing
+   a bare "auto". These override the vendored `.bar .themer` rule, which is not
+   hand-edited here. */
+.bar .themer {
+  display: inline-flex; align-items: baseline; gap: var(--space-2);
+  font-family: var(--font-mono); font-size: var(--fs-caption);
+  letter-spacing: var(--tracking-normal);
+  text-transform: none;                 /* quiet control — lowercase in every mode */
+  color: var(--fg-2);
+  background: var(--surface-glass);
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer; white-space: nowrap;
+  transition:
+    opacity var(--dur-2) var(--ease-out),
+    transform var(--dur-1) var(--ease-out);
+}
+.bar .themer:hover { opacity: 0.92; background: var(--surface-glass); }
+.bar .themer:active { transform: scale(0.97); }
+.bar .themer .themer-g { font-size: 1.05em; line-height: 1; }
