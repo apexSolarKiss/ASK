@@ -662,6 +662,7 @@ html:has(> body > .shell) { overflow-x: clip; }
    promoting a layer this wide would cost mobile memory for nothing. */
 .ptx-track {
   display: flex;
+  align-items: stretch;            /* the default, declared because .ptx-half depends on it */
   height: 100%;
   width: max-content;
   animation: ptx-scroll 560s linear infinite;
@@ -677,7 +678,19 @@ html:has(> body > .shell) { overflow-x: clip; }
 .ptx-half {
   flex: 0 0 5600px;
   width: 5600px;
-  height: 100%;
+  /* NOT `height: 100%`. This <pre> is an ORTHOGONAL flex item — its inline axis
+     runs down the page — and iOS WebKit does not resolve that percentage against
+     the track, falling back to a content-derived cross size instead. Measured on
+     real devices against a correct 846.59px track: 676px in Chrome-iOS, 714px in
+     Safari. The shortfall pulled the text edge up by exactly that much, which is
+     the whole defect.
+
+     An explicit cross size ALSO opts a flex item out of stretch — the mechanism
+     that sizes it correctly — so this is a replacement, not an addition. `auto`
+     plus stretch lets flex assign the track's already-correct height, verified
+     on both iPhone browsers. */
+  height: auto;
+  align-self: stretch;
   margin: 0;
   writing-mode: sideways-lr;
   white-space: pre;                /* the file's own breaks; nothing wraps */
