@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PTX marquee // WebKit support probe</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; padding: 20px 16px 60px;
+    background: #0A090C; color: #D4C6E1;
+    font: 15px/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  h1 { font-size: 15px; font-weight: 400; letter-spacing: .08em;
+       text-transform: uppercase; color: rgba(212,198,225,.72); margin: 0 0 18px; }
+  h2 { font-size: 13px; font-weight: 400; letter-spacing: .06em;
+       text-transform: uppercase; color: rgba(212,198,225,.55);
+       margin: 26px 0 8px; }
+  .verdict { font-size: 20px; padding: 14px; border-radius: 10px; margin: 0 0 6px; }
+  .ok   { background: rgba(0,190,255,.14);  border: 1px solid #00BEFF; }
+  .bad  { background: rgba(255,0,255,.14);  border: 1px solid #FF00FF; }
+  .note { color: rgba(212,198,225,.62); margin: 6px 0 0; font-size: 13px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  td { padding: 5px 0; border-bottom: 1px solid rgba(212,198,225,.12);
+       vertical-align: top; }
+  td:last-child { text-align: right; color: rgba(212,198,225,.72);
+                  word-break: break-all; padding-left: 10px; }
+  .band { height: 150px; overflow: hidden; background: #151318;
+          border: 1px solid rgba(212,198,225,.22); border-radius: 8px;
+          display: flex; align-items: flex-end; padding: 0 6px; }
+  .band span { flex: 0 0 auto; width: 11px; white-space: pre;
+               font: 300 11px/1 ui-monospace, "SF Mono", Menlo, monospace;
+               color: rgba(212,198,225,.85); margin: 0; }
+  /* A — what the tuned prototype uses today */
+  #a span { writing-mode: sideways-lr; }
+  /* B — the universally-supported equivalent */
+  #b span { writing-mode: vertical-rl; transform: rotate(180deg); }
+  /* C — same as A, but its columns are in the markup, not built by script */
+  #c span { writing-mode: sideways-lr; }
+</style>
+</head>
+<body>
+<h1>PTX marquee // WebKit support probe</h1>
+
+<div id="verdict" class="verdict">measuring…</div>
+<p class="note">The tuned prototype's whole rotation depends on
+<code>writing-mode: sideways-lr</code>. WebKit only shipped it in Safari 18.4.
+If it is unsupported the declaration is dropped, every column collapses to a
+7&nbsp;px sliver, and the marquee reads as absent — which is the symptom.</p>
+
+<h2>Support</h2>
+<table id="support"></table>
+
+<h2>A — sideways-lr &nbsp;(what the prototype uses)</h2>
+<div class="band" id="a"></div>
+<p class="note">Should read bottom-to-top, every column flush to the bottom edge.</p>
+
+<h2>B — vertical-rl + rotate(180deg) &nbsp;(fallback)</h2>
+<div class="band" id="b"></div>
+<p class="note">Should look identical to A. If A is blank or scrambled and B is
+correct, the fallback is the fix.</p>
+
+<h2>C — no JavaScript at all</h2>
+<div class="band" id="c"><span># sample-document-for-layout-testing</span><span></span><span>speaker one &gt;&gt;</span><span></span><span>This paragraph exists only to give the column a realistic length.</span><span></span><span>**a bulleted group**</span><span>- first item, short</span><span>- second item, somewhat longer than the first</span><span></span><span>speaker two &gt;&gt;</span><span></span><span>A second turn, so the band shows more than one rhythm of line length.</span><span></span><span>speaker three &gt;&gt;</span><span></span><span>A third turn, shorter.</span><span></span><span>/// /// ///</span><span></span><span># sample-document-for-layout-testing</span><span></span><span>speaker one &gt;&gt;</span><span></span><span>This paragraph exists only to give the column a realistic length.</span><span></span><span>**a bulleted group**</span><span>- first item, short</span><span>- second item, somewhat longer than the first</span><span></span><span>speaker two &gt;&gt;</span><span></span><span>A second turn, so the band shows more than one rhythm of line length.</span><span></span><span>speaker three &gt;&gt;</span><span></span><span>A third turn, shorter.</span><span></span><span>/// /// ///</span><span></span></div>
+<p class="note"><strong>This band is plain HTML — no script builds it.</strong>
+The tuned prototype builds its 800 columns in JavaScript, so if a viewer blocks
+scripts the marquee is empty no matter what the CSS does. Read it this way:</p>
+<table>
+  <tr><td>C fine, A and B empty</td><td>JavaScript is blocked — that is the cause</td></tr>
+  <tr><td>C scrambled or blank too</td><td>the writing-mode is unsupported</td></tr>
+  <tr><td>all three fine</td><td>neither — report what you see</td></tr>
+</table>
+<p class="note">If the box at the very top still reads <em>measuring…</em>, no
+script ran on this page at all.</p>
+
+<h2>This browser</h2>
+<table id="env"></table>
+<noscript><p class="note" style="color:#FF00FF">JavaScript is disabled or blocked
+here, so the support table and the verdict above are empty. Band C above is the
+one that still tells you something.</p></noscript>
+
+<script>
+(function () {
+  var LINES = [
+    '# sample-document-for-layout-testing',
+    '',
+    'speaker one >>',
+    '',
+    'This paragraph exists only to give the column a realistic length.',
+    '',
+    '**a bulleted group**',
+    '- first item, short',
+    '- second item, somewhat longer than the first',
+    '',
+    'speaker two >>',
+    '',
+    'A second turn, so the band shows more than one rhythm of line length.',
+    '',
+    'speaker three >>',
+    '',
+    'A third turn, shorter.',
+    '',
+    '/// /// ///',
+    ''
+  ];
+  ['a', 'b'].forEach(function (id) {
+    var box = document.getElementById(id), f = document.createDocumentFragment();
+    for (var r = 0; r < 6; r++) {
+      for (var i = 0; i < LINES.length; i++) {
+        var s = document.createElement('span');
+        s.textContent = LINES[i];
+        f.appendChild(s);
+      }
+    }
+    box.appendChild(f);
+  });
+
+  function row(t, k, v, good) {
+    var tr = document.createElement('tr');
+    var a = document.createElement('td'); a.textContent = k;
+    var b = document.createElement('td'); b.textContent = v;
+    if (good === true)  b.style.color = '#00BEFF';
+    if (good === false) b.style.color = '#FF00FF';
+    tr.appendChild(a); tr.appendChild(b); t.appendChild(tr);
+  }
+
+  var sup = document.getElementById('support');
+  var checks = [
+    ['writing-mode: sideways-lr', 'sideways-lr'],
+    ['writing-mode: sideways-rl', 'sideways-rl'],
+    ['writing-mode: vertical-lr', 'vertical-lr'],
+    ['writing-mode: vertical-rl', 'vertical-rl']
+  ];
+  var sideways = false;
+  checks.forEach(function (c) {
+    var ok = CSS.supports('writing-mode', c[1]);
+    if (c[1] === 'sideways-lr') sideways = ok;
+    row(sup, c[0], ok ? 'SUPPORTED' : 'NOT SUPPORTED', ok);
+  });
+
+  /* Support queries can lie. Measure it: with sideways-lr a one-character
+     column is TALLER than it is wide. If the declaration was dropped, the
+     span lays out horizontally and that stops being true. */
+  var probe = document.createElement('span');
+  probe.textContent = 'ABCDEFGHIJ';
+  probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;' +
+                        'font:300 11px/1 monospace;writing-mode:sideways-lr;';
+  document.body.appendChild(probe);
+  var r = probe.getBoundingClientRect();
+  var rotated = r.height > r.width;
+  probe.remove();
+  row(sup, 'measured: box is rotated', rotated ? 'YES' : 'NO — laid out flat', rotated);
+
+  var v = document.getElementById('verdict');
+  if (sideways && rotated) {
+    v.className = 'verdict ok';
+    v.textContent = 'sideways-lr WORKS here. If the marquee is still missing, the cause is something else.';
+  } else {
+    v.className = 'verdict bad';
+    v.textContent = 'sideways-lr is NOT supported here. That fully explains the missing marquee. The fallback in panel B is the fix.';
+  }
+
+  var env = document.getElementById('env');
+  var m = navigator.userAgent.match(/OS (\d+[_\d]*) like Mac OS X/);
+  row(env, 'iOS / iPadOS', m ? m[1].replace(/_/g, '.') : 'not an iOS UA');
+  row(env, 'Safari version',
+      (navigator.userAgent.match(/Version\/([\d.]+)/) || [null, 'n/a'])[1]);
+  row(env, 'viewport', innerWidth + ' x ' + innerHeight +
+      '  @' + (devicePixelRatio || 1) + 'x');
+  row(env, 'user agent', navigator.userAgent);
+})();
+</script>
+</body>
+</html>
