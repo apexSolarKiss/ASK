@@ -71,7 +71,12 @@
 }
 
 /* ---------- Hero ---------- */
-.hero { text-align: center; }
+/* `position: relative` makes the hero the containing block for the
+   provenance marquee below, which is absolutely positioned behind it. */
+.hero { text-align: center; position: relative; }
+/* The hero's two real children sit ABOVE the band, never under it. */
+.hero > .wordmark,
+.hero > .tagline-marquee { position: relative; z-index: 1; }
 
 .wordmark { color: var(--ask-white); }            /* light-mode logo pairing = white */
 .wordmark svg {
@@ -159,7 +164,12 @@ html:has(> body > .shell) { overflow-x: clip; }
 }
 
 /* ---------- Practice-positioning band (subordinate to hero; not a tier) ---------- */
+/* Pushed down by exactly the marquee's 36.3px overhang, so --space-9
+   survives on BOTH sides of this block: the gap up to the band's edge
+   and the gap down to the tier panels read as one measure. Retune the
+   overhang and this has to move with it — the equality is the rule. */
 .positioning {
+  margin-top: 36.3px;
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -601,3 +611,91 @@ html:has(> body > .shell) { overflow-x: clip; }
    ▶ (U+25B6) used on ASKproduKtion's .gal-link chip (same weight, same 14px). */
 .signal-summary .chev { font-size: var(--fs-caption); line-height: 1; color: var(--fg-2); }
 .signal[open] .signal-summary .chev { color: var(--fg-1); }
+
+/* ---------- Provenance marquee ----------
+   A second full-bleed band behind the wordmark, built from the first 800 lines
+   of the ecology-36 transcript set in mono and turned on its side. It travels
+   RIGHT, the opposite direction to the tagline band above it.
+
+   ONE TRANSCRIPT LINE = ONE COLUMN, and nothing wraps. `white-space: pre` keeps
+   the file's own line breaks and its indentation, and `align-items: flex-end`
+   puts every column on the same bottom line — that hard edge is the file's LEFT
+   MARGIN, turned on its side. The rag then falls at the top, where each line
+   ends, exactly as an unwrapped file goes ragged down its right-hand side. A
+   line longer than the band runs off the top and is clipped, the same way a long
+   line runs off the right of an editor that does not soft-wrap.
+
+   `sideways-lr` IS the rotation, and it is why this is text rather than a
+   rotated picture of text: the glyphs turn 90 degrees counter-clockwise, each
+   line runs bottom-to-top, and columns still advance left-to-right — the
+   direction a horizontally-growing track needs. `transform: rotate()` would turn
+   the whole block as one rigid object and would never reflow.
+
+   The values below are declared directly rather than as new custom properties:
+   they are this one composition's, and the foundation's token set is not ASK's
+   to extend from here. */
+.ptx-marquee {
+  position: absolute;
+  left: calc(50% - 50vw);          /* full-bleed, the same escape .tagline-marquee uses */
+  width: 100vw;
+  /* The band climbs well above the hero and simply bleeds off the top of the
+     page, which holds at any viewport height without measuring the hero's
+     offset. Below, it hangs past the tagline by the derived drop. */
+  top: -600px;
+  bottom: -36.3px;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;            /* decorative: never intercepts a click */
+  opacity: 0.5;
+}
+
+/* Two identical halves; translating -50% -> 0 travels RIGHT and hides the seam.
+   The mirror of .tagline-track, which runs 0 -> -50%. No `will-change`: the
+   transform animation composites on its own, and pre-promoting a layer this
+   wide would cost mobile memory for nothing. */
+.ptx-track {
+  display: flex;
+  height: 100%;
+  width: max-content;
+  animation: ptx-scroll 560s linear infinite;
+}
+@keyframes ptx-scroll {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+.ptx-half {
+  flex: 0 0 auto;
+  height: 100%;
+  margin: 0;
+  display: flex;
+  align-items: flex-end;           /* <- the hard bottom edge */
+}
+
+/* The explicit width is the column pitch, and it is why a BLANK transcript line
+   still holds a column: an empty span would otherwise collapse to nothing, and
+   the file's blank lines are part of its shape. Under `sideways-lr` the physical
+   width is the block axis, so 7px is one line box wide. */
+.ptx-line {
+  flex: 0 0 auto;
+  width: 7px;
+  writing-mode: sideways-lr;
+  white-space: pre;                /* <- no wrapping; the file's own breaks only */
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  font-weight: var(--fw-light);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--fg-2);
+  /* Same iOS inflation guard the tagline carries, and for the same reason: the
+     track is far wider than the viewport, which is the trigger condition. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Hold the band still rather than removing it, matching how the tagline band
+   handles reduced motion — it swaps to a static line, it does not vanish. */
+@media (prefers-reduced-motion: reduce) {
+  .ptx-track { animation: none; transform: translateX(-50%); }
+}
