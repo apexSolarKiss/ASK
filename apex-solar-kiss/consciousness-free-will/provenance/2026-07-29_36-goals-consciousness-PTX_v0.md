@@ -4,6 +4,9 @@
 > the formation and early execution of the Consciousness + Free Will research
 > program. Historical process record // not current doctrine, not current
 > program state.
+>
+> Copyright 2026 Andrew S Klug // ASK  
+> SPDX-License-Identifier: Apache-2.0
 
 Claude >>
 
