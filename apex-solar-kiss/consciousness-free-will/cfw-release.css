@@ -136,6 +136,16 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
 .orient-foot a { color: var(--fg-2); text-decoration: none; }
 .orient-foot a:hover { color: var(--fg-1); }
 
+/* The three application-bar controls as one composition group. On a wide screen
+   this must be invisible: the bar already sets an 18px gap between its own
+   children, so the group reproduces that value internally and the rendered
+   geometry is unchanged from a flat row.
+   DECLARED BEFORE THE MEDIA QUERIES DELIBERATELY. The small-screen rule below
+   restates this selector at equal specificity, so source order is what decides
+   it — a base rule placed after the query would silently win and the two-row
+   composition would never apply. */
+.bar .bar-actions { display: flex; align-items: center; gap: 18px; min-width: 0; }
+
 /* ---- tablet: overlays collapsed by default ------------------------------ */
 @media (max-width: 1023px) and (min-width: 768px) {
   .cfw-caption { display: none; }
@@ -149,6 +159,39 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
   .cfw-caption, .legend { display: none; }
   .bar .stamp { display: none; }
   .bar .title-block .s { display: none; }
+
+  /* ---- explicit two-row application bar ---------------------------------
+     Below 768px the mark, the title and three compact actions cannot share one
+     row: measured against production, `atlas` already sits 5px past the right
+     edge at 390 and 75px past it at 320, and the theme selector is 107px and
+     177px past it. `body { overflow: hidden }` is why that never announced
+     itself as a scrollbar — the row simply runs off the surface and is clipped.
+     Conforming the two controls to the compact-action contract makes them wider
+     still, so the placement has to be fixed for the visual correction to mean
+     anything.
+
+     This is an EXPLICIT composition, not natural wrapping. `.bar-actions` is
+     forced to a full-width second row, so the split always falls in the same
+     place and the control order never depends on the viewport. Letting the flex
+     row wrap on its own would reorder controls between widths.
+
+     Row layout, placement and gap are the consuming surface's to own — the
+     vendored action contract deliberately governs the control and not the row —
+     so this lives here rather than upstream. */
+  .bar { flex-wrap: wrap; row-gap: var(--space-2); }
+  .bar .spacer { display: none; }
+  .bar .title-block { flex: 1 1 auto; min-width: 0; }
+  .bar .bar-actions {
+    flex: 0 0 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content max-content;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+  /* The long label takes the flexible column and wraps inside its own pill at the
+     narrowest widths. The contract sets `white-space: normal` precisely so a long
+     label wraps rather than forcing overflow — do not add nowrap here. */
+  .bar .bar-actions #orientbtn { width: 100%; min-width: 0; }
   /* the map is present but inert until it is entered deliberately */
   body:not([data-map="1"]) .canvas-wrap { visibility: hidden; }
   .orient-inner { padding: var(--space-5) var(--space-4) var(--space-6); }
@@ -182,6 +225,31 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
 .orient-close:focus-visible { outline: 2px solid var(--fg-1); outline-offset: 2px; }
 @media (min-width: 768px) { .orient-close { display: inline-block; } }
 body[data-map="1"] .orient-close { display: inline-block; }
+
+/* ---- top-bar compact actions --------------------------------------------
+   The two bar controls are COMPACT ACTIONS, not labels. design-system-ASK owns
+   that contract in the vendored `surface-action.css`: JetBrains Mono, caption
+   size, weight 300, sentence case, zero tracking, pill geometry, and the
+   canonical hover / press / focus. The route previously painted them through
+   `.bar .atlasbtn`, which is the Caption treatment — uppercase, tracked, and
+   heavier — and the owner README names that conformance a defect rather than a
+   repair. Adopting the class is therefore the repair; the block below owns ONLY
+   what the shared contract deliberately does not: row placement, the atlas dot,
+   and the active-filter expression. It restates no part of the contract, and it
+   changes no foreground: `.surface-action` already resolves to --fg-1, which is
+   exactly what these two controls carried before.
+   `.bar .themer` keeps its own rule above — a mode selector is a different role
+   and the shared contract explicitly excludes it. */
+.bar .atlas-trigger { gap: var(--space-2); }
+.bar .atlas-trigger .dot2 {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--fg-3); display: inline-block; flex: none;
+}
+/* An active filter is UI STATE, not a governed state, and it must stay inside the
+   one compact-action grammar: no weight change, no uppercase, no second geometry.
+   Foreground and the dot carry it. */
+body.filtering .bar .atlas-trigger { border-color: var(--fg-1); }
+body.filtering .bar .atlas-trigger .dot2 { background: var(--fg-1); }
 
 /* ---- source links in the inspector --------------------------------------
    The inspector now renders locators as either a "source link" or a "citation",

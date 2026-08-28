@@ -56,10 +56,13 @@ adaptation described below.
 viewport-height composition and does not adopt the shell. It does consume both
 visual rules.
 
-Light/dark follows the system preference (`prefers-color-scheme`) — no toggle,
-no theme control, no JS for theming; the two diagonal gradients switch with the
-OS. The design system's style-guide theme selector is **not** vendored here and
-no page loads it.
+On ordinary ASK pages, light/dark follows the system preference
+(`prefers-color-scheme`) with no toggle or theming JS; the two diagonal
+gradients switch with the OS. The named
+`/apex-solar-kiss/consciousness-free-will/` full-viewport application is the
+local exception: it carries a non-persistent `auto / light / dark` selector
+implemented by its route-local release layer. The design system's style-guide
+theme selector is **not** vendored here.
 
 ## Structure — three-tier front door
 
