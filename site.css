@@ -617,19 +617,24 @@ html:has(> body > .shell) { overflow-x: clip; }
    of the ecology-36 transcript set in mono and turned on its side. It travels
    RIGHT, the opposite direction to the tagline band above it.
 
-   ONE TRANSCRIPT LINE = ONE COLUMN, and nothing wraps. `white-space: pre` keeps
-   the file's own line breaks and its indentation, and `align-items: flex-end`
-   puts every column on the same bottom line — that hard edge is the file's LEFT
-   MARGIN, turned on its side. The rag then falls at the top, where each line
-   ends, exactly as an unwrapped file goes ragged down its right-hand side. A
-   line longer than the band runs off the top and is clipped, the same way a long
-   line runs off the right of an editor that does not soft-wrap.
+   ONE TRANSCRIPT LINE = ONE COLUMN, and nothing wraps — but nothing has to
+   construct those columns either. `white-space: pre` keeps the file's own line
+   breaks, and in a vertical writing mode each of those breaks already starts a
+   new line, which here reads as the next column. The text does the work; two
+   <pre> elements carry it.
 
-   `sideways-lr` IS the rotation, and it is why this is text rather than a
-   rotated picture of text: the glyphs turn 90 degrees counter-clockwise, each
-   line runs bottom-to-top, and columns still advance left-to-right — the
-   direction a horizontally-growing track needs. `transform: rotate()` would turn
-   the whole block as one rigid object and would never reflow.
+   `sideways-lr` is doing two jobs at once. It rotates the glyphs 90 degrees
+   counter-clockwise, and it makes the inline direction run BOTTOM-TO-TOP — so
+   every line begins at the block's lower edge. That shared start IS the hard
+   bottom edge, and it is the file's LEFT MARGIN turned on its side; the rag
+   falls at the top, where each line ends. Columns still advance left-to-right,
+   the direction a horizontally-growing track needs. `transform: rotate()` would
+   turn the whole block as one rigid object and would never reflow.
+
+   A line longer than the band runs off the top and is clipped by .ptx-marquee,
+   the same way a long line runs off the right of an editor that does not
+   soft-wrap. A blank line in the file keeps its column, because a blank line in
+   `pre` still generates a line box.
 
    The values below are declared directly rather than as new custom properties:
    they are this one composition's, and the foundation's token set is not ASK's
@@ -650,9 +655,11 @@ html:has(> body > .shell) { overflow-x: clip; }
 }
 
 /* Two identical halves; translating -50% -> 0 travels RIGHT and hides the seam.
-   The mirror of .tagline-track, which runs 0 -> -50%. No `will-change`: the
-   transform animation composites on its own, and pre-promoting a layer this
-   wide would cost mobile memory for nothing. */
+   The mirror of .tagline-track, which runs 0 -> -50%. `width: max-content` is
+   load-bearing: the -50% resolves against the track's own width, so the track
+   must measure both halves rather than inherit the band's 100vw. No
+   `will-change`: the transform animation composites on its own, and pre-
+   promoting a layer this wide would cost mobile memory for nothing. */
 .ptx-track {
   display: flex;
   height: 100%;
@@ -664,28 +671,28 @@ html:has(> body > .shell) { overflow-x: clip; }
   to   { transform: translateX(0); }
 }
 
+/* 800 lines at a 7px pitch = 5,600px. Declared rather than left to intrinsic
+   sizing so the half width, the track width and therefore the -50% loop point
+   are fixed by the stylesheet instead of by text measurement. */
 .ptx-half {
-  flex: 0 0 auto;
+  flex: 0 0 5600px;
+  width: 5600px;
   height: 100%;
   margin: 0;
-  display: flex;
-  align-items: flex-end;           /* <- the hard bottom edge */
-}
-
-/* The explicit width is the column pitch, and it is why a BLANK transcript line
-   still holds a column: an empty span would otherwise collapse to nothing, and
-   the file's blank lines are part of its shape. Under `sideways-lr` the physical
-   width is the block axis, so 7px is one line box wide. */
-.ptx-line {
-  flex: 0 0 auto;
-  width: 7px;
   writing-mode: sideways-lr;
-  white-space: pre;                /* <- no wrapping; the file's own breaks only */
-  margin: 0;
+  white-space: pre;                /* the file's own breaks; nothing wraps */
+  /* LOAD-BEARING. .hero is centered, and that inherits. In this single-block
+     form a line's inline size is the band's full height, so inherited centering
+     puts every line at a different offset and destroys the hard bottom edge —
+     measured as 140+ distinct edges before this line was added. `start` is the
+     bottom under sideways-lr, which is what makes the edge one line.
+     The per-line-element form did not need this: each element shrink-wrapped to
+     its own text, so there was no spare inline space to center within. */
+  text-align: start;
   font-family: var(--font-mono);
   font-size: 7px;
   font-weight: var(--fw-light);
-  line-height: 1;
+  line-height: 1;                  /* line box == column pitch == 7px */
   letter-spacing: -0.05em;
   color: var(--fg-2);
   /* Same iOS inflation guard the tagline carries, and for the same reason: the
