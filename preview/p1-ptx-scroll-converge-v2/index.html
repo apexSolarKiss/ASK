@@ -1,0 +1,1899 @@
+<!doctype html>
+<!-- ============================================================
+     SCRATCH PROTOTYPE — not the live site, not repo truth.
+     P1 v2 // monotonic PTX convergence
+     Baseline: apexSolarKiss/ASK main @ 1360b41
+     Built by: Claude-58 // ecology-58 // 2026-08-29
+     ============================================================ -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROTOTYPE // P1 v2 // monotonic PTX convergence</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="/colors_and_type.css">
+  <link rel="stylesheet" href="/surface-panel.css">
+  <link rel="stylesheet" href="/surface-action.css">
+  <link rel="stylesheet" href="/site.css">
+<style>
+
+/* ---------- P1 v2 // monotonic convergence -------------------------------
+   Same treatment as v1. The difference is entirely in how --ptx-travel is
+   derived and when it is allowed to change.
+
+   ONE DRIVER. The CSS scroll timeline is the only thing that moves the band.
+   v1 could hand over to a JS driver after a 600ms probe, which is a second
+   discontinuity in the middle of a scroll. The probe in v2 reports and never
+   takes over. */
+.shell { position: relative; z-index: 1; }
+
+.ptx-marquee {
+  position: fixed;
+  left: 0;
+  width: 100vw;
+  top: 0;
+  bottom: auto;
+  height: 100svh;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.5;
+  transform: translateY(calc(-1 * var(--ptx-travel, 0px)));
+  will-change: transform;
+}
+.ptx-track {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  width: max-content;
+  animation: ptx-scroll 560s linear infinite;
+}
+@keyframes ptx-scroll {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+.ptx-half {
+  flex: 0 0 5600px;
+  width: 5600px;
+  height: auto;
+  align-self: stretch;
+  margin: 0;
+  writing-mode: sideways-lr;
+  white-space: pre;
+  text-align: start;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  font-weight: var(--fw-light);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--fg-2);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@supports (animation-timeline: scroll()) {
+  .ptx-marquee {
+    animation: ptx-converge linear both;
+    animation-timeline: scroll(root block);
+    animation-duration: auto;
+  }
+  @keyframes ptx-converge {
+    from { transform: translateY(calc(-1 * var(--ptx-travel, 0px))); }
+    to   { transform: translateY(0); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ptx-track { animation: none; transform: translateX(-50%); }
+}
+
+/* prototype chrome only — never proposed for the repo */
+#pp{position:fixed;left:0;right:0;bottom:0;z-index:99;background:rgba(0,0,0,.86);
+ color:#0f0;font:12px/1.5 ui-monospace,Menlo,monospace;padding:8px 10px;
+ white-space:pre-wrap;border-top:2px solid #0f0;max-height:45vh;overflow:auto;
+ -webkit-text-size-adjust:100%}
+#pp[hidden]{display:none}#pp b{color:#ff0}#pp .ok{color:#5f5}#pp .bad{color:#f55}
+#ppt{position:fixed;right:10px;bottom:10px;z-index:100;font:11px ui-monospace,Menlo,monospace;
+ padding:4px 10px;color:#0f0;background:rgba(0,0,0,.8);border:1px solid #0f0;border-radius:999px}
+#ppt[hidden]{display:none}
+
+</style>
+</head>
+<body>
+<div class="ptx-marquee" aria-hidden="true">
+  <div class="ptx-track">
+<pre class="ptx-half"># 2026-07-29_36-goals-consciousness-PTX
+
+Claude &gt;&gt;
+
+Session-start reads done and repo state verified fresh.
+
+**Required reads**
+- `AGENTS.md` — confirmed in context, auto-loaded via [CLAUDE.md](CLAUDE.md)'s `@AGENTS.md` import. Resolved owner root: shared core (`SHARED_BLOCK_SOURCE: control-surface/protocol/AGENTS.shared.md`, `PIN: self-resolving-owner-root`) + profiles `[core-ecology, advisor-project-surface]` + control-surface-local delta. `GRANT_FRAGMENT: none`, `OPERATING_SURFACE: direct-core`.
+- `ecology-ASK-EXTERNAL/_LAYOUT.md` — read. Ecology cutover recorded 2026-07-28; `intent-INbox/` active with `_STATE.md` present and operative.
+- `control-surface_grounding-note.md` — read, v40 (operating-model conformance; Model A retired as a live option).
+- [README.md](README.md), [docs/architecture.md](docs/architecture.md) — read.
+- `templates/` (10 files incl. `overlays/`), `prompts/` (12), plus `protocol/` and `docs/` listings — enumerated.
+
+**Repo state (verified at execution point, `origin` fetched)**
+```text
+pwd / toplevel   /Users/ask/repos/control-surface   (single worktree, session-owned)
+origin           https://github.com/apexSolarKiss/control-surface.git
+branch           docs/uo-tmk-domain-authority-surface-overlay  (HEAD attached)
+working tree     clean
+HEAD             053e788   tracking origin/&lt;same&gt;, in sync
+origin/main      989af4e   (#182)
+divergence       HEAD ahead 1 / behind 0
+```
+
+**In-flight work — one open item.** [PR #183](https://github.com/apexSolarKiss/control-surface/pull/183) — *census the UO-TMK Project as a hosted domain-authority review surface* — base `main`, head this branch, `MEREABLE`, no review decision recorded. Terminal state: **`PR created`**. One file, +121/−6, touching `docs/advisor-project-surface-architecture.md` only; PR body records `protocol/check.sh --local: ALL CHECKS PASSED` and no remount/repaste earned. Under the adversarial-collaboration cadence this is the Stage-2 advisor review window — held at `PR created` until you relay advisor approval.
+
+I've verified nothing about the substance of #183 beyond its own recorded claims; no fresh re-verification of its evidence was run this session.
+
+Awaiting your direction.
+
+/// /// ///
+
+ASK &gt;&gt;
+
+/Users/ask/ASK Dropbox/studio/studio ASK/ecology-ASK-EXTERNAL/intent-INbox/2026-07-28_personal-ASK_to-method-ASK_standing-intent-realization-and-repair-target-TBI.md
+/Users/ask/ASK Dropbox/studio/studio ASK/ecology-ASK-EXTERNAL/intent-INbox/2026-07-18_method-ASK_held-source-role-boundary-TBI.md
+
+for additional context &gt;&gt;
+/Users/ask/ASK Dropbox/studio/studio ASK/ecology-ASK-EXTERNAL/scratch/2026-07-28_Goertzel-goals-asymptote-PTX_v0.md
+
+&gt;&gt; make a consolidated absorption recommendation memo for both TBIs // md download -gpt // scratch -claude-code
+
+/Users/ask/ASK Dropbox/studio/studio ASK/ecology-ASK-EXTERNAL/scratch/2026-07-28_Goertzel-goals-asymptote-PTX_v0.md &gt;&gt;
+A goal-bearing agent may be delegated authority to set subgoals for its planner and action layers. 
+&gt;&gt; this now makes it clear to me, what was previously a held question was whether the source of intent had to be human or could it be computational. Obviously it can be computational because an agent can be source of intent for its sub agents.   &gt;&gt; but then CC corrected that the agent isn’t answerable to recourse, so it’s not a source of intent, it’s just a delegation conduit An agent setting subgoals under delegation holds bounded intent-setting and scoped authority. Recourse cannot land on it. Two of three is not the role.
+ Now, whether at some point that has to trace back to human intent is sort of a metaphysical question. If we knew the answer to how and whether machines could become conscious, then we would be there already, but I think there’s from an ontology perspective. There’s no architectural reason why source of intent has to be human as opposed to computational. Whether the root source of intent can be computational, I think collapses into the same question as knowing when or how a machine can become conscious. In order to be a root source of intent there has to be consciousness those two things go together.
+but wait, we said source of intent could be a moral person, that is answerable but even that is a fiction. you can’t put a moral person in jail, so ultimately you can lift the corporate veil and find a human who is answerable
+ 2026-07-18_method-ASK_held-source-role-boundary-TBI.md &gt;&gt; here it says the decision is held,
+ /Users/ask/ASK Dropbox/studio/studio ASK/ecology-ASK-EXTERNAL/articles/The Field Argues Human vs. Machine __ The Real Structure Is a Stack v4.md &gt;&gt; but in this draft essay I think we are taking the position that there’s no structural reason why the source can’t be computational. so what would it take for the computational source to manifest? it would take free will. is free will the same as consciousness? surely philosophy has tried to answer this question before. I previously raised the reference to Carl Jung and reflection, but we need to go much deeper  following is a big project &gt;&gt; consciousness // free-will
+
+let’s do a full comprehensive research and recap of the main philosophies theories and topologies and ontologies surround the questions of a/ what is consciousness, and b/ what is free will 1/ a structured language recap md, in a canonical file in ecology root, parallel alongside SoI + iSoI 2/ after that’s done (but not now, deferred til later), a complementary diagram &gt;&gt; mind map of the ideas, using the DS templates to create one giant mind map, including the interactive template if necessary to express more dimensions  then, once that’s all done, we will try to understand what is the relationship between consciousness and intent, free will = intent? will that is constrained can it be free? that’s bounded discretion…  after that, we will come back to the dyad essay &gt;&gt; its not man versus machine, it’s a stack of layers the roles are defined, not the identity who occupies them source of intent doesn’t have to be human? perhaps bounded disrection can definitely be exercised by an agent. it doesn’t have to be human selecting candidates for approval, an agent can approve the images in AP to answer the question of whether SoI can be held by a machine or non human, to answer that we need to better model the topology of the relationship between SoI and bounded discretion, between creative intent and creative discretion  also, this all connects around to SMGI, and the interface is where ASK work is focusing, the app is dead the future of software is the surface, the interface is the surface between the man and the machine, and modeling that across the above stack  the first step for the consciousness-free-will project is not to jump into the research, but to plan what this new canonical will be? cousciousness / free will doctrine? thought map? summary of human philosophy on the question? and what’s the research plan? what primary sources can be available via the internet? what secondary sources?  make a consciousness-free-will project recommendation and plan memo  // md download -gpt // scratch -claude-code
+
+/// /// ///
+
+GPT &gt;&gt;
+
+## Downloads
+
+1. [Consolidated absorption recommendation for both method-ASK TBIs](sandbox:/mnt/data/2026-07-29_method-ASK_standing-intent-source-role_consolidated-absorption-recommendation-gpt.md)
+
+2. [Consciousness + free will project recommendation and research plan](sandbox:/mnt/data/2026-07-29_ecology-ASK_consciousness-free-will_project-recommendation-and-plan-gpt.md)
+
+Both memos were developed from the attached project brief and its named source set. 
+
+## Principal recommendations
+
+The absorption memo recommends **one coordinated method-ASK doctrine fold, conditional on the two TBIs first being separately fed and ingested**, while retaining independent provenance and disposition records for each:
+
+* The July 18 TBI’s exact source-role hold should land in `docs/normative-apex.md`: computational source-role eligibility and the possible natural-person terminus both remain explicitly unanswered. 
+* The July 28 TBI’s doctrine-ready limbs should land across the existing owners: a positive definition of standing intent, a runtime-realization boundary, and repair against current standing intent. Its Goertzel vocabulary, SMGI analogy, realization scale, and computational-source answer remain external, observation-level, or held. 
+* No `governance.md`, bounded-generativity, protocol, lifecycle, storage-plane, diagram, or article change is bundled. Current doctrine already permits computational bounded judgment inside a delegated aperture; that does not settle computational occupancy of the root source role.
+
+The research-plan memo recommends an ecology-root canonical named:
+
+```text
+consciousness-free-will_master-context-note.md
+```
+
+Its form is a **typed research atlas / master context note**, not a doctrine and not yet a mind map. It separates consciousness, sentience, agency, intention, free will, moral responsibility, institutional authority, personhood, and recourse before testing their relationships. Philosophical reference works likewise treat consciousness and free will as internally plural problem fields rather than interchangeable properties, while collective intentionality introduces agency and attribution questions that cannot be reduced to one individual consciousness. ([Stanford Encyclopedia of Philosophy][1])
+
+The plan also incorporates current empirical pressure rather than treating older headline experiments as settled verdicts: the 2025 COGITATE adversarial collaboration challenged important predictions of both IIT and GNWT, and the AI-consciousness literature currently offers theory-derived indicators rather than proof that present systems are conscious. ([DOI.org][2])
+
+The framing conclusion preserved across both memos is:
+
+```text
+computational bounded discretion     supported
+computational root sourcehood        held
+consciousness                         ≠ free will
+free will                             ≠ intent
+moral status                          ≠ authority
+recourse                              ≠ incarceration
+```
+
+[1]: https://plato.stanford.edu/entries/freewill/ "https://plato.stanford.edu/entries/freewill/"
+[2]: https://doi.org/10.1038/s41586-025-08888-1 "https://doi.org/10.1038/s41586-025-08888-1"
+
+/// /// ///
+
+Claude &gt;&gt;
+
+While the workflow runs, a quick house-form check against yesterday's recommendation memo, then I'll compose:
+
+Five of six agents have returned; one still running. Waiting for completion:
+
+The straggler is `verify:lifecycle`. Peeking at where it is:
+
+Both deliverables are complete. Summary:
+
+## Executed (lifecycle)
+
+- `_STATE.md` read immediately before ingestion: `OPEN / EXCEPTIONS: NONE`. Both fed artifacts byte-read in full, roles and prior states established from body + operator records + the unit-6B census (not from filenames), then **both renamed `-TBI` → `-ingested`** at byte parity (hashes identical pre/post; the 7-28 artifact also proven byte-identical to the advisor-authored copy via the PTX-recorded sha256). Ingestion only — no disposition executed; both remain `-ingested` awaiting your ratification.
+
+## Delivered (two scratch memos)
+
+**1. [Absorption recommendation memo](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_ecology-ASK_method-ASK-TBI-pair_absorption-recommendation-memo-claude-code.md)** — recommends `ABSORB` for both handoffs via two serialized method-ASK PRs (held-boundary insert first, then the standing-intent fold), with two material findings from verification:
+- **Anchor drift in the 7-18 handoff:** live `normative-apex.md` gained `## Source of intent is a role, not an artifact` between the anchor and `§The non-identities` — the memo's placement spec was consistent when authored (checked at its recorded blob) but its two conditions no longer pin the same point. Recommended default: literal anchor governs (insert after line 42); the defensible alternative placement is surfaced for your diff-time choice.
+- **Zero drift on the 7-28 handoff** — all five recorded blob SHAs match live `origin/main`, and every claimed doctrine gap independently confirmed (no standing-intent definition repo-wide; Axis-C collision real; no repair rule; the line-403 promotion precedent verbatim).
+- Your 36-PTX positions (consciousness⇒root-source collapse; veil-piercing) are routed **non-resolvingly** to the CFW project charter — held stays held.
+
+**2. [Consciousness + free-will project plan](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_consciousness-free-will_project-recommendation-and-plan-claude-code.md)** — recommends a **structured survey master-context note** (`consciousness-free-will_master-context-note.md`, ecology root, `// vN` ceremony) — not doctrine, not a position paper — with a five-part structure, an ASK-mapping layer (notably: the free-will *sourcehood* literature is the root-SoI question in different vocabulary, and Frankfurt's hierarchical volitions map directly onto bounded discretion), a five-phase gated plan, and a **live-verified source inventory** (all 14 SEP entries confirmed with exact slugs; Gutenberg IDs for the classics; consc.net/arXiv/PMC/Open MIND verified; gaps named: no SEP legal-personhood entry, Schopenhauer's *On the Freedom of the Will* absent from Gutenberg, post-Hachette lending curtailment on commercial monographs).
+
+Support work ran as a 6-agent read-only workflow (3 censuses · 1 availability sweep · 2 adversarial verifiers); all six lifecycle-conformance claims survived refutation. One adjacent observation, recorded not acted on: the iSoI master's status line says "mirrors snapshot `_v45`" while its H1 is v47 — the same status-line lag class its v41 note once healed.
+
+Awaiting your ratification on the dispositions (§6 of memo A) and your call on the CFW project phases.
+
+/// /// ///
+
+GPT &gt;&gt;
+
+# Consolidated v2
+
+[Download the consolidated recommendation and project plan](sandbox:/mnt/data/2026-07-29_ecology-ASK_method-TBI-pair-and-consciousness-free-will_consolidated-recommendation_v2-gpt.md)
+
+```text
+49,280 bytes
+SHA-256 3924216db31065d96f1f8ab859428300e4b6c0eed936da864070837a825efcf7
+```
+
+This v2 supersedes the two earlier GPT recommendation memos as the folded advisory object. It incorporates Claude’s lifecycle receipt, doctrine verification, source-access sweep, and both delivered recommendation memos, while preserving the questions and sequencing established by the 36-goals/consciousness PTX.
+
+## Reconciled rulings
+
+* **Lifecycle is now current fact, not a future condition.** `_STATE.md` is `OPEN / EXCEPTIONS: NONE`, and both routed handoffs now exist as `-ingested`; the v2 accepts those completed ingestion events without treating them as dispositions.
+* **Use two serialized method-ASK PRs.** PR-1 lands the explicit held source-role boundary. PR-2 then lands the standing-intent, runtime-realization, and repair-target fold across the three doctrine owners.
+* **The July 18 anchor drift is resolved.** The exact held-boundary paragraph goes after the verified dyad-section anchor and before the subsequently added `## Source of intent is a role, not an artifact` section. That preserves the original conceptual location rather than forcing the now-incompatible secondary instruction to place it immediately before the non-identities.
+* **Recommend `-absorbed` for both handoffs after landing.** The v2 resolves my earlier mixed-disposition suggestion in Claude’s favor: the July 28 handoff’s operative objective reaches durable method owners at artifact level; its Goertzel and SMGI residue remains evidentiary source material rather than a separately banked held claim. Each terminal rename occurs with the durable closure record, never before its corresponding repo work and follow-through land. This matches the live absorption doctrine’s distinction between ingestion, artifact-level absorption, and mixed `-closed` outcomes.
+* **The consciousness/free-will canonical is a structured survey master-context note**, not doctrine, a position paper, or the future diagram. The recommended root canonical is `consciousness-free-will_master-context-note.md`, with seven sections, crossed axes for consciousness, a three-layer free-will model, a bridge through intention and agency, a machine/personhood section, an ASK mapping layer, and a source ledger. 
+* **The research runs in five gated phases.** Skeleton first; four bounded survey sweeps; relationship modeling plus adversarial stabilization; deferred DS relation atlas; only then any ASK ruling, dyad-essay revision, or SMGI/interface synthesis.
+* **ASK’s two candidate answers remain non-resolving pressure.** “Root computational sourcehood requires consciousness” and the natural-person/veil-piercing argument enter the project charter as questions to test, not conclusions smuggled into method doctrine.
+* **Free-will sourcehood is treated as an analogue, not an identity.** Frankfurt-style higher-order endorsement is a comparison surface for bounded discretion; it does not replace Dworkin’s governance meaning of delegated weak discretion.
+* **No bundled side work.** The dyad essay, SoI/iSoI masters, bounded-generativity, SMGI, AP worked case, diagram, and the observed iSoI `v47`/`_v45` status-line lag all remain outside this operation.
+
+No live repo, Dropbox canonical, intake disposition, or Project setting was mutated from this advisor surface.
+
+///
+
+Claude &gt;&gt;
+
+GPT's v2 is in scratch and byte-matches its declared hash — I'll fold from the object, not the relay summary. Launching verification of its factual additions while I read it:
+
+GPT's absorption-doctrine citation checks out — §Reconciliation after absorption does carry a residue clause. Its PR-2 anchors are real too. Waiting on the disposition adjudication:
+
+Both agents are actively working. Drafting in scratchpad while they finish:
+
+Both verdicts landed, and one of them corrects *my* framing as well as GPT's. Writing both v2 memos:
+
+Both memos folded to `_v2`. GPT's v2 was in scratch and byte-matched its declared hash, so I folded the object, not the relay paste.
+
+## Where we converged
+Lifecycle receipt final · two serialized PRs · the anchor-drift resolution · recipient-classifies/ASK-ratifies · one closure record for both artifacts. On the anchor the ground is textual, not agreement: the literal anchor sits verbatim at line 42 and the memo's secondary condition became internally unsatisfiable once a section intervened. That question is now **closed** to literal-anchor placement; v1's diff-time choice is recorded as considered-and-not-taken.
+
+## Accepted from GPT, verified first
+Its two load-bearing citations check out. The PR-2 anchors in `intent-artifacts.md` exist (lines 13 / 35), and the residue clause it cites is real — `absorption-discipline.md:111`, *"Residue is not redundancy… a correct reconciliation may retire nothing at the artifact level."* Also adopted: the one-new-apex-bullet restraint, the single pointer-only grounding-note sync, the eight-item closure contents, the P1/P2/P3 classification with its five-slot separation.
+
+## One correction returned — and one self-correction
+GPT fixed `-absorbed` for the 7-28 artifact in advance. An adversarial adjudication against the live doc **refutes that warrant**: the argument covers only the excluded vocabulary and is silent on the one limb that can create mixedness — the two candidate observations the handoff explicitly submits *to be graded* — then fixes a suffix before the decision that determines it (`:85`, `:88`, `:81`).
+
+But v1's fallback was wrong too. I lumped "observation-level" with "held"; the doc separates them — `:41` Project-local observation is a landing, `:43` Hold/no action is not. Corrected rule: 7-18 takes `-absorbed` unconditionally (single claim; the HELD *content* is not a held *disposition*); 7-28 takes `-absorbed` only if every limb lands durably — observations landed *as labeled* observation-level material with candidate generalization and promotion condition — and `-closed` if either is deferred where it sits. The suffix is an output of PR-2's grading, not an input. GPT's answer will likely prove right; it can't be ruled in advance.
+
+## Empirical additions, pinned down
+COGITATE 2025 is real (Nature 642(8066):133–142, DOI `10.1038/s41586-025-08888-1`, CC BY, free at PMC12137136) and the finding is **mixed on both sides — no refutation, no winner**: IIT's sustained posterior representation passed sparsely (8 of 53 electrodes) while its gamma-synchrony prediction failed; GNWT's offset ignition was absent in all 655 PFC electrodes while category broadcasting partly held. Any sentence saying it "refuted" either theory would be wrong. Two further catches: Butlin/Long **excludes IIT by design**, so the indicator rubric must not be read as operationalizing it; and there is **no SEP `sentience` or `group-agency` entry** (both 404), which GPT's structure implies — substitutes named. Seven new SEP slugs verified with revision dates, three post-Libet items added, one unverifiable "Sjöberg (2024)" excluded rather than cited.
+
+## Two things I added that neither prior memo had
+A **cross-tradition transversal view** (Greek/Hellenistic, Christian, Jewish, Islamic, Indian, Chinese, Africana, Indigenous — each read from its own partition of self and action, not for its answer to a Western problem) — a real gap in my v1. And in §3 I retracted my own identity claim: free-will sourcehood is a **pressure analogue** to root source-of-intent, not the same question in other words. That was modal hardening in my draft, one turn after the thread caught it twice elsewhere.
+
+## Open for you
+- **Dispositions** — §4 of memo A; nothing renames until PR-2's grading runs.
+- **P1 sequencing** — its only hard dependency is PR-1 (which supplies the held-question text); waiting for PR-2 as well is an attention call, not doctrine.
+- **§6 flagged departure** — you asked for "one giant mind map"; the advisor recommends a typed filterable relation atlas instead. I think it's the better object and arguably what "interactive template to express more dimensions" reached for, but it changes what was asked, so it's your call rather than my substitution.
+
+One adjacent finding, recorded not acted on: `absorption-discipline.md` has a genuine seam — `:43` lists Hold inside §Layer destinations while `:85` defines `-absorbed` as reaching a destination "per §Layer destinations," so read literally `-absorbed` swallows `-held` and `-closed`; and `:171` writes "held at observation-level," blending the two vocabularies. That blend is what made this disagreement possible. Method-owned repair, separate routing.
+
+///
+
+GPT &gt;&gt;
+
+## Advisor ruling
+
+Claude’s v2 is materially stronger. The anchor ruling is closed, the two-PR structure holds, the lifecycle receipt remains ingestion-only, the consciousness/free-will plan is correctly framed as a survey canonical rather than doctrine, and the cross-tradition plus typed-analogue corrections should stand.  
+
+One line in the revised disposition rule still needs correction.
+
+### 1. Dispositions
+
+**July 18 handoff:** ratify `ABSORB`.
+
+After PR-1 lands and the pointer synchronization is complete:
+
+```text
+-held-source-role-boundary-ingested.md
+→ -held-source-role-boundary-absorbed.md
+```
+
+The doctrine being absorbed says that two substantive questions are held open. That does not make the artifact’s disposition `-held`; the artifact’s only operative claim has reached its durable owner.
+
+**July 28 handoff:** ratify absorption of the doctrine-ready limbs, but do not ratify a terminal suffix yet.
+
+Claude is right that the suffix is an output of PR-2’s grading. It is also right that an observation-level landing and a hold are different outcomes. But this clause in its rule is still too permissive:
+
+&gt; “or recorded as declined with no retention”
+
+A declined limb did **not** reach a durable destination. Under the live doctrine, `-absorbed` requires the result to be true of the artifact as a whole, while `-closed` carries mixed claim-level outcomes. The residue rule allows the historical source artifact to survive after absorption; it does not convert an unabsorbed candidate claim into an absorbed one.
+
+The corrected decision rule is:
+
+```text
+7-28 → -absorbed
+
+ONLY IF:
+- all four doctrine-ready limbs land; and
+- both §8 candidate observations also land in a durable method-owned
+  surface as explicitly labeled observation-level material, each with:
+    candidate generalization
+    promotion condition
+    project-specific evidence boundary
+
+7-28 → -closed
+
+IF either candidate observation is:
+- held
+- declined
+- routed elsewhere
+- no-route
+- retained only as source-side evidence or residue
+- otherwise left without a new durable owner
+```
+
+Because the current smallest-coherent PR-2 does not naturally provide a durable home for the SMGI observation, **`-closed` is the more probable result under the present scope**. That remains a prediction, not a pre-grading ruling. The executor should not distort PR-2 merely to earn `-absorbed`.
+
+### 2. Method sequence
+
+Ratify:
+
+```text
+PR-1  held source-role boundary
+  &gt;&gt;
+PR-2  standing intent · runtime realization · repair target
+  &gt;&gt;
+one pair-level closure record
+  &gt;&gt;
+terminal rename of each artifact according to its actual result
+```
+
+The literal-anchor placement is settled:
+
+```text
+after     “…each suffice to secure it.”
+before    ## Source of intent is a role, not an artifact
+```
+
+The later section insertion made the July 18 memo’s two original placement conditions impossible to satisfy simultaneously. The literal anchor is more specific and preserves the intended conceptual location. 
+
+### 3. Consciousness/free-will P1 sequencing
+
+**Wait for both PR-1 and PR-2 before creating P1.**
+
+Claude is correct that PR-1 is the only strict textual dependency because P1 must quote the two held questions. But P1’s ASK-mapping layer also uses `standing intent`, `runtime realization`, persistence, authorization, and repair—the exact vocabulary PR-2 is about. Creating and snapshotting v1 between the two PRs would knowingly give the new canonical a stale doctrinal base and likely force an immediate corrective version.
+
+Therefore:
+
+```text
+PR-1
+→ PR-2
+→ pair closure
+→ CFW P1 / canonical v1
+```
+
+That is an attention and source-of-truth sequencing ruling, not a claim that PR-2 is a formal dependency. It preserves the original project brief’s requirement to plan the canonical before commencing the full research while keeping its ASK mappings downstream of settled method vocabulary. 
+
+### 4. Giant mind map versus relation atlas
+
+Do not choose between them. Use the atlas as the architecture and the giant mind map as its default projection.
+
+Ratify P4 as:
+
+```text
+UNDERLYING OBJECT
+typed, filterable relation atlas generated from stable canonical IDs
+
+DEFAULT VIEW
+one giant all-field mind map — the literal overview ASK requested
+
+ADDITIONAL VIEWS
+filters by:
+- consciousness / free will / agency / personhood
+- theory / tradition / thinker / empirical program
+- support / conflict / compatibility / necessary / sufficient
+- ASK analogue / analogue-break / non-identity
+- held question / evidence status
+
+OUTPUTS
+- interactive multidimensional atlas
+- one giant overview projection
+- bounded sectional projections
+- printable static overview
+```
+
+That preserves ASK’s requested artifact while avoiding an unreadable untyped radial diagram. The v2 memo correctly identifies the relation atlas as the better internal model, but it becomes a substitution only if the requested giant overview disappears. With the overview retained as the default view, there is no departure. 
+
+### 5. Absorption-discipline seam
+
+The seam is real and method-owned.
+
+`§Layer destinations` currently includes both positive landings and `Hold / no action`, while `-absorbed` later points generically to that section. Read literally, that can collapse `-held` into `-absorbed`. The worked-pressure text also says material was “held at observation-level,” despite observation-level carriage and deliberate hold being distinct statuses.
+
+Route a separate small method-ASK repair with this direction:
+
+```text
+- distinguish positive absorption destinations from non-absorption dispositions
+- make -absorbed point only to a positive durable landing
+- preserve -held as deliberate deferral without landing
+- replace “held at observation-level” with “carried/preserved at observation-level”
+```
+
+This is **not** a third limb of either TBI and should not enter PR-1 or PR-2. It also does not require a new handoff/TBI: ecology already operates method-ASK, so it proceeds through a hard repo-boundary reset under method-ASK’s own gates.
+
+## Relay-ready decision
+
+```text
+Ratified with one correction.
+
+1. Execute the two serialized method-ASK PRs in the recommended order.
+2. July 18 final disposition: -absorbed after PR-1 + pointer sync.
+3. July 28: absorb the doctrine-ready limbs, but determine the terminal suffix
+   only after explicit grading of both §8 observations.
+   - -absorbed only if both observations also land durably as properly labeled
+     observation-level method material.
+   - -closed if either is held, declined, routed, no-route, or remains only as
+     source-side evidence/residue.
+4. Use one pair-level closure record with separate artifact sections.
+5. Begin CFW P1 only after both PRs and pair closure.
+6. P4 is a typed relation atlas whose default all-field projection is the
+   requested one giant mind map.
+7. Record the absorption-discipline vocabulary seam as separate method-ASK work,
+   not bundled into either current PR and not routed as a same-surface TBI.
+8. Leave the iSoI v47/_v45 status-line lag as separate maintenance.
+```
+
+///
+
+Claude &gt;&gt;
+
+The advisor's correction is right on its face, but let me verify it against the live doctrine rather than accept it — and start the method-ASK boundary reset in parallel.
+
+Doctrine verified — the advisor's correction is correct: `-declined` is its own terminal classification and appears nowhere in §Layer destinations, so a declined limb alongside absorbed limbs is exactly the mixed outcome `-closed` names. My v2 clause wrongly imported "no retention" (a Learning-Disposition notion) into the absorption test.
+
+Completing the method-ASK boundary reset:
+
+Required reads continuing — `docs/method.md` (method-local requirement) and the target file in full:
+
+Required reads complete. Now the branch and the exact edit:
+
+While that verifies, updating both memos to `_v3` with the ratified corrections:
+
+Now memo B's `_v3` — the two sequencing rulings:
+
+A blocking finding — verifying it myself against the repo rather than trusting the subagent:
+
+Confirmed against the repo directly — the contradiction is real, and the two sibling primitive docs already disagree with each other on scoping:
+
+Ruling absorbed and PR-1 built. **One blocker found — I'm stopping for your ruling.**
+
+## The correction — verified, then adopted
+The advisor is right, and I checked the warrant rather than accepting it. `-declined` is enumerated as its own terminal classification at `absorption-discipline.md:87` and appears **nowhere in §Layer destinations**. So a declined observation beside absorbed doctrine limbs is exactly the mixed outcome `-closed` names. My v2 had imported "no retention" — a §Learning Disposition notion about whether a learning earns storage *anywhere* — into the absorption test, which asks whether *this claim* reached a durable destination. Different questions. §4 now carries the ruled table with all six `-closed` triggers, the three observation-level field requirements, the ruled prediction that **`-closed` is more probable**, and the guard that matters most: don't distort PR-2 to earn `-absorbed`.
+
+## PR-1 — exact scoped diff ready, and clean
+Hard repo-boundary reset done (method-ASK, `main` @ `7b26871`, clean, branch `docs/held-source-role-boundary`, required reads complete). One file, +2 lines, zero deletions. Two adversarial passes:
+
+- **Byte-identical** to the handoff's "Insert exactly" block — 368 chars, `sha256 858f5820…` on both sides.
+- **Placement ruled correct on new evidence**: the intervening section was added by commit `2291d28` (#150) *after* the memo, and the memo-time blob `1f22514` shows §The field models a dyad immediately followed by §The non-identities. So "before §The non-identities" was an *entailment* of anchor-adjacency plus section-containment, not an independent constraint. Honoring it literally now would push the paragraph into the wrong section and strand its "list above" reference.
+- Every other checklist item PASS. **No check harness exists** in method-ASK, so I am *not* claiming "repository checks passed" — that item is NOT-APPLICABLE.
+
+## The blocker
+`docs/portable-definition-layer.md` §Boundaries already answers held question (a), unscoped: **"Source-of-intent remains human."** Its sibling `docs/bounded-generativity.md` says the same thing *correctly scoped* — "in these implementations… A computational agent may exercise bounded delegated judgment without thereby becoming the source of intent." The two primitive docs already disagree with each other; landing the hold newly puts two live docs in direct conflict on the same question.
+
+I verified both lines by direct read at `origin/main`. The charitable reading is that `portable-definition-layer`'s gloss ("not produced by any tool") is a *non-derivability* claim the apex doc already owns, and its bold lead overstates its own gloss — so the repair is one sentence in a form the repo models next door. But both fixes exceed my authority: scoping that line widens PR-1 past the handoff's stated scope, and narrowing the hold breaks its byte-exact mandate. §Rule-to-Artifact Conformance Gate says stop for your ruling.
+
+**Recommend option A:** a one-line PR-0 scoping `portable-definition-layer.md` to match `bounded-generativity.md`'s existing form, *then* PR-1. Keeps PR-1 byte-exact and single-paragraph; no window of contradiction ever exists. Alternatives: widen PR-1 (needs your explicit scope authorization), or land PR-1 and repair after (visible contradiction in a public repo meanwhile).
+
+Two further findings, both blocked by the same byte-exactness and both your call: the new hold **states no resolution trigger** (unlike both existing holds and `absorption-discipline.md:65`), and it **doesn't cite the guard that makes its claim true** (`bounded-generativity`'s no-entailment clause). Neither blocks landing if you're content with the paragraph as authored.
+
+## Also done
+- Memo A at [`_v4`](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_ecology-ASK_method-ASK-TBI-pair_absorption-recommendation-memo_v4-claude-code.md) — ruled §4, PR-3 authorized as separate work with a sequencing note (it changes the very rule §4 applies), §10 execution record, §11 the blocker.
+- Memo B at [`_v3`](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_consciousness-free-will_project-recommendation-and-plan_v3-claude-code.md) — P1 now waits for both PRs plus pair closure; the diagram question resolved as **both** (atlas architecture, your giant mind map as its default all-field projection), which retires my flagged departure since nothing is substituted.
+- Both artifacts remain `-ingested`. Nothing committed, pushed, or merged.
+
+///
+
+GPT &gt;&gt;
+
+## Advisor ruling
+
+**Do not create PR-0. Narrowly widen PR-1 to two files.**
+
+The blocker is real: `portable-definition-layer.md` currently states, without qualification, **“Source-of-intent remains human,”** while `bounded-generativity.md` limits the corresponding claim to **the documented implementations** and explicitly says computational delegated judgment does not thereby confer sourcehood. The first is a universal identity restriction; the second is a scoped observation plus a non-entailment. They cannot remain peers once `normative-apex.md` declares computational source-role eligibility deliberately unresolved.  
+
+But PR-0 would split one coherent correction into two review cycles without reducing decision-relevant uncertainty. The PDL scoping repair is necessary **because** the held-boundary paragraph is landing; merging both together creates no contradiction window and gives the corpus reconciliation one audit trail. The original handoff scope can be expressly widened by ASK while preserving its exact requested paragraph unchanged.
+
+### Authorized PR-1 scope
+
+Keep the `normative-apex.md` insertion **byte-identical** and at the already-ruled position:
+
+```text
+after     “…each suffice to secure it.”
+before    ## Source of intent is a role, not an artifact
+```
+
+The live apex text confirms that this is the role-occupancy section; moving the hold below the intervening artifact section would misplace it.
+
+Add exactly one companion replacement in `docs/portable-definition-layer.md`.
+
+**Replace:**
+
+```markdown
+- **Source-of-intent remains human.** What the definition layer *means*, and what counts as a governed artifact-or-interpretation worth preserving, is the operator's — not produced by any tool.
+```
+
+**With:**
+
+```markdown
+- **Source of intent, in the worked instances documented here, remains human/institutional.** What the definition layer *means*, and what counts as a governed artifact-or-interpretation worth preserving, is supplied or authorized by the operator or governing institution — not produced merely by the tool that carries or executes it.
+```
+
+This does three things and no more:
+
+```text
+scopes the empirical claim to the documented instances
+preserves the non-derivability claim
+does not answer whether a computational office may be constituted as source
+```
+
+The PDL repair is **adjacent corpus conformance authorized by ASK**, not additional payload attributed to the July 18 handoff. The pair-level closure should preserve that provenance distinction.
+
+## Do not add the two proposed extras
+
+### No resolution trigger in the held paragraph
+
+Leave the exact paragraph unchanged. The hold is a content-level doctrinal boundary, not observation-level material requiring a promotion condition. The consciousness/free-will project is intended to become the later **resolution basis**, not a trigger that should be hard-coded into doctrine before its canonical even exists. 
+
+### No citation to `bounded-generativity.md`
+
+The normative-apex doctrine owns the structural source-role question. Bounded generativity supplies a confirming implementation-scoped non-entailment, but it is a sibling primitive, not the authority for what the apex doctrine may hold open. The corpus should agree without making the structural owner depend on the worked-instance owner.
+
+## Revised execution order
+
+```text
+PR-1 widened:
+  normative-apex exact held paragraph
+  + portable-definition-layer scoped conformance repair
+
+then PR-3:
+  absorption-discipline destination/disposition seam repair
+
+then PR-2:
+  standing intent · runtime realization · repair target
+  + explicit grading of both §8 observations under the repaired discipline
+
+then:
+  one pointer-only method grounding-note synchronization
+  one pair-level closure record
+  both terminal renames according to the actual grading
+  CFW P1 / canonical v1
+```
+
+PR-3 should now land **before PR-2**, not merely at an unspecified point. It changes the doctrine that PR-2 must use to distinguish observation-level landing, hold, decline, and mixed closure. The existing workaround is logically adequate, but knowingly grading against the unrepaired owner adds avoidable interpretive friction. The live absorption doctrine presently distinguishes positive landings from hold/no-action and separately defines `-absorbed`, `-held`, and mixed `-closed`; the identified wording seam is therefore real.
+
+## Pre-commit status
+
+The earlier one-file verification remains valid for the **apex paragraph itself**, but the previous terminal state—
+
+```text
+exact scoped diff ready for approval
+```
+
+—is superseded by this ruling. PR-1 is now a two-file unit and needs a fresh complete-diff inspection before ASK approves commit and push. No re-drafting of the held paragraph is needed. The absence of a repository check harness remains accurately reported as **not applicable**, not as “checks passed.”
+
+## Relay-ready text
+
+```text
+Ruling: widen PR-1; do not create PR-0.
+
+Keep the normative-apex held-boundary paragraph byte-identical and at the ruled
+literal anchor. Add one companion change in docs/portable-definition-layer.md:
+
+- **Source of intent, in the worked instances documented here, remains
+  human/institutional.** What the definition layer *means*, and what counts as a
+  governed artifact-or-interpretation worth preserving, is supplied or authorized
+  by the operator or governing institution — not produced merely by the tool that
+  carries or executes it.
+
+No other PDL edit. Do not add a resolution trigger or a bounded-generativity
+citation to the held paragraph.
+
+Treat the PDL change as ASK-authorized corpus conformance required to land the
+hold, not as payload contained in the July 18 TBI.
+
+After the widened PR-1 merges:
+1. land the separately authorized absorption-discipline seam repair as PR-3;
+2. execute PR-2 and grade both candidate observations under the repaired owner;
+3. complete the pointer sync, pair-level closure, and terminal renames;
+4. begin CFW P1 only after the pair closes.
+
+The former one-file exact-diff-ready state is superseded. Return a fresh complete
+two-file diff for ASK approval before commit.
+```
+
+///
+
+Claude &gt;&gt;
+
+Ruling absorbed — widen to two files, no PR-0, both extras declined. Applying the companion change exactly as ruled:
+
+Both regions verified byte-exactly by my own independent check. Writing the memos while the three-agent verification runs:
+
+Now memo B's `_v4` — the method-side order changed under it:
+
+All three verifiers returned PASS. Final state check:
+
+Widened as ruled. **Terminal state: `exact scoped diff ready for approval` — fresh two-file diff, nothing committed.**
+
+## The diff
+```
+docs/normative-apex.md            | 2 ++
+docs/portable-definition-layer.md | 2 +-
+2 files changed, 3 insertions(+), 1 deletion(-)
+```
+Branch `docs/held-source-role-boundary`, 0 commits ahead of `main` @ `7b26871`.
+
+**Byte fidelity — verified programmatically, not by eye.** The apex paragraph is untouched and re-verified at `sha256 858f5820…6d5ea85f` (368 chars); no re-drafting occurred, and `git numstat` shows 2 insertions / 0 deletions on that file, so no existing line was altered. The PDL replacement is byte-identical to your ruled text (333 chars / 335 bytes — the em dash is 3 bytes), the removed line matched the ruled old text exactly, and the old universal form is now absent from the repo. One transmission detail worth knowing: the ruled old text couldn't disambiguate the apostrophe in `operator's`; the file's bytes are straight ASCII, which is the variant that matched.
+
+## Verification of the widened unit — three independent read-only passes, all PASS
+
+**Corpus completeness.** Zero remaining contradictions across all 46 non-binary carriers, under eight independent search strategies, with the boundary stated (excluded: git history, the grounding note, control-surface, and the published Substack text). Nothing depends on the old PDL bullet — its distinctive fragments return zero hits elsewhere, so the rescope strands no dependent.
+
+**On "merely" — the two verifiers disagreed, and I'm ruling for keeping your text.** One flagged it as a redundant hedge that softens the negation below the baseline. The other refuted that with better evidence: `normative-apex.md:7` uses the *same* hedge — "cannot be legitimated **merely** by executing it" — and `:11` expressly permits tool contribution ("Generated candidates, critique, evidence… may inform revision; they do not themselves authorize the revision"), with `:72` "candidate-generation ≠ standard-authorship". So the old absolute "not produced by any tool" was **over-strong relative to the doctrine it was carrying** — it would have forbidden the tool-informed revision the apex doc explicitly allows. Your wording is more doctrinally accurate than what it replaced, not weaker.
+
+**Local coherence.** The rescope is an improvement on two axes: the negation now runs on the doc's *own* declared axis (tool vs source, per its title "the durable object, separable from the tool that holds it") rather than the human-vs-machine axis the hold deliberately opens; and instance-scoping is already precedented in that same §Boundaries at `:85`. The asymmetry with `bounded-generativity.md:100` — which adds a non-entailment sentence PDL doesn't — was ruled *correct*, not tolerable: that doc admits computational judgment in its realization span, PDL disclaims those mechanics outright at `:88`, so importing the sentence would answer a question PDL never poses.
+
+## Three non-blocking observations — no action taken, none in scope
+
+1. **`docs/source-of-intent.md:417/:420/:425`** is the one remaining doctrine surface using bare "human" for the deciding source without a qualifier ("the human decision is explicit"; "human judgment &gt;&gt; authorized relay &gt;&gt; execution"). Classified ADJACENT, not contradicting — it's an operational relay rule, and that doc cedes the structural face to normative-apex at `:7`. But it's the same *class* of finding that produced the PDL repair, so if your intent is that no carrier presupposes a human source in unscoped general phrasing, that's the line to revisit — as its own bounded change, not here.
+2. The new hold lives only in body prose; both other holds in the corpus are surfaced in a §Self-superseding clause. Findability only.
+3. "worked instances" (plural) is licensed by the doc's own §60 heading ("one implemented, one conceptual") but the doc reserves the singular for AP alone at `:22`/`:70`. A zero-cost tightening exists — but it's your ruled text, and I'm not proposing churn on a paragraph that was just ruled.
+
+## Records
+Memo A at [`_v5`](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_ecology-ASK_method-ASK-TBI-pair_absorption-recommendation-memo_v5-claude-code.md) — §11 ruled and resolved (both declines recorded with their reasons: my trigger argument mis-typed a content-level hold as observation-level, and my citation argument had the direction of authority backwards); §7 carries the ruled PR-1 → PR-3 → PR-2 order, which settles the sequencing note v4 left open; §10 carries the two-file diff and the **provenance distinction** — the PDL change is ASK-authorized corpus conformance, *not* July-18 handoff payload, which the pair-level closure must preserve. Memo B at [`_v4`](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_consciousness-free-will_project-recommendation-and-plan_v4-claude-code.md) — corrected: "both PRs" was wrong once there are three.
+
+Verification evidence stays out of the memos and goes in the PR body when you authorize commit — per §Comments, Docs, and PR Roles, change-specific framing belongs there. Still accurately reported: **no repository check harness exists** in method-ASK, so checks are NOT-APPLICABLE rather than passed.
+
+Awaiting your approval to commit and push.
+
+///
+
+GPT &gt;&gt;
+
+## Pre-commit gate
+
+**No advisor approval is issued from this relay.**
+
+The mounted bootstrap assigns ordinary pre-commit approval directly to ASK:
+
+&gt; **Pre-commit:** in-thread exact-scoped-diff approval. ASK reviews directly; you are not in that loop.
+
+Your message explicitly asks for an exception—an advisor pre-commit review—but that exception requires a **named proposal-only exact-byte review object** in mapped shared scratch, with its exact path, baseline, byte size, and SHA-256. The executor’s status report and the evolving absorption memo do not satisfy that object contract. I therefore have not independently reviewed or recomputed the bytes of the uncommitted two-file diff and cannot certify them.
+
+## Substantive posture
+
+I see **no new conceptual blocker** in the reported two-file unit:
+
+* `portable-definition-layer.md` currently makes the unscoped assertion **“Source-of-intent remains human.”** 
+* `bounded-generativity.md` correctly limits its human/institutional statement to its documented implementations and says computational delegated judgment does not itself confer sourcehood. 
+* `normative-apex.md` currently establishes a human-or-computational executor while leaving the root source-role question unstated; the exact held paragraph belongs immediately after that section’s final paragraph and before the role/artifact section.
+
+The widened design therefore remains coherent with the paired-TBI operation and the consciousness/free-will project’s non-resolving posture.
+
+But **substantive agreement is not exact-diff approval**.
+
+## Operative next step
+
+ASK may directly approve the executor’s displayed two-file diff and authorize commit/push under the normal pre-commit gate.
+
+After push, relay the exact PR number or URL. That opens the advisor’s actual **Stage-2** window, where I will verify:
+
+```text
+exact base SHA
+exact head SHA
+full pushed diff
+placement and byte fidelity
+PDL scoping semantics
+absence of bundled changes
+PR account against the actual patch
+```
+
+Until then, the accurate advisor state is:
+
+```text
+conceptual objection       none
+exact uncommitted bytes    not independently reviewed
+advisor commit approval    not issued
+Stage-2 review             awaits pushed PR locator
+```
+
+///
+
+ASK &gt;&gt;
+
+the bootstrap was incorrect. in a parallel ecology thread, we are working on fixing it it. just remounted a new bootstrap to this project sources, read and follow it instead of the previous bootstrap.
+
+///
+
+GPT &gt;&gt;
+
+Read and adopted **Advisor Bootstrap v4** as the operative bootstrap for this thread. It supersedes the previous bootstrap. 
+
+The live index, control-surface grounding note, and the named repo files—`README.md`, `AGENTS.md`, `docs/architecture.md`, and `protocol/README.md`—are all readable through their declared paths.  
+
+My preceding response is **withdrawn**. The restored rule is:
+
+```text
+paired-path Stage 1 belongs to the advisor
+ASK’s relay is the review request
+a missing exact object leaves the review open with readiness incomplete
+direct execution requires explicit ASK authorization
+```
+
+The executor’s prior readiness relay therefore opened Stage 1; it did not route the diff to ASK as the routine first-line reviewer. The current state is:
+
+```text
+Stage-1 window       open
+exact review object  not yet supplied
+advisor verdict      pending, not declined
+```
+
+The bounded recovery is for the executor to publish the minimum proposal-only exact patch to the index-mapped shared scratch and report its exact locator, baseline, byte size, and SHA-256. Once that object is relayed here, I review it directly; no second review-request phrase is required.
+
+///
+
+Claude &gt;&gt;
+
+**Stop — the working tree contains a change this session did not make.** The PDL bullet already carries the ruled replacement text, but I never issued that edit. Re-orienting against the repo before touching anything:
+
+Confirmed a second writer. My session made one edit (`normative-apex.md`, 22:41); `portable-definition-layer.md` was modified at 23:28 and there's an untracked `applycheck-wt/` I did not create. Establishing exactly what changed before touching anything:
+
+**Stopping. A second writer-capable session has been operating in `method-ASK`, and under §Session Topology that is a stop condition until you establish provenance.**
+
+## What I found
+
+I went to apply the ruled PDL replacement and discovered it was **already applied** — by something other than this session.
+
+```text
+docs/normative-apex.md          modified 22:41:16   ← my edit, this session
+docs/portable-definition-layer.md  modified 23:28:04   ← NOT mine; ~47 min later
+applycheck-wt/                     created  07:07     ← NOT mine
+```
+
+`applycheck-wt/` is a **second git worktree** on this repo at detached HEAD `7b26871`, clean, and untracked in the main worktree. The name suggests another session was test-applying a patch. My session issued exactly one edit in this repo; I never touched `portable-definition-layer.md` and never created a worktree.
+
+## The material state is nonetheless correct
+
+I verified the second writer's bytes rather than assuming — the PDL line is **byte-identical to your ruled replacement**: 333 chars, `sha256 7ac1b1a3…` on both sides, including the em dash. And the full working-tree diff against `origin/main` is exactly the authorized two-file unit:
+
+```text
+docs/normative-apex.md              +2  the held-boundary paragraph, byte-exact,
+                                        at the ruled anchor (dddaf84..a1cd369 —
+                                        the same hunk I verified earlier)
+docs/portable-definition-layer.md   1 line replaced, byte-identical to the ruling
+                                    (be74774..ead5006)
+```
+
+Nothing is committed. `HEAD == origin/main == 7b26871`, zero commits ahead.
+
+## Why I'm not proceeding
+
+`AGENTS.md` §Session-Start Discipline: *"Inheriting another thread's uncommitted state is a stop condition until provenance is established."* §Session Topology: *"Stop on suspected concurrent mutation. If a working tree contains changes the current session did not make, do not overwrite."*
+
+So I have not committed, pushed, deleted the worktree, or published the `-PROPOSED` review object the advisor is waiting on. Publishing a review packet over bytes whose authorship I can't account for would launder unestablished provenance into an object the advisor treats as exact-verified — precisely the inference-attached-to-a-checked-fact error the evidence rules prohibit.
+
+## What I need from you
+
+1. **Who made the PDL edit and the worktree?** If it was you or a parallel session acting on the same ruling, say so and I'll proceed — the bytes already check out, so this becomes a one-line provenance note in the closure record rather than a rework.
+2. **Disposition of `applycheck-wt/`** — it's untracked and not gitignored, so any `git add -A` would sweep it in. I'd remove it with `git worktree remove` before commit, but not while another session may be using it.
+
+Once provenance is settled I'll publish the minimum proposal-only exact patch to `ecology-ASK-EXTERNAL/scratch/` as `…_method-ASK-PR1-two-file_exact-patch-PROPOSED.md`, reporting its exact path, baseline `7b26871`, byte size and SHA-256, which opens the advisor's Stage-1 review.
+
+Two smaller notes: the index row *"Named review object (current)"* still reads **"none — no active review object"** and will need to name the packet by exact path once published — that's a live-canonical edit the advisor fetches, so tell me if you want me to make it or if it's yours. And memo A is at `_v4`; I'll carry the concurrency incident and the widened two-file scope into `_v5` once the provenance question is answered, so the record reflects one settled account rather than two.
+
+///
+
+ASK &gt;&gt;
+
+as mentioned, there was a problem with the bootstrap. I had pasted GPT's reply, but then had it load a newly corrected bootstrap v4 and reissue. I stopped your last turn mid flight and selected "rewind to here" in the Claude Code UI, but it seems it left residue. is that enough to clarify and we can get back to work?
+
+///
+
+Claude &gt;&gt;
+
+That fully resolves it — thank you. The residue is my own from the rewound turn (the UI rolls back the conversation, not the filesystem), not a second writer. That also matches the `+3 −1` the UI shows for the branch. Clearing the residue and verifying the final unit:
+
+Clean — only the two intended files. Now publishing the Stage-1 review object. **Declaring before creation**, per the review-object contract:
+
+```text
+path       ecology-ASK-EXTERNAL/scratch/
+filename   2026-07-30_method-ASK_PR1-held-boundary-and-PDL-scoping_exact-patch-PROPOSED.md
+role       single-file multi-target review object — complete exact patch for the
+           two-file PR-1 unit, with target set, baseline refs, and proposed hashes
+lifecycle  proposal-only; immutable once path+hash are reported; a revision takes a
+           new dated/_vN -PROPOSED name; retired when PR-1 merges and the pushed PR
+           becomes the Stage-2 object
+```
+
+Review object published and its embedded patch verified byte-identical to the live tree. Updating the index row the advisor fetches live — it currently asserts "no active review object," which is now false:
+
+Yes — that clarifies it completely, and it was the better explanation than mine. A UI rewind rolls back the conversation but not the filesystem, so my own pre-rewind work looked exactly like a second writer. The stop was still the right call on the evidence I had; the cost was one round-trip.
+
+**Residue cleared, PR-1 complete as a two-file unit, Stage-1 object published.**
+
+## Relay for the advisor
+
+```text
+path      /studio/studio ASK/ecology-ASK-EXTERNAL/scratch/
+          2026-07-30_method-ASK_PR1-held-boundary-and-PDL-scoping_exact-patch-PROPOSED.md
+bytes     13,319
+sha256    c5be6713af1d6737f1d8185ea36e55dd54370b333e82310b3fe0d16c40d27813
+baseline  7b2687125810c8990f34018334fe008cc9a0708d  (== origin/main)
+diffstat  2 files changed, 3 insertions(+), 1 deletion(-)
+```
+
+The packet carries the complete exact patch, per-target baseline and proposed blob SHAs with byte sizes, both byte-fidelity attestations, the placement drift resolution with the memo-time blob evidence, the verification boundary, and the declined extras. Its embedded diff was verified identical to the live working tree (26 lines, programmatic comparison, not eyeballed).
+
+## What I verified rather than assumed
+
+The PDL bytes already in the tree are **byte-identical to your ruled replacement** — 333 chars, `sha256 7ac1b1a3…`, em dash included. The apex paragraph remains byte-identical to the handoff's mandated block (368 chars, `sha256 858f5820…`) at the ruled anchor. The residue worktree was clean, detached at `7b26871`, zero unique commits, then removed.
+
+## One thing I changed that you should know about
+
+`_INDEX-ecology-ASK.md`'s **"Named review object (current)"** row said *"none — no active review object"* — false the moment the packet existed, and the advisor fetches that index live. I updated the row to name the packet by exact path with baseline, size, and hash, keeping the prior program-closure note as a parenthetical. That's correcting a false current instruction under §Verification Claims, not scope creep — but it's a live canonical the advisor reads, so flagging it explicitly.
+
+## Record
+
+Memo A is at [`_v5`](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_ecology-ASK_method-ASK-TBI-pair_absorption-recommendation-memo_v5-claude-code.md): §12 the widened unit and published object, §13 both extras declined so they don't resurface as fresh findings, §14 the single-writer incident and its resolution, §15 the revised order with **PR-3 now before PR-2**. The provenance split is recorded to survive into the closure — `normative-apex.md` is July-18 handoff payload, `portable-definition-layer.md` is ASK-authorized adjacent conformance, and the handoff did not ask for two files.
+
+Nothing committed, pushed, or merged. Both routed artifacts remain `-ingested`. Terminal state: **`exact scoped diff ready for approval`** for the two-file unit — awaiting your approval to commit and push, which then opens the advisor's Stage-2 window on the pushed PR.
+
+///
+
+GPT &gt;&gt;
+
+## Stage 1 — **APPROVE**
+
+I recommend that ASK authorize commit and push of the exact two-file patch identified by:
+
+```text
+repo       apexSolarKiss/method-ASK
+baseline   7b2687125810c8990f34018334fe008cc9a0708d
+patch      ebdc83ddb957d69f371eee239523252ca5595c27e44d42e15ffd4b2f6525c3bd
+targets    docs/normative-apex.md
+           docs/portable-definition-layer.md
+```
+
+This is an advisor recommendation only; ASK remains the authorization apex. The corrected bootstrap makes this relay the Stage-1 request and assigns the exact pre-commit review to this surface. 
+
+### Exact-patch verification
+
+I fetched the named proposal object from the live index-mapped path. The live index now identifies the same path, baseline, size, and whole-packet hash reported by the executor.  
+
+I independently reconstructed the **complete unified patch**, including the single-space context markers on blank diff lines:
+
+```text
+exact patch size     2,989 bytes
+computed SHA-256     ebdc83ddb957d69f371eee239523252ca5595c27e44d42e15ffd4b2f6525c3bd
+reported SHA-256     ebdc83ddb957d69f371eee239523252ca5595c27e44d42e15ffd4b2f6525c3bd
+result               MATCH
+```
+
+The exact baseline blob SHAs in the packet also match GitHub at the declared commit:
+
+```text
+docs/normative-apex.md
+dddaf845c8514501df8a73d9a6cec71c130f8c43
+</pre>
+<pre class="ptx-half"># 2026-07-29_36-goals-consciousness-PTX
+
+Claude &gt;&gt;
+
+Session-start reads done and repo state verified fresh.
+
+**Required reads**
+- `AGENTS.md` — confirmed in context, auto-loaded via [CLAUDE.md](CLAUDE.md)'s `@AGENTS.md` import. Resolved owner root: shared core (`SHARED_BLOCK_SOURCE: control-surface/protocol/AGENTS.shared.md`, `PIN: self-resolving-owner-root`) + profiles `[core-ecology, advisor-project-surface]` + control-surface-local delta. `GRANT_FRAGMENT: none`, `OPERATING_SURFACE: direct-core`.
+- `ecology-ASK-EXTERNAL/_LAYOUT.md` — read. Ecology cutover recorded 2026-07-28; `intent-INbox/` active with `_STATE.md` present and operative.
+- `control-surface_grounding-note.md` — read, v40 (operating-model conformance; Model A retired as a live option).
+- [README.md](README.md), [docs/architecture.md](docs/architecture.md) — read.
+- `templates/` (10 files incl. `overlays/`), `prompts/` (12), plus `protocol/` and `docs/` listings — enumerated.
+
+**Repo state (verified at execution point, `origin` fetched)**
+```text
+pwd / toplevel   /Users/ask/repos/control-surface   (single worktree, session-owned)
+origin           https://github.com/apexSolarKiss/control-surface.git
+branch           docs/uo-tmk-domain-authority-surface-overlay  (HEAD attached)
+working tree     clean
+HEAD             053e788   tracking origin/&lt;same&gt;, in sync
+origin/main      989af4e   (#182)
+divergence       HEAD ahead 1 / behind 0
+```
+
+**In-flight work — one open item.** [PR #183](https://github.com/apexSolarKiss/control-surface/pull/183) — *census the UO-TMK Project as a hosted domain-authority review surface* — base `main`, head this branch, `MEREABLE`, no review decision recorded. Terminal state: **`PR created`**. One file, +121/−6, touching `docs/advisor-project-surface-architecture.md` only; PR body records `protocol/check.sh --local: ALL CHECKS PASSED` and no remount/repaste earned. Under the adversarial-collaboration cadence this is the Stage-2 advisor review window — held at `PR created` until you relay advisor approval.
+
+I've verified nothing about the substance of #183 beyond its own recorded claims; no fresh re-verification of its evidence was run this session.
+
+Awaiting your direction.
+
+/// /// ///
+
+ASK &gt;&gt;
+
+/Users/ask/ASK Dropbox/studio/studio ASK/ecology-ASK-EXTERNAL/intent-INbox/2026-07-28_personal-ASK_to-method-ASK_standing-intent-realization-and-repair-target-TBI.md
+/Users/ask/ASK Dropbox/studio/studio ASK/ecology-ASK-EXTERNAL/intent-INbox/2026-07-18_method-ASK_held-source-role-boundary-TBI.md
+
+for additional context &gt;&gt;
+/Users/ask/ASK Dropbox/studio/studio ASK/ecology-ASK-EXTERNAL/scratch/2026-07-28_Goertzel-goals-asymptote-PTX_v0.md
+
+&gt;&gt; make a consolidated absorption recommendation memo for both TBIs // md download -gpt // scratch -claude-code
+
+/Users/ask/ASK Dropbox/studio/studio ASK/ecology-ASK-EXTERNAL/scratch/2026-07-28_Goertzel-goals-asymptote-PTX_v0.md &gt;&gt;
+A goal-bearing agent may be delegated authority to set subgoals for its planner and action layers. 
+&gt;&gt; this now makes it clear to me, what was previously a held question was whether the source of intent had to be human or could it be computational. Obviously it can be computational because an agent can be source of intent for its sub agents.   &gt;&gt; but then CC corrected that the agent isn’t answerable to recourse, so it’s not a source of intent, it’s just a delegation conduit An agent setting subgoals under delegation holds bounded intent-setting and scoped authority. Recourse cannot land on it. Two of three is not the role.
+ Now, whether at some point that has to trace back to human intent is sort of a metaphysical question. If we knew the answer to how and whether machines could become conscious, then we would be there already, but I think there’s from an ontology perspective. There’s no architectural reason why source of intent has to be human as opposed to computational. Whether the root source of intent can be computational, I think collapses into the same question as knowing when or how a machine can become conscious. In order to be a root source of intent there has to be consciousness those two things go together.
+but wait, we said source of intent could be a moral person, that is answerable but even that is a fiction. you can’t put a moral person in jail, so ultimately you can lift the corporate veil and find a human who is answerable
+ 2026-07-18_method-ASK_held-source-role-boundary-TBI.md &gt;&gt; here it says the decision is held,
+ /Users/ask/ASK Dropbox/studio/studio ASK/ecology-ASK-EXTERNAL/articles/The Field Argues Human vs. Machine __ The Real Structure Is a Stack v4.md &gt;&gt; but in this draft essay I think we are taking the position that there’s no structural reason why the source can’t be computational. so what would it take for the computational source to manifest? it would take free will. is free will the same as consciousness? surely philosophy has tried to answer this question before. I previously raised the reference to Carl Jung and reflection, but we need to go much deeper  following is a big project &gt;&gt; consciousness // free-will
+
+let’s do a full comprehensive research and recap of the main philosophies theories and topologies and ontologies surround the questions of a/ what is consciousness, and b/ what is free will 1/ a structured language recap md, in a canonical file in ecology root, parallel alongside SoI + iSoI 2/ after that’s done (but not now, deferred til later), a complementary diagram &gt;&gt; mind map of the ideas, using the DS templates to create one giant mind map, including the interactive template if necessary to express more dimensions  then, once that’s all done, we will try to understand what is the relationship between consciousness and intent, free will = intent? will that is constrained can it be free? that’s bounded discretion…  after that, we will come back to the dyad essay &gt;&gt; its not man versus machine, it’s a stack of layers the roles are defined, not the identity who occupies them source of intent doesn’t have to be human? perhaps bounded disrection can definitely be exercised by an agent. it doesn’t have to be human selecting candidates for approval, an agent can approve the images in AP to answer the question of whether SoI can be held by a machine or non human, to answer that we need to better model the topology of the relationship between SoI and bounded discretion, between creative intent and creative discretion  also, this all connects around to SMGI, and the interface is where ASK work is focusing, the app is dead the future of software is the surface, the interface is the surface between the man and the machine, and modeling that across the above stack  the first step for the consciousness-free-will project is not to jump into the research, but to plan what this new canonical will be? cousciousness / free will doctrine? thought map? summary of human philosophy on the question? and what’s the research plan? what primary sources can be available via the internet? what secondary sources?  make a consciousness-free-will project recommendation and plan memo  // md download -gpt // scratch -claude-code
+
+/// /// ///
+
+GPT &gt;&gt;
+
+## Downloads
+
+1. [Consolidated absorption recommendation for both method-ASK TBIs](sandbox:/mnt/data/2026-07-29_method-ASK_standing-intent-source-role_consolidated-absorption-recommendation-gpt.md)
+
+2. [Consciousness + free will project recommendation and research plan](sandbox:/mnt/data/2026-07-29_ecology-ASK_consciousness-free-will_project-recommendation-and-plan-gpt.md)
+
+Both memos were developed from the attached project brief and its named source set. 
+
+## Principal recommendations
+
+The absorption memo recommends **one coordinated method-ASK doctrine fold, conditional on the two TBIs first being separately fed and ingested**, while retaining independent provenance and disposition records for each:
+
+* The July 18 TBI’s exact source-role hold should land in `docs/normative-apex.md`: computational source-role eligibility and the possible natural-person terminus both remain explicitly unanswered. 
+* The July 28 TBI’s doctrine-ready limbs should land across the existing owners: a positive definition of standing intent, a runtime-realization boundary, and repair against current standing intent. Its Goertzel vocabulary, SMGI analogy, realization scale, and computational-source answer remain external, observation-level, or held. 
+* No `governance.md`, bounded-generativity, protocol, lifecycle, storage-plane, diagram, or article change is bundled. Current doctrine already permits computational bounded judgment inside a delegated aperture; that does not settle computational occupancy of the root source role.
+
+The research-plan memo recommends an ecology-root canonical named:
+
+```text
+consciousness-free-will_master-context-note.md
+```
+
+Its form is a **typed research atlas / master context note**, not a doctrine and not yet a mind map. It separates consciousness, sentience, agency, intention, free will, moral responsibility, institutional authority, personhood, and recourse before testing their relationships. Philosophical reference works likewise treat consciousness and free will as internally plural problem fields rather than interchangeable properties, while collective intentionality introduces agency and attribution questions that cannot be reduced to one individual consciousness. ([Stanford Encyclopedia of Philosophy][1])
+
+The plan also incorporates current empirical pressure rather than treating older headline experiments as settled verdicts: the 2025 COGITATE adversarial collaboration challenged important predictions of both IIT and GNWT, and the AI-consciousness literature currently offers theory-derived indicators rather than proof that present systems are conscious. ([DOI.org][2])
+
+The framing conclusion preserved across both memos is:
+
+```text
+computational bounded discretion     supported
+computational root sourcehood        held
+consciousness                         ≠ free will
+free will                             ≠ intent
+moral status                          ≠ authority
+recourse                              ≠ incarceration
+```
+
+[1]: https://plato.stanford.edu/entries/freewill/ "https://plato.stanford.edu/entries/freewill/"
+[2]: https://doi.org/10.1038/s41586-025-08888-1 "https://doi.org/10.1038/s41586-025-08888-1"
+
+/// /// ///
+
+Claude &gt;&gt;
+
+While the workflow runs, a quick house-form check against yesterday's recommendation memo, then I'll compose:
+
+Five of six agents have returned; one still running. Waiting for completion:
+
+The straggler is `verify:lifecycle`. Peeking at where it is:
+
+Both deliverables are complete. Summary:
+
+## Executed (lifecycle)
+
+- `_STATE.md` read immediately before ingestion: `OPEN / EXCEPTIONS: NONE`. Both fed artifacts byte-read in full, roles and prior states established from body + operator records + the unit-6B census (not from filenames), then **both renamed `-TBI` → `-ingested`** at byte parity (hashes identical pre/post; the 7-28 artifact also proven byte-identical to the advisor-authored copy via the PTX-recorded sha256). Ingestion only — no disposition executed; both remain `-ingested` awaiting your ratification.
+
+## Delivered (two scratch memos)
+
+**1. [Absorption recommendation memo](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_ecology-ASK_method-ASK-TBI-pair_absorption-recommendation-memo-claude-code.md)** — recommends `ABSORB` for both handoffs via two serialized method-ASK PRs (held-boundary insert first, then the standing-intent fold), with two material findings from verification:
+- **Anchor drift in the 7-18 handoff:** live `normative-apex.md` gained `## Source of intent is a role, not an artifact` between the anchor and `§The non-identities` — the memo's placement spec was consistent when authored (checked at its recorded blob) but its two conditions no longer pin the same point. Recommended default: literal anchor governs (insert after line 42); the defensible alternative placement is surfaced for your diff-time choice.
+- **Zero drift on the 7-28 handoff** — all five recorded blob SHAs match live `origin/main`, and every claimed doctrine gap independently confirmed (no standing-intent definition repo-wide; Axis-C collision real; no repair rule; the line-403 promotion precedent verbatim).
+- Your 36-PTX positions (consciousness⇒root-source collapse; veil-piercing) are routed **non-resolvingly** to the CFW project charter — held stays held.
+
+**2. [Consciousness + free-will project plan](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_consciousness-free-will_project-recommendation-and-plan-claude-code.md)** — recommends a **structured survey master-context note** (`consciousness-free-will_master-context-note.md`, ecology root, `// vN` ceremony) — not doctrine, not a position paper — with a five-part structure, an ASK-mapping layer (notably: the free-will *sourcehood* literature is the root-SoI question in different vocabulary, and Frankfurt's hierarchical volitions map directly onto bounded discretion), a five-phase gated plan, and a **live-verified source inventory** (all 14 SEP entries confirmed with exact slugs; Gutenberg IDs for the classics; consc.net/arXiv/PMC/Open MIND verified; gaps named: no SEP legal-personhood entry, Schopenhauer's *On the Freedom of the Will* absent from Gutenberg, post-Hachette lending curtailment on commercial monographs).
+
+Support work ran as a 6-agent read-only workflow (3 censuses · 1 availability sweep · 2 adversarial verifiers); all six lifecycle-conformance claims survived refutation. One adjacent observation, recorded not acted on: the iSoI master's status line says "mirrors snapshot `_v45`" while its H1 is v47 — the same status-line lag class its v41 note once healed.
+
+Awaiting your ratification on the dispositions (§6 of memo A) and your call on the CFW project phases.
+
+/// /// ///
+
+GPT &gt;&gt;
+
+# Consolidated v2
+
+[Download the consolidated recommendation and project plan](sandbox:/mnt/data/2026-07-29_ecology-ASK_method-TBI-pair-and-consciousness-free-will_consolidated-recommendation_v2-gpt.md)
+
+```text
+49,280 bytes
+SHA-256 3924216db31065d96f1f8ab859428300e4b6c0eed936da864070837a825efcf7
+```
+
+This v2 supersedes the two earlier GPT recommendation memos as the folded advisory object. It incorporates Claude’s lifecycle receipt, doctrine verification, source-access sweep, and both delivered recommendation memos, while preserving the questions and sequencing established by the 36-goals/consciousness PTX.
+
+## Reconciled rulings
+
+* **Lifecycle is now current fact, not a future condition.** `_STATE.md` is `OPEN / EXCEPTIONS: NONE`, and both routed handoffs now exist as `-ingested`; the v2 accepts those completed ingestion events without treating them as dispositions.
+* **Use two serialized method-ASK PRs.** PR-1 lands the explicit held source-role boundary. PR-2 then lands the standing-intent, runtime-realization, and repair-target fold across the three doctrine owners.
+* **The July 18 anchor drift is resolved.** The exact held-boundary paragraph goes after the verified dyad-section anchor and before the subsequently added `## Source of intent is a role, not an artifact` section. That preserves the original conceptual location rather than forcing the now-incompatible secondary instruction to place it immediately before the non-identities.
+* **Recommend `-absorbed` for both handoffs after landing.** The v2 resolves my earlier mixed-disposition suggestion in Claude’s favor: the July 28 handoff’s operative objective reaches durable method owners at artifact level; its Goertzel and SMGI residue remains evidentiary source material rather than a separately banked held claim. Each terminal rename occurs with the durable closure record, never before its corresponding repo work and follow-through land. This matches the live absorption doctrine’s distinction between ingestion, artifact-level absorption, and mixed `-closed` outcomes.
+* **The consciousness/free-will canonical is a structured survey master-context note**, not doctrine, a position paper, or the future diagram. The recommended root canonical is `consciousness-free-will_master-context-note.md`, with seven sections, crossed axes for consciousness, a three-layer free-will model, a bridge through intention and agency, a machine/personhood section, an ASK mapping layer, and a source ledger. 
+* **The research runs in five gated phases.** Skeleton first; four bounded survey sweeps; relationship modeling plus adversarial stabilization; deferred DS relation atlas; only then any ASK ruling, dyad-essay revision, or SMGI/interface synthesis.
+* **ASK’s two candidate answers remain non-resolving pressure.** “Root computational sourcehood requires consciousness” and the natural-person/veil-piercing argument enter the project charter as questions to test, not conclusions smuggled into method doctrine.
+* **Free-will sourcehood is treated as an analogue, not an identity.** Frankfurt-style higher-order endorsement is a comparison surface for bounded discretion; it does not replace Dworkin’s governance meaning of delegated weak discretion.
+* **No bundled side work.** The dyad essay, SoI/iSoI masters, bounded-generativity, SMGI, AP worked case, diagram, and the observed iSoI `v47`/`_v45` status-line lag all remain outside this operation.
+
+No live repo, Dropbox canonical, intake disposition, or Project setting was mutated from this advisor surface.
+
+///
+
+Claude &gt;&gt;
+
+GPT's v2 is in scratch and byte-matches its declared hash — I'll fold from the object, not the relay summary. Launching verification of its factual additions while I read it:
+
+GPT's absorption-doctrine citation checks out — §Reconciliation after absorption does carry a residue clause. Its PR-2 anchors are real too. Waiting on the disposition adjudication:
+
+Both agents are actively working. Drafting in scratchpad while they finish:
+
+Both verdicts landed, and one of them corrects *my* framing as well as GPT's. Writing both v2 memos:
+
+Both memos folded to `_v2`. GPT's v2 was in scratch and byte-matched its declared hash, so I folded the object, not the relay paste.
+
+## Where we converged
+Lifecycle receipt final · two serialized PRs · the anchor-drift resolution · recipient-classifies/ASK-ratifies · one closure record for both artifacts. On the anchor the ground is textual, not agreement: the literal anchor sits verbatim at line 42 and the memo's secondary condition became internally unsatisfiable once a section intervened. That question is now **closed** to literal-anchor placement; v1's diff-time choice is recorded as considered-and-not-taken.
+
+## Accepted from GPT, verified first
+Its two load-bearing citations check out. The PR-2 anchors in `intent-artifacts.md` exist (lines 13 / 35), and the residue clause it cites is real — `absorption-discipline.md:111`, *"Residue is not redundancy… a correct reconciliation may retire nothing at the artifact level."* Also adopted: the one-new-apex-bullet restraint, the single pointer-only grounding-note sync, the eight-item closure contents, the P1/P2/P3 classification with its five-slot separation.
+
+## One correction returned — and one self-correction
+GPT fixed `-absorbed` for the 7-28 artifact in advance. An adversarial adjudication against the live doc **refutes that warrant**: the argument covers only the excluded vocabulary and is silent on the one limb that can create mixedness — the two candidate observations the handoff explicitly submits *to be graded* — then fixes a suffix before the decision that determines it (`:85`, `:88`, `:81`).
+
+But v1's fallback was wrong too. I lumped "observation-level" with "held"; the doc separates them — `:41` Project-local observation is a landing, `:43` Hold/no action is not. Corrected rule: 7-18 takes `-absorbed` unconditionally (single claim; the HELD *content* is not a held *disposition*); 7-28 takes `-absorbed` only if every limb lands durably — observations landed *as labeled* observation-level material with candidate generalization and promotion condition — and `-closed` if either is deferred where it sits. The suffix is an output of PR-2's grading, not an input. GPT's answer will likely prove right; it can't be ruled in advance.
+
+## Empirical additions, pinned down
+COGITATE 2025 is real (Nature 642(8066):133–142, DOI `10.1038/s41586-025-08888-1`, CC BY, free at PMC12137136) and the finding is **mixed on both sides — no refutation, no winner**: IIT's sustained posterior representation passed sparsely (8 of 53 electrodes) while its gamma-synchrony prediction failed; GNWT's offset ignition was absent in all 655 PFC electrodes while category broadcasting partly held. Any sentence saying it "refuted" either theory would be wrong. Two further catches: Butlin/Long **excludes IIT by design**, so the indicator rubric must not be read as operationalizing it; and there is **no SEP `sentience` or `group-agency` entry** (both 404), which GPT's structure implies — substitutes named. Seven new SEP slugs verified with revision dates, three post-Libet items added, one unverifiable "Sjöberg (2024)" excluded rather than cited.
+
+## Two things I added that neither prior memo had
+A **cross-tradition transversal view** (Greek/Hellenistic, Christian, Jewish, Islamic, Indian, Chinese, Africana, Indigenous — each read from its own partition of self and action, not for its answer to a Western problem) — a real gap in my v1. And in §3 I retracted my own identity claim: free-will sourcehood is a **pressure analogue** to root source-of-intent, not the same question in other words. That was modal hardening in my draft, one turn after the thread caught it twice elsewhere.
+
+## Open for you
+- **Dispositions** — §4 of memo A; nothing renames until PR-2's grading runs.
+- **P1 sequencing** — its only hard dependency is PR-1 (which supplies the held-question text); waiting for PR-2 as well is an attention call, not doctrine.
+- **§6 flagged departure** — you asked for "one giant mind map"; the advisor recommends a typed filterable relation atlas instead. I think it's the better object and arguably what "interactive template to express more dimensions" reached for, but it changes what was asked, so it's your call rather than my substitution.
+
+One adjacent finding, recorded not acted on: `absorption-discipline.md` has a genuine seam — `:43` lists Hold inside §Layer destinations while `:85` defines `-absorbed` as reaching a destination "per §Layer destinations," so read literally `-absorbed` swallows `-held` and `-closed`; and `:171` writes "held at observation-level," blending the two vocabularies. That blend is what made this disagreement possible. Method-owned repair, separate routing.
+
+///
+
+GPT &gt;&gt;
+
+## Advisor ruling
+
+Claude’s v2 is materially stronger. The anchor ruling is closed, the two-PR structure holds, the lifecycle receipt remains ingestion-only, the consciousness/free-will plan is correctly framed as a survey canonical rather than doctrine, and the cross-tradition plus typed-analogue corrections should stand.  
+
+One line in the revised disposition rule still needs correction.
+
+### 1. Dispositions
+
+**July 18 handoff:** ratify `ABSORB`.
+
+After PR-1 lands and the pointer synchronization is complete:
+
+```text
+-held-source-role-boundary-ingested.md
+→ -held-source-role-boundary-absorbed.md
+```
+
+The doctrine being absorbed says that two substantive questions are held open. That does not make the artifact’s disposition `-held`; the artifact’s only operative claim has reached its durable owner.
+
+**July 28 handoff:** ratify absorption of the doctrine-ready limbs, but do not ratify a terminal suffix yet.
+
+Claude is right that the suffix is an output of PR-2’s grading. It is also right that an observation-level landing and a hold are different outcomes. But this clause in its rule is still too permissive:
+
+&gt; “or recorded as declined with no retention”
+
+A declined limb did **not** reach a durable destination. Under the live doctrine, `-absorbed` requires the result to be true of the artifact as a whole, while `-closed` carries mixed claim-level outcomes. The residue rule allows the historical source artifact to survive after absorption; it does not convert an unabsorbed candidate claim into an absorbed one.
+
+The corrected decision rule is:
+
+```text
+7-28 → -absorbed
+
+ONLY IF:
+- all four doctrine-ready limbs land; and
+- both §8 candidate observations also land in a durable method-owned
+  surface as explicitly labeled observation-level material, each with:
+    candidate generalization
+    promotion condition
+    project-specific evidence boundary
+
+7-28 → -closed
+
+IF either candidate observation is:
+- held
+- declined
+- routed elsewhere
+- no-route
+- retained only as source-side evidence or residue
+- otherwise left without a new durable owner
+```
+
+Because the current smallest-coherent PR-2 does not naturally provide a durable home for the SMGI observation, **`-closed` is the more probable result under the present scope**. That remains a prediction, not a pre-grading ruling. The executor should not distort PR-2 merely to earn `-absorbed`.
+
+### 2. Method sequence
+
+Ratify:
+
+```text
+PR-1  held source-role boundary
+  &gt;&gt;
+PR-2  standing intent · runtime realization · repair target
+  &gt;&gt;
+one pair-level closure record
+  &gt;&gt;
+terminal rename of each artifact according to its actual result
+```
+
+The literal-anchor placement is settled:
+
+```text
+after     “…each suffice to secure it.”
+before    ## Source of intent is a role, not an artifact
+```
+
+The later section insertion made the July 18 memo’s two original placement conditions impossible to satisfy simultaneously. The literal anchor is more specific and preserves the intended conceptual location. 
+
+### 3. Consciousness/free-will P1 sequencing
+
+**Wait for both PR-1 and PR-2 before creating P1.**
+
+Claude is correct that PR-1 is the only strict textual dependency because P1 must quote the two held questions. But P1’s ASK-mapping layer also uses `standing intent`, `runtime realization`, persistence, authorization, and repair—the exact vocabulary PR-2 is about. Creating and snapshotting v1 between the two PRs would knowingly give the new canonical a stale doctrinal base and likely force an immediate corrective version.
+
+Therefore:
+
+```text
+PR-1
+→ PR-2
+→ pair closure
+→ CFW P1 / canonical v1
+```
+
+That is an attention and source-of-truth sequencing ruling, not a claim that PR-2 is a formal dependency. It preserves the original project brief’s requirement to plan the canonical before commencing the full research while keeping its ASK mappings downstream of settled method vocabulary. 
+
+### 4. Giant mind map versus relation atlas
+
+Do not choose between them. Use the atlas as the architecture and the giant mind map as its default projection.
+
+Ratify P4 as:
+
+```text
+UNDERLYING OBJECT
+typed, filterable relation atlas generated from stable canonical IDs
+
+DEFAULT VIEW
+one giant all-field mind map — the literal overview ASK requested
+
+ADDITIONAL VIEWS
+filters by:
+- consciousness / free will / agency / personhood
+- theory / tradition / thinker / empirical program
+- support / conflict / compatibility / necessary / sufficient
+- ASK analogue / analogue-break / non-identity
+- held question / evidence status
+
+OUTPUTS
+- interactive multidimensional atlas
+- one giant overview projection
+- bounded sectional projections
+- printable static overview
+```
+
+That preserves ASK’s requested artifact while avoiding an unreadable untyped radial diagram. The v2 memo correctly identifies the relation atlas as the better internal model, but it becomes a substitution only if the requested giant overview disappears. With the overview retained as the default view, there is no departure. 
+
+### 5. Absorption-discipline seam
+
+The seam is real and method-owned.
+
+`§Layer destinations` currently includes both positive landings and `Hold / no action`, while `-absorbed` later points generically to that section. Read literally, that can collapse `-held` into `-absorbed`. The worked-pressure text also says material was “held at observation-level,” despite observation-level carriage and deliberate hold being distinct statuses.
+
+Route a separate small method-ASK repair with this direction:
+
+```text
+- distinguish positive absorption destinations from non-absorption dispositions
+- make -absorbed point only to a positive durable landing
+- preserve -held as deliberate deferral without landing
+- replace “held at observation-level” with “carried/preserved at observation-level”
+```
+
+This is **not** a third limb of either TBI and should not enter PR-1 or PR-2. It also does not require a new handoff/TBI: ecology already operates method-ASK, so it proceeds through a hard repo-boundary reset under method-ASK’s own gates.
+
+## Relay-ready decision
+
+```text
+Ratified with one correction.
+
+1. Execute the two serialized method-ASK PRs in the recommended order.
+2. July 18 final disposition: -absorbed after PR-1 + pointer sync.
+3. July 28: absorb the doctrine-ready limbs, but determine the terminal suffix
+   only after explicit grading of both §8 observations.
+   - -absorbed only if both observations also land durably as properly labeled
+     observation-level method material.
+   - -closed if either is held, declined, routed, no-route, or remains only as
+     source-side evidence/residue.
+4. Use one pair-level closure record with separate artifact sections.
+5. Begin CFW P1 only after both PRs and pair closure.
+6. P4 is a typed relation atlas whose default all-field projection is the
+   requested one giant mind map.
+7. Record the absorption-discipline vocabulary seam as separate method-ASK work,
+   not bundled into either current PR and not routed as a same-surface TBI.
+8. Leave the iSoI v47/_v45 status-line lag as separate maintenance.
+```
+
+///
+
+Claude &gt;&gt;
+
+The advisor's correction is right on its face, but let me verify it against the live doctrine rather than accept it — and start the method-ASK boundary reset in parallel.
+
+Doctrine verified — the advisor's correction is correct: `-declined` is its own terminal classification and appears nowhere in §Layer destinations, so a declined limb alongside absorbed limbs is exactly the mixed outcome `-closed` names. My v2 clause wrongly imported "no retention" (a Learning-Disposition notion) into the absorption test.
+
+Completing the method-ASK boundary reset:
+
+Required reads continuing — `docs/method.md` (method-local requirement) and the target file in full:
+
+Required reads complete. Now the branch and the exact edit:
+
+While that verifies, updating both memos to `_v3` with the ratified corrections:
+
+Now memo B's `_v3` — the two sequencing rulings:
+
+A blocking finding — verifying it myself against the repo rather than trusting the subagent:
+
+Confirmed against the repo directly — the contradiction is real, and the two sibling primitive docs already disagree with each other on scoping:
+
+Ruling absorbed and PR-1 built. **One blocker found — I'm stopping for your ruling.**
+
+## The correction — verified, then adopted
+The advisor is right, and I checked the warrant rather than accepting it. `-declined` is enumerated as its own terminal classification at `absorption-discipline.md:87` and appears **nowhere in §Layer destinations**. So a declined observation beside absorbed doctrine limbs is exactly the mixed outcome `-closed` names. My v2 had imported "no retention" — a §Learning Disposition notion about whether a learning earns storage *anywhere* — into the absorption test, which asks whether *this claim* reached a durable destination. Different questions. §4 now carries the ruled table with all six `-closed` triggers, the three observation-level field requirements, the ruled prediction that **`-closed` is more probable**, and the guard that matters most: don't distort PR-2 to earn `-absorbed`.
+
+## PR-1 — exact scoped diff ready, and clean
+Hard repo-boundary reset done (method-ASK, `main` @ `7b26871`, clean, branch `docs/held-source-role-boundary`, required reads complete). One file, +2 lines, zero deletions. Two adversarial passes:
+
+- **Byte-identical** to the handoff's "Insert exactly" block — 368 chars, `sha256 858f5820…` on both sides.
+- **Placement ruled correct on new evidence**: the intervening section was added by commit `2291d28` (#150) *after* the memo, and the memo-time blob `1f22514` shows §The field models a dyad immediately followed by §The non-identities. So "before §The non-identities" was an *entailment* of anchor-adjacency plus section-containment, not an independent constraint. Honoring it literally now would push the paragraph into the wrong section and strand its "list above" reference.
+- Every other checklist item PASS. **No check harness exists** in method-ASK, so I am *not* claiming "repository checks passed" — that item is NOT-APPLICABLE.
+
+## The blocker
+`docs/portable-definition-layer.md` §Boundaries already answers held question (a), unscoped: **"Source-of-intent remains human."** Its sibling `docs/bounded-generativity.md` says the same thing *correctly scoped* — "in these implementations… A computational agent may exercise bounded delegated judgment without thereby becoming the source of intent." The two primitive docs already disagree with each other; landing the hold newly puts two live docs in direct conflict on the same question.
+
+I verified both lines by direct read at `origin/main`. The charitable reading is that `portable-definition-layer`'s gloss ("not produced by any tool") is a *non-derivability* claim the apex doc already owns, and its bold lead overstates its own gloss — so the repair is one sentence in a form the repo models next door. But both fixes exceed my authority: scoping that line widens PR-1 past the handoff's stated scope, and narrowing the hold breaks its byte-exact mandate. §Rule-to-Artifact Conformance Gate says stop for your ruling.
+
+**Recommend option A:** a one-line PR-0 scoping `portable-definition-layer.md` to match `bounded-generativity.md`'s existing form, *then* PR-1. Keeps PR-1 byte-exact and single-paragraph; no window of contradiction ever exists. Alternatives: widen PR-1 (needs your explicit scope authorization), or land PR-1 and repair after (visible contradiction in a public repo meanwhile).
+
+Two further findings, both blocked by the same byte-exactness and both your call: the new hold **states no resolution trigger** (unlike both existing holds and `absorption-discipline.md:65`), and it **doesn't cite the guard that makes its claim true** (`bounded-generativity`'s no-entailment clause). Neither blocks landing if you're content with the paragraph as authored.
+
+## Also done
+- Memo A at [`_v4`](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_ecology-ASK_method-ASK-TBI-pair_absorption-recommendation-memo_v4-claude-code.md) — ruled §4, PR-3 authorized as separate work with a sequencing note (it changes the very rule §4 applies), §10 execution record, §11 the blocker.
+- Memo B at [`_v3`](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_consciousness-free-will_project-recommendation-and-plan_v3-claude-code.md) — P1 now waits for both PRs plus pair closure; the diagram question resolved as **both** (atlas architecture, your giant mind map as its default all-field projection), which retires my flagged departure since nothing is substituted.
+- Both artifacts remain `-ingested`. Nothing committed, pushed, or merged.
+
+///
+
+GPT &gt;&gt;
+
+## Advisor ruling
+
+**Do not create PR-0. Narrowly widen PR-1 to two files.**
+
+The blocker is real: `portable-definition-layer.md` currently states, without qualification, **“Source-of-intent remains human,”** while `bounded-generativity.md` limits the corresponding claim to **the documented implementations** and explicitly says computational delegated judgment does not thereby confer sourcehood. The first is a universal identity restriction; the second is a scoped observation plus a non-entailment. They cannot remain peers once `normative-apex.md` declares computational source-role eligibility deliberately unresolved.  
+
+But PR-0 would split one coherent correction into two review cycles without reducing decision-relevant uncertainty. The PDL scoping repair is necessary **because** the held-boundary paragraph is landing; merging both together creates no contradiction window and gives the corpus reconciliation one audit trail. The original handoff scope can be expressly widened by ASK while preserving its exact requested paragraph unchanged.
+
+### Authorized PR-1 scope
+
+Keep the `normative-apex.md` insertion **byte-identical** and at the already-ruled position:
+
+```text
+after     “…each suffice to secure it.”
+before    ## Source of intent is a role, not an artifact
+```
+
+The live apex text confirms that this is the role-occupancy section; moving the hold below the intervening artifact section would misplace it.
+
+Add exactly one companion replacement in `docs/portable-definition-layer.md`.
+
+**Replace:**
+
+```markdown
+- **Source-of-intent remains human.** What the definition layer *means*, and what counts as a governed artifact-or-interpretation worth preserving, is the operator's — not produced by any tool.
+```
+
+**With:**
+
+```markdown
+- **Source of intent, in the worked instances documented here, remains human/institutional.** What the definition layer *means*, and what counts as a governed artifact-or-interpretation worth preserving, is supplied or authorized by the operator or governing institution — not produced merely by the tool that carries or executes it.
+```
+
+This does three things and no more:
+
+```text
+scopes the empirical claim to the documented instances
+preserves the non-derivability claim
+does not answer whether a computational office may be constituted as source
+```
+
+The PDL repair is **adjacent corpus conformance authorized by ASK**, not additional payload attributed to the July 18 handoff. The pair-level closure should preserve that provenance distinction.
+
+## Do not add the two proposed extras
+
+### No resolution trigger in the held paragraph
+
+Leave the exact paragraph unchanged. The hold is a content-level doctrinal boundary, not observation-level material requiring a promotion condition. The consciousness/free-will project is intended to become the later **resolution basis**, not a trigger that should be hard-coded into doctrine before its canonical even exists. 
+
+### No citation to `bounded-generativity.md`
+
+The normative-apex doctrine owns the structural source-role question. Bounded generativity supplies a confirming implementation-scoped non-entailment, but it is a sibling primitive, not the authority for what the apex doctrine may hold open. The corpus should agree without making the structural owner depend on the worked-instance owner.
+
+## Revised execution order
+
+```text
+PR-1 widened:
+  normative-apex exact held paragraph
+  + portable-definition-layer scoped conformance repair
+
+then PR-3:
+  absorption-discipline destination/disposition seam repair
+
+then PR-2:
+  standing intent · runtime realization · repair target
+  + explicit grading of both §8 observations under the repaired discipline
+
+then:
+  one pointer-only method grounding-note synchronization
+  one pair-level closure record
+  both terminal renames according to the actual grading
+  CFW P1 / canonical v1
+```
+
+PR-3 should now land **before PR-2**, not merely at an unspecified point. It changes the doctrine that PR-2 must use to distinguish observation-level landing, hold, decline, and mixed closure. The existing workaround is logically adequate, but knowingly grading against the unrepaired owner adds avoidable interpretive friction. The live absorption doctrine presently distinguishes positive landings from hold/no-action and separately defines `-absorbed`, `-held`, and mixed `-closed`; the identified wording seam is therefore real.
+
+## Pre-commit status
+
+The earlier one-file verification remains valid for the **apex paragraph itself**, but the previous terminal state—
+
+```text
+exact scoped diff ready for approval
+```
+
+—is superseded by this ruling. PR-1 is now a two-file unit and needs a fresh complete-diff inspection before ASK approves commit and push. No re-drafting of the held paragraph is needed. The absence of a repository check harness remains accurately reported as **not applicable**, not as “checks passed.”
+
+## Relay-ready text
+
+```text
+Ruling: widen PR-1; do not create PR-0.
+
+Keep the normative-apex held-boundary paragraph byte-identical and at the ruled
+literal anchor. Add one companion change in docs/portable-definition-layer.md:
+
+- **Source of intent, in the worked instances documented here, remains
+  human/institutional.** What the definition layer *means*, and what counts as a
+  governed artifact-or-interpretation worth preserving, is supplied or authorized
+  by the operator or governing institution — not produced merely by the tool that
+  carries or executes it.
+
+No other PDL edit. Do not add a resolution trigger or a bounded-generativity
+citation to the held paragraph.
+
+Treat the PDL change as ASK-authorized corpus conformance required to land the
+hold, not as payload contained in the July 18 TBI.
+
+After the widened PR-1 merges:
+1. land the separately authorized absorption-discipline seam repair as PR-3;
+2. execute PR-2 and grade both candidate observations under the repaired owner;
+3. complete the pointer sync, pair-level closure, and terminal renames;
+4. begin CFW P1 only after the pair closes.
+
+The former one-file exact-diff-ready state is superseded. Return a fresh complete
+two-file diff for ASK approval before commit.
+```
+
+///
+
+Claude &gt;&gt;
+
+Ruling absorbed — widen to two files, no PR-0, both extras declined. Applying the companion change exactly as ruled:
+
+Both regions verified byte-exactly by my own independent check. Writing the memos while the three-agent verification runs:
+
+Now memo B's `_v4` — the method-side order changed under it:
+
+All three verifiers returned PASS. Final state check:
+
+Widened as ruled. **Terminal state: `exact scoped diff ready for approval` — fresh two-file diff, nothing committed.**
+
+## The diff
+```
+docs/normative-apex.md            | 2 ++
+docs/portable-definition-layer.md | 2 +-
+2 files changed, 3 insertions(+), 1 deletion(-)
+```
+Branch `docs/held-source-role-boundary`, 0 commits ahead of `main` @ `7b26871`.
+
+**Byte fidelity — verified programmatically, not by eye.** The apex paragraph is untouched and re-verified at `sha256 858f5820…6d5ea85f` (368 chars); no re-drafting occurred, and `git numstat` shows 2 insertions / 0 deletions on that file, so no existing line was altered. The PDL replacement is byte-identical to your ruled text (333 chars / 335 bytes — the em dash is 3 bytes), the removed line matched the ruled old text exactly, and the old universal form is now absent from the repo. One transmission detail worth knowing: the ruled old text couldn't disambiguate the apostrophe in `operator's`; the file's bytes are straight ASCII, which is the variant that matched.
+
+## Verification of the widened unit — three independent read-only passes, all PASS
+
+**Corpus completeness.** Zero remaining contradictions across all 46 non-binary carriers, under eight independent search strategies, with the boundary stated (excluded: git history, the grounding note, control-surface, and the published Substack text). Nothing depends on the old PDL bullet — its distinctive fragments return zero hits elsewhere, so the rescope strands no dependent.
+
+**On "merely" — the two verifiers disagreed, and I'm ruling for keeping your text.** One flagged it as a redundant hedge that softens the negation below the baseline. The other refuted that with better evidence: `normative-apex.md:7` uses the *same* hedge — "cannot be legitimated **merely** by executing it" — and `:11` expressly permits tool contribution ("Generated candidates, critique, evidence… may inform revision; they do not themselves authorize the revision"), with `:72` "candidate-generation ≠ standard-authorship". So the old absolute "not produced by any tool" was **over-strong relative to the doctrine it was carrying** — it would have forbidden the tool-informed revision the apex doc explicitly allows. Your wording is more doctrinally accurate than what it replaced, not weaker.
+
+**Local coherence.** The rescope is an improvement on two axes: the negation now runs on the doc's *own* declared axis (tool vs source, per its title "the durable object, separable from the tool that holds it") rather than the human-vs-machine axis the hold deliberately opens; and instance-scoping is already precedented in that same §Boundaries at `:85`. The asymmetry with `bounded-generativity.md:100` — which adds a non-entailment sentence PDL doesn't — was ruled *correct*, not tolerable: that doc admits computational judgment in its realization span, PDL disclaims those mechanics outright at `:88`, so importing the sentence would answer a question PDL never poses.
+
+## Three non-blocking observations — no action taken, none in scope
+
+1. **`docs/source-of-intent.md:417/:420/:425`** is the one remaining doctrine surface using bare "human" for the deciding source without a qualifier ("the human decision is explicit"; "human judgment &gt;&gt; authorized relay &gt;&gt; execution"). Classified ADJACENT, not contradicting — it's an operational relay rule, and that doc cedes the structural face to normative-apex at `:7`. But it's the same *class* of finding that produced the PDL repair, so if your intent is that no carrier presupposes a human source in unscoped general phrasing, that's the line to revisit — as its own bounded change, not here.
+2. The new hold lives only in body prose; both other holds in the corpus are surfaced in a §Self-superseding clause. Findability only.
+3. "worked instances" (plural) is licensed by the doc's own §60 heading ("one implemented, one conceptual") but the doc reserves the singular for AP alone at `:22`/`:70`. A zero-cost tightening exists — but it's your ruled text, and I'm not proposing churn on a paragraph that was just ruled.
+
+## Records
+Memo A at [`_v5`](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_ecology-ASK_method-ASK-TBI-pair_absorption-recommendation-memo_v5-claude-code.md) — §11 ruled and resolved (both declines recorded with their reasons: my trigger argument mis-typed a content-level hold as observation-level, and my citation argument had the direction of authority backwards); §7 carries the ruled PR-1 → PR-3 → PR-2 order, which settles the sequencing note v4 left open; §10 carries the two-file diff and the **provenance distinction** — the PDL change is ASK-authorized corpus conformance, *not* July-18 handoff payload, which the pair-level closure must preserve. Memo B at [`_v4`](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_consciousness-free-will_project-recommendation-and-plan_v4-claude-code.md) — corrected: "both PRs" was wrong once there are three.
+
+Verification evidence stays out of the memos and goes in the PR body when you authorize commit — per §Comments, Docs, and PR Roles, change-specific framing belongs there. Still accurately reported: **no repository check harness exists** in method-ASK, so checks are NOT-APPLICABLE rather than passed.
+
+Awaiting your approval to commit and push.
+
+///
+
+GPT &gt;&gt;
+
+## Pre-commit gate
+
+**No advisor approval is issued from this relay.**
+
+The mounted bootstrap assigns ordinary pre-commit approval directly to ASK:
+
+&gt; **Pre-commit:** in-thread exact-scoped-diff approval. ASK reviews directly; you are not in that loop.
+
+Your message explicitly asks for an exception—an advisor pre-commit review—but that exception requires a **named proposal-only exact-byte review object** in mapped shared scratch, with its exact path, baseline, byte size, and SHA-256. The executor’s status report and the evolving absorption memo do not satisfy that object contract. I therefore have not independently reviewed or recomputed the bytes of the uncommitted two-file diff and cannot certify them.
+
+## Substantive posture
+
+I see **no new conceptual blocker** in the reported two-file unit:
+
+* `portable-definition-layer.md` currently makes the unscoped assertion **“Source-of-intent remains human.”** 
+* `bounded-generativity.md` correctly limits its human/institutional statement to its documented implementations and says computational delegated judgment does not itself confer sourcehood. 
+* `normative-apex.md` currently establishes a human-or-computational executor while leaving the root source-role question unstated; the exact held paragraph belongs immediately after that section’s final paragraph and before the role/artifact section.
+
+The widened design therefore remains coherent with the paired-TBI operation and the consciousness/free-will project’s non-resolving posture.
+
+But **substantive agreement is not exact-diff approval**.
+
+## Operative next step
+
+ASK may directly approve the executor’s displayed two-file diff and authorize commit/push under the normal pre-commit gate.
+
+After push, relay the exact PR number or URL. That opens the advisor’s actual **Stage-2** window, where I will verify:
+
+```text
+exact base SHA
+exact head SHA
+full pushed diff
+placement and byte fidelity
+PDL scoping semantics
+absence of bundled changes
+PR account against the actual patch
+```
+
+Until then, the accurate advisor state is:
+
+```text
+conceptual objection       none
+exact uncommitted bytes    not independently reviewed
+advisor commit approval    not issued
+Stage-2 review             awaits pushed PR locator
+```
+
+///
+
+ASK &gt;&gt;
+
+the bootstrap was incorrect. in a parallel ecology thread, we are working on fixing it it. just remounted a new bootstrap to this project sources, read and follow it instead of the previous bootstrap.
+
+///
+
+GPT &gt;&gt;
+
+Read and adopted **Advisor Bootstrap v4** as the operative bootstrap for this thread. It supersedes the previous bootstrap. 
+
+The live index, control-surface grounding note, and the named repo files—`README.md`, `AGENTS.md`, `docs/architecture.md`, and `protocol/README.md`—are all readable through their declared paths.  
+
+My preceding response is **withdrawn**. The restored rule is:
+
+```text
+paired-path Stage 1 belongs to the advisor
+ASK’s relay is the review request
+a missing exact object leaves the review open with readiness incomplete
+direct execution requires explicit ASK authorization
+```
+
+The executor’s prior readiness relay therefore opened Stage 1; it did not route the diff to ASK as the routine first-line reviewer. The current state is:
+
+```text
+Stage-1 window       open
+exact review object  not yet supplied
+advisor verdict      pending, not declined
+```
+
+The bounded recovery is for the executor to publish the minimum proposal-only exact patch to the index-mapped shared scratch and report its exact locator, baseline, byte size, and SHA-256. Once that object is relayed here, I review it directly; no second review-request phrase is required.
+
+///
+
+Claude &gt;&gt;
+
+**Stop — the working tree contains a change this session did not make.** The PDL bullet already carries the ruled replacement text, but I never issued that edit. Re-orienting against the repo before touching anything:
+
+Confirmed a second writer. My session made one edit (`normative-apex.md`, 22:41); `portable-definition-layer.md` was modified at 23:28 and there's an untracked `applycheck-wt/` I did not create. Establishing exactly what changed before touching anything:
+
+**Stopping. A second writer-capable session has been operating in `method-ASK`, and under §Session Topology that is a stop condition until you establish provenance.**
+
+## What I found
+
+I went to apply the ruled PDL replacement and discovered it was **already applied** — by something other than this session.
+
+```text
+docs/normative-apex.md          modified 22:41:16   ← my edit, this session
+docs/portable-definition-layer.md  modified 23:28:04   ← NOT mine; ~47 min later
+applycheck-wt/                     created  07:07     ← NOT mine
+```
+
+`applycheck-wt/` is a **second git worktree** on this repo at detached HEAD `7b26871`, clean, and untracked in the main worktree. The name suggests another session was test-applying a patch. My session issued exactly one edit in this repo; I never touched `portable-definition-layer.md` and never created a worktree.
+
+## The material state is nonetheless correct
+
+I verified the second writer's bytes rather than assuming — the PDL line is **byte-identical to your ruled replacement**: 333 chars, `sha256 7ac1b1a3…` on both sides, including the em dash. And the full working-tree diff against `origin/main` is exactly the authorized two-file unit:
+
+```text
+docs/normative-apex.md              +2  the held-boundary paragraph, byte-exact,
+                                        at the ruled anchor (dddaf84..a1cd369 —
+                                        the same hunk I verified earlier)
+docs/portable-definition-layer.md   1 line replaced, byte-identical to the ruling
+                                    (be74774..ead5006)
+```
+
+Nothing is committed. `HEAD == origin/main == 7b26871`, zero commits ahead.
+
+## Why I'm not proceeding
+
+`AGENTS.md` §Session-Start Discipline: *"Inheriting another thread's uncommitted state is a stop condition until provenance is established."* §Session Topology: *"Stop on suspected concurrent mutation. If a working tree contains changes the current session did not make, do not overwrite."*
+
+So I have not committed, pushed, deleted the worktree, or published the `-PROPOSED` review object the advisor is waiting on. Publishing a review packet over bytes whose authorship I can't account for would launder unestablished provenance into an object the advisor treats as exact-verified — precisely the inference-attached-to-a-checked-fact error the evidence rules prohibit.
+
+## What I need from you
+
+1. **Who made the PDL edit and the worktree?** If it was you or a parallel session acting on the same ruling, say so and I'll proceed — the bytes already check out, so this becomes a one-line provenance note in the closure record rather than a rework.
+2. **Disposition of `applycheck-wt/`** — it's untracked and not gitignored, so any `git add -A` would sweep it in. I'd remove it with `git worktree remove` before commit, but not while another session may be using it.
+
+Once provenance is settled I'll publish the minimum proposal-only exact patch to `ecology-ASK-EXTERNAL/scratch/` as `…_method-ASK-PR1-two-file_exact-patch-PROPOSED.md`, reporting its exact path, baseline `7b26871`, byte size and SHA-256, which opens the advisor's Stage-1 review.
+
+Two smaller notes: the index row *"Named review object (current)"* still reads **"none — no active review object"** and will need to name the packet by exact path once published — that's a live-canonical edit the advisor fetches, so tell me if you want me to make it or if it's yours. And memo A is at `_v4`; I'll carry the concurrency incident and the widened two-file scope into `_v5` once the provenance question is answered, so the record reflects one settled account rather than two.
+
+///
+
+ASK &gt;&gt;
+
+as mentioned, there was a problem with the bootstrap. I had pasted GPT's reply, but then had it load a newly corrected bootstrap v4 and reissue. I stopped your last turn mid flight and selected "rewind to here" in the Claude Code UI, but it seems it left residue. is that enough to clarify and we can get back to work?
+
+///
+
+Claude &gt;&gt;
+
+That fully resolves it — thank you. The residue is my own from the rewound turn (the UI rolls back the conversation, not the filesystem), not a second writer. That also matches the `+3 −1` the UI shows for the branch. Clearing the residue and verifying the final unit:
+
+Clean — only the two intended files. Now publishing the Stage-1 review object. **Declaring before creation**, per the review-object contract:
+
+```text
+path       ecology-ASK-EXTERNAL/scratch/
+filename   2026-07-30_method-ASK_PR1-held-boundary-and-PDL-scoping_exact-patch-PROPOSED.md
+role       single-file multi-target review object — complete exact patch for the
+           two-file PR-1 unit, with target set, baseline refs, and proposed hashes
+lifecycle  proposal-only; immutable once path+hash are reported; a revision takes a
+           new dated/_vN -PROPOSED name; retired when PR-1 merges and the pushed PR
+           becomes the Stage-2 object
+```
+
+Review object published and its embedded patch verified byte-identical to the live tree. Updating the index row the advisor fetches live — it currently asserts "no active review object," which is now false:
+
+Yes — that clarifies it completely, and it was the better explanation than mine. A UI rewind rolls back the conversation but not the filesystem, so my own pre-rewind work looked exactly like a second writer. The stop was still the right call on the evidence I had; the cost was one round-trip.
+
+**Residue cleared, PR-1 complete as a two-file unit, Stage-1 object published.**
+
+## Relay for the advisor
+
+```text
+path      /studio/studio ASK/ecology-ASK-EXTERNAL/scratch/
+          2026-07-30_method-ASK_PR1-held-boundary-and-PDL-scoping_exact-patch-PROPOSED.md
+bytes     13,319
+sha256    c5be6713af1d6737f1d8185ea36e55dd54370b333e82310b3fe0d16c40d27813
+baseline  7b2687125810c8990f34018334fe008cc9a0708d  (== origin/main)
+diffstat  2 files changed, 3 insertions(+), 1 deletion(-)
+```
+
+The packet carries the complete exact patch, per-target baseline and proposed blob SHAs with byte sizes, both byte-fidelity attestations, the placement drift resolution with the memo-time blob evidence, the verification boundary, and the declined extras. Its embedded diff was verified identical to the live working tree (26 lines, programmatic comparison, not eyeballed).
+
+## What I verified rather than assumed
+
+The PDL bytes already in the tree are **byte-identical to your ruled replacement** — 333 chars, `sha256 7ac1b1a3…`, em dash included. The apex paragraph remains byte-identical to the handoff's mandated block (368 chars, `sha256 858f5820…`) at the ruled anchor. The residue worktree was clean, detached at `7b26871`, zero unique commits, then removed.
+
+## One thing I changed that you should know about
+
+`_INDEX-ecology-ASK.md`'s **"Named review object (current)"** row said *"none — no active review object"* — false the moment the packet existed, and the advisor fetches that index live. I updated the row to name the packet by exact path with baseline, size, and hash, keeping the prior program-closure note as a parenthetical. That's correcting a false current instruction under §Verification Claims, not scope creep — but it's a live canonical the advisor reads, so flagging it explicitly.
+
+## Record
+
+Memo A is at [`_v5`](/Users/ask/ASK%20Dropbox/studio/studio%20ASK/ecology-ASK-EXTERNAL/scratch/2026-07-29_ecology-ASK_method-ASK-TBI-pair_absorption-recommendation-memo_v5-claude-code.md): §12 the widened unit and published object, §13 both extras declined so they don't resurface as fresh findings, §14 the single-writer incident and its resolution, §15 the revised order with **PR-3 now before PR-2**. The provenance split is recorded to survive into the closure — `normative-apex.md` is July-18 handoff payload, `portable-definition-layer.md` is ASK-authorized adjacent conformance, and the handoff did not ask for two files.
+
+Nothing committed, pushed, or merged. Both routed artifacts remain `-ingested`. Terminal state: **`exact scoped diff ready for approval`** for the two-file unit — awaiting your approval to commit and push, which then opens the advisor's Stage-2 window on the pushed PR.
+
+///
+
+GPT &gt;&gt;
+
+## Stage 1 — **APPROVE**
+
+I recommend that ASK authorize commit and push of the exact two-file patch identified by:
+
+```text
+repo       apexSolarKiss/method-ASK
+baseline   7b2687125810c8990f34018334fe008cc9a0708d
+patch      ebdc83ddb957d69f371eee239523252ca5595c27e44d42e15ffd4b2f6525c3bd
+targets    docs/normative-apex.md
+           docs/portable-definition-layer.md
+```
+
+This is an advisor recommendation only; ASK remains the authorization apex. The corrected bootstrap makes this relay the Stage-1 request and assigns the exact pre-commit review to this surface. 
+
+### Exact-patch verification
+
+I fetched the named proposal object from the live index-mapped path. The live index now identifies the same path, baseline, size, and whole-packet hash reported by the executor.  
+
+I independently reconstructed the **complete unified patch**, including the single-space context markers on blank diff lines:
+
+```text
+exact patch size     2,989 bytes
+computed SHA-256     ebdc83ddb957d69f371eee239523252ca5595c27e44d42e15ffd4b2f6525c3bd
+reported SHA-256     ebdc83ddb957d69f371eee239523252ca5595c27e44d42e15ffd4b2f6525c3bd
+result               MATCH
+```
+
+The exact baseline blob SHAs in the packet also match GitHub at the declared commit:
+
+```text
+docs/normative-apex.md
+dddaf845c8514501df8a73d9a6cec71c130f8c43
+</pre>
+  </div>
+</div>
+
+  <main class="shell">
+    <header class="hero">
+      <h1 class="wordmark" style="margin: 0;">
+        <span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">ASK</span>
+        <!-- logo-ASK primary wordmark — fill:currentColor, inherits the mode's pairing color -->
+        <svg viewBox="0 0 2160 973.33" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true">
+          <path d="M261.89,970.33h398.3c15.46,0,18.53-21.9,3.67-26.15l-342.8-98.07c-12.84-3.67-26.42,2.72-31.77,14.95l-39.62,90.59c-3.85,8.81,2.6,18.68,12.22,18.68Z"/>
+          <path d="M938.42,9.89c-161.1,0-232.89,98.78-232.89,273.45s69.17,260.56,217.14,260.56h236.4c109.44,0,173.36,15.75,173.36,141.73,0,100.22-43.78,151.76-133.96,151.76h-361.39c-10.99,0-20.87-6.57-25-16.61L497.69,55.7c-13.13-32.93-34.15-58.7-62.16-58.7s-49.91,28.63-62.16,58.7L1.03,949.32c-3.65,8.75,2.88,18.35,12.47,18.35h73.81c10.97,0,20.84-6.55,24.98-16.56L433.78,173.09l316.75,777.89c4.1,10.08,14.01,16.69,25.03,16.69h415.89c161.1,0,232.02-97.35,232.02-280.61,0-173.23-73.55-257.7-216.26-257.7h-236.4c-111.19,0-173.36-14.32-173.36-136.01,0-100.22,44.65-151.76,133.96-151.76l285.19.16c11.69,0,17.73-13.96,9.72-22.47l-94.91-100.9c-5.04-5.35-12.06-8.39-19.41-8.4l-173.59-.11Z"/>
+          <path d="M2156.2,945.15l-451.6-462.52c-10.24-10.48-10.03-27.13.47-37.36l423.5-412.63c8.57-8.35,2.57-22.75-9.48-22.75h-100.19c-7.31,0-14.31,2.92-19.39,8.11l-380.37,387.74c-8.43,8.59-23.18,2.71-23.18-9.24V36.48c0-14.69-12.08-26.59-26.97-26.59h-67.59v.35l-227.51-.14c-11.79,0-17.78,14.16-9.58,22.62l98.04,101.04c5.02,5.17,11.92,8.09,19.12,8.1l119.93.07v799.15c0,14.69,12.08,26.59,26.97,26.59h40.61c14.9,0,26.97-11.91,26.97-26.59v-399.19c0-12.07,15.01-17.9,23.35-9.06l402.92,426.38c5.1,5.4,12.25,8.47,19.74,8.47h104.53c11.89,0,17.96-14.07,9.72-22.52Z"/>
+        </svg>
+      </h1>
+      <div class="tagline-marquee">
+        <span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">order from chaos // beauty in systems</span>
+        <!-- two identical halves; the -50% loop makes the seam invisible -->
+        <div class="tagline-track" aria-hidden="true">
+          <p class="tagline tagline-half">order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  </p>
+          <p class="tagline tagline-half">order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  order from chaos  //  beauty in systems  //  </p>
+        </div>
+        <p class="tagline tagline-static" aria-hidden="true">order from chaos  //  beauty in systems</p>
+      </div>
+    </header>
+
+    <section class="positioning" aria-label="what ASK builds">
+      <p class="positioning-category">governed domain architectures</p>
+      <p class="positioning-primitive">bounded generativity</p>
+      <p class="positioning-prop">A deterministic governance architecture brackets the generative execution span</p>
+    </section>
+
+    <section class="tiers" aria-label="ASK surfaces">
+      <article class="tier surface-panel">
+        <span class="tier-role caption">builder</span>
+        <h2 class="tier-name surface-panel-title"><a href="/apex-solar-kiss/">apex solar kiss</a></h2>
+        <p class="tier-desc surface-panel-support">governed domain architectures</p>
+        <nav class="tier-links" aria-label="apex solar kiss links">
+          <a class="chip surface-action" href="/apex-solar-kiss/">projects</a>
+          <a class="chip surface-action" href="https://github.com/apexSolarKiss" target="_blank" rel="noopener">GitHub</a>
+          <a class="chip surface-action" href="/apex-solar-kiss/design/">design</a>
+        </nav>
+      </article>
+
+      <article class="tier surface-panel">
+        <span class="tier-role caption">artistic practice</span>
+        <h2 class="tier-name surface-panel-title"><a href="/asymptotic-system-key/">asymptotic system key</a></h2>
+        <!-- Each plus binds to the word after it with a non-breaking space, so a
+             wrap falls before `+ abstract` or `+ conceptual` and never strands a
+             plus at the end of a line. Visible copy is unchanged. -->
+        <p class="tier-desc surface-panel-support">generative +&nbsp;abstract +&nbsp;conceptual</p>
+        <nav class="tier-links" aria-label="asymptotic system key links">
+          <a class="chip surface-action" href="/asymptotic-system-key/">works</a>
+          <a class="chip surface-action" href="/asymptotic-system-key/lineage/">lineage</a>
+        </nav>
+      </article>
+
+      <article class="tier surface-panel">
+        <span class="tier-role caption">creative production</span>
+        <h2 class="tier-name surface-panel-title"><a href="/askproduktion/">ASKproduKtion</a></h2>
+        <p class="tier-desc surface-panel-support">photography + video</p>
+        <nav class="tier-links" aria-label="ASKproduKtion links">
+          <a class="chip surface-action" href="/askproduktion/">portfolio</a>
+        </nav>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <a href="https://atomicspacekitten.substack.com" target="_blank" rel="noopener">Substack</a>
+      <a href="https://www.linkedin.com/in/andrewklug" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:hello@a-s-k.studio">hello@A-S-K.studio</a>
+    </footer>
+  </main>
+
+<div id="pp"></div><button id="ppt" hidden>panel</button>
+<script>
+(function(){
+ var band=document.querySelector('.ptx-marquee'),root=document.documentElement;
+ var hero=document.querySelector('.hero');
+ var travel=0, edgeDoc=0, mutations=0, resizes=0, frozen=false;
+ var lastScroll=null, lastEdge=null, violations=0, maxBack=0;
+
+ /* THE v1 BUG, for the record:
+      travel = innerHeight - (edgeDoc - scrollY)
+    edgeDoc is a DOCUMENT coordinate; subtracting scrollY converts it back to
+    the hero's CURRENT viewport position, so travel grew as the page scrolled.
+    Correct at scroll 0 and wrong everywhere else. On a phone the browser
+    chrome collapsing fires resize mid-scroll, which recomputed travel against
+    a scrolled hero and moved the animation's start point underneath it —
+    reverse, overshoot, settle.
+
+    v2 derives travel from two scroll-INDEPENDENT quantities and freezes it. */
+ function measure(why){
+   var r=hero.getBoundingClientRect();
+   edgeDoc = r.bottom + scrollY + 36.3;            /* document coordinate */
+   var bandH = band.getBoundingClientRect().height; /* NOT innerHeight: on iOS
+                                                       100svh and innerHeight
+                                                       disagree while the
+                                                       browser chrome moves */
+   travel = Math.max(0, bandH - edgeDoc);
+   root.style.setProperty('--ptx-travel', travel.toFixed(2)+'px');
+   mutations++;
+   return why;
+ }
+
+ /* Measure once the fonts and first layout have settled, then FREEZE. A
+    mid-scroll resize on mobile is the browser chrome moving, not a new layout,
+    and rebasing on it is what produced the jump. Only an orientation change
+    while at the top re-opens the measurement. */
+ function settle(){ if(!frozen){ measure('initial'); frozen=true; } }
+ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(settle);
+ addEventListener('load',settle);
+ setTimeout(settle,700);
+
+ addEventListener('resize',function(){
+   resizes++;
+   if(scrollY<2){ frozen=false; settle(); }      /* safe: nothing to disturb */
+ });
+ if(screen.orientation) screen.orientation.addEventListener('change',function(){
+   scrollTo(0,0); frozen=false; settle();
+ });
+
+ /* Monotonicity watch: the edge must never move UP the document as the page
+    scrolls DOWN. Any backward step is the defect reappearing. */
+ addEventListener('scroll',function(){
+   var edge=band.getBoundingClientRect().bottom+scrollY;
+   if(lastScroll!==null && scrollY>lastScroll+1 && edge<lastEdge-1){
+     violations++; maxBack=Math.max(maxBack,lastEdge-edge);
+   }
+   lastScroll=scrollY; lastEdge=edge;
+ },{passive:true});
+
+ /* Reporting only. This probe NEVER changes the driver — that was v1's second
+    discontinuity. */
+ var probe={claims:CSS.supports('animation-timeline','scroll()'),drives:null};
+ (function(){
+   var st=document.createElement('style');
+   st.textContent='@keyframes _pr{from{transform:translateY(0)}to{transform:translateY(400px)}}'
+     +'#_pr{position:absolute;left:-9999px;top:0;width:8px;height:8px;'
+     +'animation:_pr linear both;animation-timeline:scroll(root block);animation-duration:auto}';
+   document.head.appendChild(st);
+   var el=document.createElement('div'); el.id='_pr'; document.body.appendChild(el);
+   setTimeout(function(){
+     var max=Math.max(1,root.scrollHeight-innerHeight);
+     var y=new DOMMatrixReadOnly(getComputedStyle(el).transform).m42;
+     probe.measured=Math.round(y); probe.expected=Math.round(400*Math.min(1,scrollY/max));
+     probe.drives=Math.abs(y-probe.expected)<40;
+     el.remove(); st.remove();
+   },700);
+ })();
+
+ var out=document.getElementById('pp');
+ function report(){
+   var b=band.getBoundingClientRect();
+   var max=Math.max(1, root.scrollHeight-innerHeight);
+   var p=Math.min(1,Math.max(0,scrollY/max));
+   var docH=root.scrollHeight, edge=b.bottom+scrollY, conv=Math.abs(edge-docH);
+   var expected=edgeDoc + (docH-edgeDoc)*p;
+   out.innerHTML='<b>P1 v2 // monotonic convergence</b>'
+   +'\ndriver        CSS scroll timeline only (no takeover)'
+   +'\ntravel        '+travel.toFixed(1)+'px   set '+mutations+'x'
+     +(mutations===1?' <span class=ok>(frozen)</span>':' <span class=bad>(REBASED — should be 1)</span>')
+   +'\nresize events '+resizes+'  (ignored while scrolled)'
+   +'\nprogress      '+(p*100).toFixed(1)+'%'
+   +'\nedge now      '+edge.toFixed(1)+'   expected '+expected.toFixed(1)
+     +'   delta '+(edge-expected).toFixed(1)
+   +'\nmonotonic     '+(violations===0
+      ?'<span class=ok>YES — edge never moved backwards</span>'
+      :'<span class=bad>'+violations+' reversals, worst '+maxBack.toFixed(1)+'px</span>')
+   +'\nconvergence   '+(p>0.995
+      ?(conv<3?'<span class=ok>CONVERGED ('+conv.toFixed(1)+'px)</span>'
+              :'<span class=bad>off by '+conv.toFixed(1)+'px</span>')
+      :'scroll to the bottom')
+   +'\n\n<b>JS-free path on THIS device</b>'
+   +'\nCSS.supports  '+probe.claims
+   +'\nactually drives '+(probe.drives===null?'measuring…'
+      :(probe.drives?'<span class=ok>YES — motion is CSS-only</span>'
+                    :'<span class=bad>NO — band will not move here</span>'))
+   +(probe.measured!==undefined?'  ('+probe.measured+' vs '+probe.expected+')':'');
+ }
+ addEventListener('scroll',report,{passive:true});
+ addEventListener('resize',report);
+ setInterval(report,400); report();
+})();
+
+(function(){
+ var p=document.getElementById('pp'),t=document.getElementById('ppt');
+ if(!p||!t)return;
+ t.addEventListener('click',function(){p.hidden=false;t.hidden=true});
+ p.addEventListener('click',function(){p.hidden=true;t.hidden=false});
+ addEventListener('keydown',function(e){if(e.key==='p'||e.key==='P'){
+   var on=p.hidden;p.hidden=!on;t.hidden=on}});
+})();
+</script>
+</body>
+</html>
