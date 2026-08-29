@@ -1793,7 +1793,7 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
  var hero=document.querySelector('.hero');
  var travel=0, edgeDoc=0, bandH=0, startEdge=0;
  var mutations=0, resizes=0, frozen=false, gate='pending';
- var scrolledOnce=false, rebases=0;
+ var topRemeasures=0, midScrollRebases=0;
 
  /* THE v1 BUG, for the record:
       travel = innerHeight - (edgeDoc - scrollY)
@@ -1819,6 +1819,14 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
                                      so it stays exact when travel clamps to 0. */
    root.style.setProperty('--ptx-travel', travel.toFixed(2)+'px');
    band.classList.add('measured');
+   /* Classify THIS measurement by where the page is right now — not by
+      whether the page was ever scrolled at some earlier point. A history
+      latch answers the wrong question: after any scroll it condemns the
+      benign top re-measure, the orientation reset (which returns to the
+      top first), and even the FIRST measurement when fonts.ready lands
+      after an early scroll. An initial measurement is never a rebase,
+      wherever it happens. */
+   if(mutations>0){ if(scrollY<2) topRemeasures++; else midScrollRebases++; }
    mutations++; gate=why;
    /* A re-measure while parked at the top is benign — the layout genuinely
       changed and nothing is mid-flight. The DEFECT is a re-measure after
@@ -1826,7 +1834,6 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
       underneath the user. Count them separately; do not colour the benign
       case red, or the panel cries wolf in exactly the reading it exists to
       support. */
-   if(scrolledOnce) rebases++;
  }
 
  /* FONT READINESS IS THE PRIMARY GATE.
@@ -1878,7 +1885,6 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
  var lastY=null,lastEdge=null,violations=0,maxBack=0,samples=0,overscroll=0;
  addEventListener('scroll',function(){
    var y=scrollY, m=maxScroll();
-   if(y>40) scrolledOnce=true;
    if(y<0||y>m){ lastY=null; overscroll++; return; }
    var edgeVp=band.getBoundingClientRect().bottom;
    if(lastY!==null && y>lastY+1){
@@ -1936,9 +1942,9 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
    +'\nmeasured by    '+gate+(frozen?'  <span class=ok>frozen</span>':'  <span class=bad>NOT YET</span>')
    +'\ntravel         '+travel.toFixed(1)+'px   set '+mutations+'x'
      +(mutations===0?''
-        :rebases>0?' <span class=bad>REBASED AFTER SCROLLING ('+rebases+') — the defect</span>'
+        :midScrollRebases>0?' <span class=bad>REBASED WHILE SCROLLED ('+midScrollRebases+') — the defect</span>'
         :mutations===1?' <span class=ok>(frozen)</span>'
-        :' <span class=ok>(re-measured at top only — benign)</span>')
+        :' <span class=ok>(re-measured at top only ('+topRemeasures+') — benign)</span>')
    +'\nresize events  '+resizes+'  (ignored while scrolled)'
    +'\nprogress       '+(p*100).toFixed(1)+'%'
 
