@@ -146,6 +146,43 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
    composition would never apply. */
 .bar .bar-actions { display: flex; align-items: center; gap: 18px; min-width: 0; }
 
+/* ---- HUD: the two PNG export controls -----------------------------------
+   PLACEMENT ONLY. `.hud button` is sized for a 30px glyph square, and these two
+   carry words, so they need a text box rather than that square. They sit in the
+   HUD's own mono register beside `regions` and `no filter` — one step brighter,
+   because unlike those two they are actionable rather than reportorial. The
+   label case is authored, not transformed: `PNG page` is the control's name.
+
+   THE PAIR IS A SECOND ROW, PLACED OUT OF FLOW, and the reason is measured.
+   Inline, these two labels widen the HUD from 304px to 482px and run it under
+   the centred caption panel that shares its bottom edge — 60px at 1440, 140px
+   at 1280, 244px at 1024. Making the HUD a two-row flex container fixes the
+   width and not the harm: the HUD grows upward, the caption spans that band,
+   and the obscured caption area at 1024 goes 2,895.64 -> 4,869.94 px^2, a 68%
+   regression that a width-only check calls clean.
+
+   Out of flow, the HUD's own box stays 304x44 and its caption overlap is
+   exactly the baseline's; the export row is ~175px wide against a caption
+   starting at x=256, so it adds none of its own. It carries its own glass
+   because it is visually a second pill, not a detached strip. At 320px it is
+   still far inside the viewport, so no third row and no clipping. */
+.hud .hud-row-export {
+  position: absolute; left: -1px; bottom: calc(100% + 7px);
+  display: flex; align-items: center; gap: 4px; flex-wrap: nowrap;
+  padding: 5px 6px;
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+  border: 1px solid var(--surface-glass-2);
+  border-radius: var(--radius-md);
+}
+.hud .hud-export {
+  width: auto; height: 26px; padding: 0 9px;
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em;
+  color: var(--fg-2); white-space: nowrap;
+}
+.hud .hud-export:hover { color: var(--fg-1); background: var(--surface-glass-2); }
+.hud .hud-export[disabled] { opacity: 0.55; cursor: default; }
+
 /* ---- tablet: overlays collapsed by default ------------------------------ */
 @media (max-width: 1023px) and (min-width: 768px) {
   .cfw-caption { display: none; }
