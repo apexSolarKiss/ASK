@@ -1793,6 +1793,7 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
  var hero=document.querySelector('.hero');
  var travel=0, edgeDoc=0, bandH=0, startEdge=0;
  var mutations=0, resizes=0, frozen=false, gate='pending';
+ var scrolledOnce=false, rebases=0;
 
  /* THE v1 BUG, for the record:
       travel = innerHeight - (edgeDoc - scrollY)
@@ -1819,6 +1820,13 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
    root.style.setProperty('--ptx-travel', travel.toFixed(2)+'px');
    band.classList.add('measured');
    mutations++; gate=why;
+   /* A re-measure while parked at the top is benign — the layout genuinely
+      changed and nothing is mid-flight. The DEFECT is a re-measure after
+      scrolling has begun, because that moves the animation's start point
+      underneath the user. Count them separately; do not colour the benign
+      case red, or the panel cries wolf in exactly the reading it exists to
+      support. */
+   if(scrolledOnce) rebases++;
  }
 
  /* FONT READINESS IS THE PRIMARY GATE.
@@ -1870,6 +1878,7 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
  var lastY=null,lastEdge=null,violations=0,maxBack=0,samples=0,overscroll=0;
  addEventListener('scroll',function(){
    var y=scrollY, m=maxScroll();
+   if(y>40) scrolledOnce=true;
    if(y<0||y>m){ lastY=null; overscroll++; return; }
    var edgeVp=band.getBoundingClientRect().bottom;
    if(lastY!==null && y>lastY+1){
@@ -1926,7 +1935,10 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
    +'\ndriver         CSS scroll timeline only (no takeover)'
    +'\nmeasured by    '+gate+(frozen?'  <span class=ok>frozen</span>':'  <span class=bad>NOT YET</span>')
    +'\ntravel         '+travel.toFixed(1)+'px   set '+mutations+'x'
-     +(mutations===1?' <span class=ok>(frozen)</span>':mutations===0?'':' <span class=bad>(REBASED — should be 1)</span>')
+     +(mutations===0?''
+        :rebases>0?' <span class=bad>REBASED AFTER SCROLLING ('+rebases+') — the defect</span>'
+        :mutations===1?' <span class=ok>(frozen)</span>'
+        :' <span class=ok>(re-measured at top only — benign)</span>')
    +'\nresize events  '+resizes+'  (ignored while scrolled)'
    +'\nprogress       '+(p*100).toFixed(1)+'%'
 
