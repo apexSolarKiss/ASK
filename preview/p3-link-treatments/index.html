@@ -1,0 +1,154 @@
+<!doctype html>
+<!-- ============================================================
+     SCRATCH PROTOTYPE — not the live site, not repo truth.
+     P3 // link treatments
+     Baseline: apexSolarKiss/ASK main @ 1360b41
+     Built by: Claude-58 // ecology-58 // 2026-08-29
+     ============================================================ -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROTOTYPE // P3 // link treatments</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="/colors_and_type.css">
+  <link rel="stylesheet" href="/surface-panel.css">
+  <link rel="stylesheet" href="/surface-action.css">
+  <link rel="stylesheet" href="/site.css">
+<style>
+
+/* ---------- P3 // link affordance alternatives ------------------------------
+   The current treatment is a 1px border-bottom in --line-1. Each block below
+   re-renders the SAME three places links actually appear — breadcrumb, prose,
+   footer — under one alternative, so they can be compared rather than imagined.
+
+   Read the accessibility note on each. WCAG 1.4.1 is the constraint that
+   decides several of these: a link inside a block of text may not be
+   distinguished by COLOUR ALONE unless it also carries a non-colour cue, or the
+   link/body contrast is at least 3:1 AND a cue appears on hover and focus. A
+   glow is colour. That does not rule it out — it rules out using it alone in
+   running prose, which is a narrower and more useful statement. */
+.demo { border-top: 1px solid var(--line-2); padding: var(--space-5) 0; }
+.demo-h { font-family: var(--font-mono); font-size: var(--fs-caption);
+  letter-spacing: var(--tracking-wide); text-transform: uppercase;
+  color: var(--ask-emphasis-violet); margin: 0 0 var(--space-3); }
+.demo-note { font-size: var(--fs-caption); line-height: 1.5; color: var(--fg-3);
+  margin: var(--space-3) 0 0; max-width: 60ch; }
+.demo-note b { color: var(--fg-2); }
+.demo p.body { max-width: 60ch; margin: 0 0 var(--space-3); }
+.crumb { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--fg-2); margin: 0 0 var(--space-3); }
+.crumb .sep { color: var(--fg-3); }
+.foot { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-2); margin: var(--space-3) 0 0; display: flex; gap: var(--space-5); }
+
+/* A // current — 1px border-bottom in --line-1 */
+.tA a { border-bottom: 1px solid var(--line-1); }
+
+/* B // magenta glow, no underline */
+.tB a { border-bottom: none; text-shadow: 0 0 6px rgba(255,0,255,.55); }
+.tB a:hover { text-shadow: 0 0 10px rgba(255,0,255,.9); }
+
+/* C // magenta glow PLUS a magenta underline that only appears on hover/focus */
+.tC a { border-bottom: none; text-shadow: 0 0 6px rgba(255,0,255,.5);
+  transition: text-shadow var(--dur-2) var(--ease-out); }
+.tC a:hover, .tC a:focus-visible {
+  text-shadow: 0 0 12px rgba(255,0,255,.95);
+  border-bottom: 1px solid var(--ask-emphasis-magenta); }
+
+/* D // magenta underline at rest, no glow — same anatomy as today, new colour */
+.tD a { border-bottom: 1px solid rgba(255,0,255,.55); }
+.tD a:hover { border-bottom-color: var(--ask-emphasis-magenta); }
+
+/* E // real text-decoration, thin and offset — the typographic answer */
+.tE a { border-bottom: none; text-decoration: underline;
+  text-decoration-color: rgba(255,0,255,.5);
+  text-decoration-thickness: 1px; text-underline-offset: 0.22em; }
+.tE a:hover { text-decoration-color: var(--ask-emphasis-magenta); }
+
+/* F // no underline in prose; a leading magenta marker instead */
+.tF a { border-bottom: none; color: var(--fg-1); }
+.tF a::before { content: "\2009"; box-shadow: -0.32em 0 0 0 var(--ask-emphasis-magenta); }
+.tF a:hover { text-shadow: 0 0 8px rgba(255,0,255,.7); }
+
+/* prototype chrome only — never proposed for the repo */
+#pp{position:fixed;left:0;right:0;bottom:0;z-index:99;background:rgba(0,0,0,.86);
+ color:#0f0;font:12px/1.5 ui-monospace,Menlo,monospace;padding:8px 10px;
+ white-space:pre-wrap;border-top:2px solid #0f0;max-height:45vh;overflow:auto;
+ -webkit-text-size-adjust:100%}
+#pp[hidden]{display:none}#pp b{color:#ff0}#pp .ok{color:#5f5}#pp .bad{color:#f55}
+#ppt{position:fixed;right:10px;bottom:10px;z-index:100;font:11px ui-monospace,Menlo,monospace;
+ padding:4px 10px;color:#0f0;background:rgba(0,0,0,.8);border:1px solid #0f0;border-radius:999px}
+#ppt[hidden]{display:none}
+
+</style>
+</head>
+<body>
+<main class="shell" style="max-width:820px;display:block">
+  <h1 class="h2" style="margin-bottom:var(--space-2)">link treatments</h1>
+  <p class="small" style="color:var(--fg-2);max-width:60ch;margin-bottom:var(--space-6)">
+    Six alternatives to the current faint underline, each rendered in the three places
+    links actually appear — breadcrumb, running prose, footer. Compare on a phone:
+    the breadcrumb is where the current treatment reads worst.
+  </p>
+<section class="demo tA">
+  <p class="demo-h">A // current — 1px border-bottom</p>
+  <p class="crumb"><a href="#">ASK</a> <span class="sep">//</span> <a href="#">apex solar kiss</a> <span class="sep">//</span> design</p>
+  <p class="body">A deterministic governance architecture brackets the generative execution span. The <a href="#">provenance transcript</a> sits behind the mark, and the <a href="#">design system</a> is vendored from a separate repo.</p>
+  <p class="foot"><a href="#">Substack</a> <a href="#">LinkedIn</a> <a href="#">hello@A-S-K.studio</a></p>
+  <p class="demo-note"><b>Baseline.</b> Non-colour cue, so it passes 1.4.1 anywhere. The complaint is aesthetic: at mono caption sizes the 1px rule sits close under the glyphs and reads as grime, worst in the breadcrumb where the separators compete with it.</p>
+</section>
+<section class="demo tB">
+  <p class="demo-h">B // magenta glow, no underline</p>
+  <p class="crumb"><a href="#">ASK</a> <span class="sep">//</span> <a href="#">apex solar kiss</a> <span class="sep">//</span> design</p>
+  <p class="body">A deterministic governance architecture brackets the generative execution span. The <a href="#">provenance transcript</a> sits behind the mark, and the <a href="#">design system</a> is vendored from a separate repo.</p>
+  <p class="foot"><a href="#">Substack</a> <a href="#">LinkedIn</a> <a href="#">hello@A-S-K.studio</a></p>
+  <p class="demo-note"><b>Fails WCAG 1.4.1 in prose as shown.</b> Inside a block of text the only difference from body copy is colour, and the glow is colour. Fine for the breadcrumb and footer, where every item is a link and there is no surrounding prose to be distinguished from. Also note the glow does not scale down: at 14px mono it starts to look like a rendering fault rather than an affordance.</p>
+</section>
+<section class="demo tC">
+  <p class="demo-h">C // glow at rest, magenta underline on hover and focus</p>
+  <p class="crumb"><a href="#">ASK</a> <span class="sep">//</span> <a href="#">apex solar kiss</a> <span class="sep">//</span> design</p>
+  <p class="body">A deterministic governance architecture brackets the generative execution span. The <a href="#">provenance transcript</a> sits behind the mark, and the <a href="#">design system</a> is vendored from a separate repo.</p>
+  <p class="foot"><a href="#">Substack</a> <a href="#">LinkedIn</a> <a href="#">hello@A-S-K.studio</a></p>
+  <p class="demo-note"><b>Passes 1.4.1 if the link/body contrast reaches 3:1</b> — the hover and focus cue is the escape clause the guideline provides. Keeps the clean look at rest, which is what you actually asked for, and it degrades honestly: with the glow unsupported or unseen, the hover underline is still there.</p>
+</section>
+<section class="demo tD">
+  <p class="demo-h">D // magenta underline at rest, no glow</p>
+  <p class="crumb"><a href="#">ASK</a> <span class="sep">//</span> <a href="#">apex solar kiss</a> <span class="sep">//</span> design</p>
+  <p class="body">A deterministic governance architecture brackets the generative execution span. The <a href="#">provenance transcript</a> sits behind the mark, and the <a href="#">design system</a> is vendored from a separate repo.</p>
+  <p class="foot"><a href="#">Substack</a> <a href="#">LinkedIn</a> <a href="#">hello@A-S-K.studio</a></p>
+  <p class="demo-note">Same anatomy as today, new colour. Passes everywhere. Cheapest possible change and the least interesting — it does not fix the grime, it tints it.</p>
+</section>
+<section class="demo tE">
+  <p class="demo-h">E // real underline, thin, offset from the baseline</p>
+  <p class="crumb"><a href="#">ASK</a> <span class="sep">//</span> <a href="#">apex solar kiss</a> <span class="sep">//</span> design</p>
+  <p class="body">A deterministic governance architecture brackets the generative execution span. The <a href="#">provenance transcript</a> sits behind the mark, and the <a href="#">design system</a> is vendored from a separate repo.</p>
+  <p class="foot"><a href="#">Substack</a> <a href="#">LinkedIn</a> <a href="#">hello@A-S-K.studio</a></p>
+  <p class="demo-note"><b>The typographic answer to the actual complaint.</b> <code>text-underline-offset</code> is what a border-bottom cannot do: it moves the rule away from the descenders instead of jamming it under them. Passes everywhere, works at caption sizes, and skips descenders where the platform supports it.</p>
+</section>
+<section class="demo tF">
+  <p class="demo-h">F // no rule; a magenta marker before the link</p>
+  <p class="crumb"><a href="#">ASK</a> <span class="sep">//</span> <a href="#">apex solar kiss</a> <span class="sep">//</span> design</p>
+  <p class="body">A deterministic governance architecture brackets the generative execution span. The <a href="#">provenance transcript</a> sits behind the mark, and the <a href="#">design system</a> is vendored from a separate repo.</p>
+  <p class="foot"><a href="#">Substack</a> <a href="#">LinkedIn</a> <a href="#">hello@A-S-K.studio</a></p>
+  <p class="demo-note">A non-colour cue that is not an underline, so it passes. Included for completeness — it reads as a bullet more than a link and I would not ship it.</p>
+</section>
+</main>
+<div id="pp"></div><button id="ppt" hidden>panel</button>
+<script>
+(function(){var o=document.getElementById('pp');
+ o.innerHTML='<b>P3 // link treatments</b>\nviewport '+innerWidth+'x'+innerHeight
+ +'\n\nA current · B glow · C glow+hover rule · D magenta rule · E offset underline · F marker'
+ +'\n\nmagenta is --ask-emphasis-magenta, which the design system reserves as one of'
+ +'\nthree SPARING emphasis accents. Using it for every link on every surface is a'
+ +'\ndesign-system decision, not a site decision — flagged, not assumed.';})();
+
+(function(){
+ var p=document.getElementById('pp'),t=document.getElementById('ppt');
+ if(!p||!t)return;
+ t.addEventListener('click',function(){p.hidden=false;t.hidden=true});
+ p.addEventListener('click',function(){p.hidden=true;t.hidden=false});
+ addEventListener('keydown',function(e){if(e.key==='p'||e.key==='P'){
+   var on=p.hidden;p.hidden=!on;t.hidden=on}});
+})();
+</script>
+</body>
+</html>

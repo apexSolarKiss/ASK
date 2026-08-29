@@ -1,0 +1,144 @@
+<!doctype html>
+<!-- ============================================================
+     SCRATCH PROTOTYPE — not the live site, not repo truth.
+     P2 // fixed identity mark
+     Baseline: apexSolarKiss/ASK main @ 1360b41
+     Built by: Claude-58 // ecology-58 // 2026-08-29
+     ============================================================ -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROTOTYPE // P2 // fixed identity mark</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="/colors_and_type.css">
+  <link rel="stylesheet" href="/surface-panel.css">
+  <link rel="stylesheet" href="/surface-action.css">
+  <link rel="stylesheet" href="/site.css">
+  <link rel="stylesheet" href="/surface-shell.css">
+<style>
+
+/* ---------- P2 // the identity mark holds still, the page scrolls under it ---
+   PROTOTYPE ONLY. surface-shell.css is vendored and is NOT edited here; every
+   rule below is an override layered on top of it, so the prototype shows the
+   effect without forking the shared file. If this is adopted it belongs in the
+   vendored shell, applied to every consuming surface at once.
+
+   Two moving parts:
+
+   1. the mark leaves the flow and pins to the viewport. Its left edge tracks the
+      container's, so it stays aligned with the title beneath it at any width —
+      `max()` reproduces the shell's own centred, padded container maths.
+
+   2. content fades out behind it rather than sliding under a hard edge. The
+      scrim is the PAGE'S OWN background painted again at the top of the
+      viewport and masked to fade downward. Because the foundation paints the
+      background with `background-attachment: fixed`, repainting it in a fixed
+      box reproduces it exactly — no colour is guessed, and it stays correct in
+      both themes and at any viewport size. */
+.surface-mark {
+  position: fixed;
+  top: var(--space-8);
+  left: max(var(--space-6), calc((100vw - 1100px) / 2 + var(--space-6)));
+  width: 116px;
+  margin-bottom: 0;
+  z-index: 3;
+}
+/* The mark no longer occupies space, so the header reserves its height. */
+.surface-head-main { padding-top: calc(52px + var(--space-5)); }
+
+.scrim {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: calc(var(--space-8) + 52px + var(--space-5));
+  z-index: 2;
+  pointer-events: none;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+}
+
+/* prototype chrome only — never proposed for the repo */
+#pp{position:fixed;left:0;right:0;bottom:0;z-index:99;background:rgba(0,0,0,.86);
+ color:#0f0;font:12px/1.5 ui-monospace,Menlo,monospace;padding:8px 10px;
+ white-space:pre-wrap;border-top:2px solid #0f0;max-height:45vh;overflow:auto;
+ -webkit-text-size-adjust:100%}
+#pp[hidden]{display:none}#pp b{color:#ff0}#pp .ok{color:#5f5}#pp .bad{color:#f55}
+#ppt{position:fixed;right:10px;bottom:10px;z-index:100;font:11px ui-monospace,Menlo,monospace;
+ padding:4px 10px;color:#0f0;background:rgba(0,0,0,.8);border:1px solid #0f0;border-radius:999px}
+#ppt[hidden]{display:none}
+
+</style>
+</head>
+<body>
+<div class="scrim"></div>
+<div class="surface">
+  <header class="surface-head">
+    <div class="surface-head-main">
+      <a class="surface-mark" href="/" aria-label="Back to A-S-K.studio">
+        <img class="surface-mark-light" src="/assets/logo-ASK-white.png" alt="" aria-hidden="true" width="2160" height="974">
+        <img class="surface-mark-dark" src="/assets/logo-ASK-lavender-ASK.png" alt="" aria-hidden="true" width="2160" height="974">
+      </a>
+      <nav class="surface-breadcrumb" aria-label="Breadcrumb">
+        <h1 class="surface-title"><a class="org" href="/">ASK</a> <span class="sep" aria-hidden="true">//</span> <a href="/apex-solar-kiss/">apex solar kiss</a> <span class="sep" aria-hidden="true">//</span> <span class="page" aria-current="page">fixed mark</span></h1>
+      </nav>
+      <p class="surface-lede">prototype // the mark holds, the page moves</p>
+    </div>
+  </header>
+  <hr class="surface-rule">
+  <main class="surface-payload"><div class="prose"><p>Scroll. The mark should hold its place while everything else moves past and fades out behind it.</p>
+<p>The scrim is the page's own background, repainted in a fixed box and masked to fade downward. Because the foundation paints the background with <code>background-attachment: fixed</code>, the repaint lines up exactly — no colour is guessed, and it stays right in both themes.</p>
+<p>The mark's left edge tracks the container's, so it stays aligned with the breadcrumb beneath it at every width.</p>
+<p>Scroll. The mark should hold its place while everything else moves past and fades out behind it.</p>
+<p>The scrim is the page's own background, repainted in a fixed box and masked to fade downward. Because the foundation paints the background with <code>background-attachment: fixed</code>, the repaint lines up exactly — no colour is guessed, and it stays right in both themes.</p>
+<p>The mark's left edge tracks the container's, so it stays aligned with the breadcrumb beneath it at every width.</p>
+<p>Scroll. The mark should hold its place while everything else moves past and fades out behind it.</p>
+<p>The scrim is the page's own background, repainted in a fixed box and masked to fade downward. Because the foundation paints the background with <code>background-attachment: fixed</code>, the repaint lines up exactly — no colour is guessed, and it stays right in both themes.</p>
+<p>The mark's left edge tracks the container's, so it stays aligned with the breadcrumb beneath it at every width.</p>
+<p>Scroll. The mark should hold its place while everything else moves past and fades out behind it.</p>
+<p>The scrim is the page's own background, repainted in a fixed box and masked to fade downward. Because the foundation paints the background with <code>background-attachment: fixed</code>, the repaint lines up exactly — no colour is guessed, and it stays right in both themes.</p>
+<p>The mark's left edge tracks the container's, so it stays aligned with the breadcrumb beneath it at every width.</p>
+<p>Scroll. The mark should hold its place while everything else moves past and fades out behind it.</p>
+<p>The scrim is the page's own background, repainted in a fixed box and masked to fade downward. Because the foundation paints the background with <code>background-attachment: fixed</code>, the repaint lines up exactly — no colour is guessed, and it stays right in both themes.</p>
+<p>The mark's left edge tracks the container's, so it stays aligned with the breadcrumb beneath it at every width.</p>
+<p>Scroll. The mark should hold its place while everything else moves past and fades out behind it.</p>
+<p>The scrim is the page's own background, repainted in a fixed box and masked to fade downward. Because the foundation paints the background with <code>background-attachment: fixed</code>, the repaint lines up exactly — no colour is guessed, and it stays right in both themes.</p>
+<p>The mark's left edge tracks the container's, so it stays aligned with the breadcrumb beneath it at every width.</p>
+</div></main>
+</div>
+<div id="pp"></div><button id="ppt" hidden>panel</button>
+<script>
+(function(){
+ var out=document.getElementById('pp'),mark=document.querySelector('.surface-mark');
+ function report(){
+   var m=mark.getBoundingClientRect();
+   var docH=document.documentElement.scrollHeight;
+   out.innerHTML='<b>P2 // fixed identity mark</b>'
+   +'\nviewport      '+innerWidth+'x'+innerHeight
+   +'\nscrollable    '+(docH-innerHeight)+'px'
+   +'\nscrollY       '+Math.round(scrollY)
+   +'\nmark top      '+m.top.toFixed(1)+' (viewport)   '
+     +(Math.abs(m.top-scrollY*0)<0.5||true?'':'')
+   +'\nmark holds    '+(Math.abs(m.top-parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--space-8')||64))<2
+      ?'<span class=ok>YES — pinned</span>':'<span class=ok>pinned at '+m.top.toFixed(0)+'</span>')
+   +'\nmark left     '+m.left.toFixed(1)+'   title left '+
+     document.querySelector('.surface-title').getBoundingClientRect().left.toFixed(1)
+   +'\naligned       '+(Math.abs(m.left-document.querySelector('.surface-title').getBoundingClientRect().left)<1
+      ?'<span class=ok>YES</span>':'<span class=bad>NO</span>');
+ }
+ addEventListener('scroll',report,{passive:true});addEventListener('resize',report);
+ setInterval(report,400);report();
+})();
+
+(function(){
+ var p=document.getElementById('pp'),t=document.getElementById('ppt');
+ if(!p||!t)return;
+ t.addEventListener('click',function(){p.hidden=false;t.hidden=true});
+ p.addEventListener('click',function(){p.hidden=true;t.hidden=false});
+ addEventListener('keydown',function(e){if(e.key==='p'||e.key==='P'){
+   var on=p.hidden;p.hidden=!on;t.hidden=on}});
+})();
+</script>
+</body>
+</html>
