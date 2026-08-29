@@ -1,0 +1,423 @@
+<!doctype html>
+<!-- ============================================================
+     SCRATCH PROTOTYPE — not the live site, not repo truth.
+     P2 v6 // contextual colour + in-flow marker
+     Baseline: apexSolarKiss/ASK main @ 1360b41
+     Built by: Claude-58 // ecology-58 // 2026-08-29
+     ============================================================ -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROTOTYPE // P2 v6 // contextual colour + in-flow marker</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="/colors_and_type.css">
+  <link rel="stylesheet" href="/surface-panel.css">
+  <link rel="stylesheet" href="/surface-action.css">
+  <link rel="stylesheet" href="/site.css">
+  <link rel="stylesheet" href="/surface-shell.css">
+<style>
+
+/* ---------- P2 // the identity mark holds still, the page scrolls under it ---
+   PROTOTYPE ONLY. surface-shell.css is vendored and is NOT edited here; every
+   rule below is an override layered on top of it. If adopted it belongs in the
+   vendored shell and lands on every consuming surface at once.
+
+   1. the mark leaves the flow and pins to the viewport. Its left edge tracks the
+      container's, so it stays aligned with the title beneath it at any width —
+      `max()` reproduces the shell's own centred, padded container maths.
+
+   2. content fades out behind it rather than sliding under a hard edge. The
+      scrim is the PAGE'S OWN background painted again in a fixed box and masked
+      to fade downward. Because the foundation paints the background with
+      `background-attachment: fixed`, repainting it in a fixed box reproduces it
+      exactly — no colour is guessed, and it stays right in both themes. */
+:root {
+  /* The mark's rendered height is derived, not typed: the <img> is 2160x974 in
+     a 116px slot, so the height follows from the aspect ratio and the fade
+     tracks the mark if the slot width ever changes. */
+  --mark-h: calc(116px * 974 / 2160);                    /* 52.31px */
+  --fade-solid: calc(var(--space-8) + var(--mark-h));    /* 116.31px — mark bottom */
+  --fade-len: 24px;                                      /* fade length BELOW that */
+  --fade-end: calc(var(--fade-solid) + var(--fade-len)); /* fully transparent here */
+}
+.surface-mark {
+  position: fixed;
+  top: var(--space-8);
+  left: max(var(--space-6), calc((100vw - 1100px) / 2 + var(--space-6)));
+  width: 116px;
+  margin-bottom: 0;
+  z-index: 3;
+}
+.scrim {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 2;
+  pointer-events: none;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+}
+
+/* v3. Opaque to the mark's bottom edge, transparent by --fade-end, and the
+   header reserves exactly enough room that content STARTS at --fade-end. So
+   nothing is ever faded at rest, and nothing survives to the mark. */
+.surface-head-main { padding-top: calc(var(--fade-end) - var(--space-8)); }
+.scrim {
+  height: var(--fade-end);
+  -webkit-mask-image: linear-gradient(to bottom, #000 var(--fade-solid), transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 var(--fade-solid), transparent 100%);
+}
+/* ---------- v4 // overscan, and wrapped-title clearance -------------------
+   THE PEEK. v3's scrim already began at top: 0, so "extend it to the top" was
+   already true — the peek comes from ABOVE the viewport: iOS rubber-band
+   overscroll, and the safe-area inset. The fix is opaque coverage above y=0,
+   with both mask stops pushed down by the same amount so the VISIBLE geometry
+   is untouched:
+
+     mark bottom   116.3   fade begins
+     fade ends     140.3   breadcrumb starts
+
+   Still the page's own gradient, not a flat fill, so it stays right in both
+   themes. */
+:root { --scrim-overscan: max(64px, env(safe-area-inset-top, 0px)); }
+.scrim {
+  top: calc(-1 * var(--scrim-overscan));
+  height: calc(var(--scrim-overscan) + var(--fade-end));
+  -webkit-mask-image: linear-gradient(to bottom,
+    #000 0,
+    #000 calc(var(--scrim-overscan) + var(--fade-solid)),
+    transparent calc(var(--scrim-overscan) + var(--fade-end)));
+  mask-image: linear-gradient(to bottom,
+    #000 0,
+    #000 calc(var(--scrim-overscan) + var(--fade-solid)),
+    transparent calc(var(--scrim-overscan) + var(--fade-end)));
+}
+
+/* WRAPPED-TITLE CLEARANCE. Separate defect, and it predates the magenta idea:
+   .surface-title is 24px on --lh-heading (1.12), a 26.88px line box, so a
+   wrapped breadcrumb has ~2.9px of total leading and the fragments nearly
+   touch. Any marker or focus treatment makes that worse.
+
+   This belongs to surface-shell, not to a link rule — the shell owns the
+   structural title and its responsive behaviour. Prototyped here only. */
+/* the 640px rule is deliberately absent in v6 — see P2V6_CSS */
+
+
+
+/* ---------- P2 v6 // the two v5 integration drifts corrected ---------------
+   v5 copied the P3 comparison sketch literally into a far more structured
+   context and carried two defects across with it. Both are corrected here;
+   nothing else about the treatment moves.
+
+   1. CONTEXTUAL FOREGROUND, NOT A UNIVERSAL ONE. "Normal foreground link text"
+      means "preserve the foreground the containing visual role already
+      assigns" — not "force every qualifying link to --fg-1". The shell makes
+      those distinctions on purpose: `.org` sits at --fg-2, `.page` is inert at
+      --fg-3, an ordinary ancestor inherits the structural-title foreground.
+      So v6 declares NO colour at all and lets that hierarchy stand. The marker
+      does the work; a link does not brighten merely because it is traversable.
+      Full magenta text remains separately available for bounded emphasis — a
+      different dose, at a different altitude.
+
+   2. THE MARKER OCCUPIES INLINE SPACE. In v5 the box-shadow hung 0.32em to the
+      left of the anchor with nothing reserving it, so the first marker's ink
+      began 7.68px outside the structural-title column and broke the alignment
+      the shell keeps between the mark and the breadcrumb. The marker is
+      visible title content; it cannot be hanging punctuation and aligned at
+      the same time. `padding-inline-start` reserves exactly the distance the
+      shadow travels, so the ink lands ON the column and the linked words start
+      one marker-slot to the right — which is correct, the slot is real.
+
+      With the default `box-decoration-break: slice` that padding applies to
+      the FIRST fragment only, so a link that wraps gets one slot, not one per
+      line. The anchor stays a plain fragmentable inline — never inline-block,
+      which is the defect the shell already solved for its focus indicator. */
+
+/* leading — width-independent, breadcrumb-scoped, no breakpoint */
+.surface-breadcrumb .surface-title { line-height: var(--title-lh, 1.35); }
+
+/* Option F, corrected: no colour declaration, marker in the flow */
+.surface-breadcrumb .surface-title a {
+  border-bottom: none;
+  padding-inline-start: 0.32em;
+}
+.surface-breadcrumb .surface-title a::before {
+  content: "\2009";
+  box-shadow: -0.32em 0 0 0 var(--ask-emphasis-magenta);
+}
+.surface-breadcrumb .surface-title a:hover,
+.surface-breadcrumb .surface-title a:focus-visible {
+  text-shadow: 0 0 8px rgba(255,0,255,.7);
+}
+
+/* specimen scaffolding — prototype chrome, never proposed */
+.spec-label { font-family: var(--font-mono); font-size: var(--fs-caption);
+  letter-spacing: var(--tracking-wide); text-transform: uppercase;
+  color: var(--ask-emphasis-violet); margin: var(--space-6) 0 var(--space-2); }
+.spec-note { font-size: var(--fs-caption); line-height: 1.5; color: var(--fg-3);
+  margin: var(--space-2) 0 0; }
+
+#ctl .r2 { display: flex; gap: 6px; align-items: center; }
+#ctl button.lh { font: 11px ui-monospace, Menlo, monospace; padding: 4px 9px;
+  color: #0f0; background: transparent; border: 1px solid #0f0; border-radius: 3px; }
+#ctl button.lh.on { background: #0f0; color: #000; }
+
+/* prototype chrome only — never proposed for the repo */
+#pp{position:fixed;left:0;right:0;bottom:0;z-index:99;background:rgba(0,0,0,.86);
+ color:#0f0;font:12px/1.5 ui-monospace,Menlo,monospace;padding:8px 10px;
+ white-space:pre-wrap;border-top:2px solid #0f0;max-height:45vh;overflow:auto;
+ -webkit-text-size-adjust:100%}
+#pp[hidden]{display:none}#pp b{color:#ff0}#pp .ok{color:#5f5}#pp .bad{color:#f55}
+#ppt{position:fixed;right:10px;bottom:10px;z-index:100;font:11px ui-monospace,Menlo,monospace;
+ padding:4px 10px;color:#0f0;background:rgba(0,0,0,.8);border:1px solid #0f0;border-radius:999px}
+#ppt[hidden]{display:none}
+
+</style>
+</head>
+<body>
+<div class="scrim"></div>
+<div class="surface">
+  <header class="surface-head">
+    <div class="surface-head-main">
+      <a class="surface-mark" href="/" aria-label="Back to A-S-K.studio">
+        <img class="surface-mark-light" src="/assets/logo-ASK-white.png" alt="" aria-hidden="true" width="2160" height="974">
+        <img class="surface-mark-dark" src="/assets/logo-ASK-lavender-ASK.png" alt="" aria-hidden="true" width="2160" height="974">
+      </a>
+      <nav class="surface-breadcrumb" aria-label="Breadcrumb">
+        <h1 class="surface-title" id="spec1"><a class="org" href="/">ASK</a> <span class="sep" aria-hidden="true">//</span> <a href="/apex-solar-kiss/">apex solar kiss</a> <span class="sep" aria-hidden="true">//</span> <span class="page" aria-current="page">fixed mark v6 // a deliberately long page name that wraps</span></h1>
+      </nav>
+      <p class="surface-lede">prototype // the mark holds, the page moves</p>
+
+      <p class="spec-label">specimen 2 // a linked ancestor long enough to wrap inside the link</p>
+      <nav class="surface-breadcrumb" aria-label="Breadcrumb specimen">
+        <p class="surface-title" id="spec2"><a class="org" href="/">ASK</a> <span class="sep" aria-hidden="true">//</span> <a href="/apex-solar-kiss/">apex solar kiss and the consciousness plus free will research programme</a> <span class="sep" aria-hidden="true">//</span> <span class="page" aria-current="page">current</span></p>
+      </nav>
+
+      <p class="spec-label">colour control // the same breadcrumb with no anchors at all</p>
+      <nav class="surface-breadcrumb" aria-label="Colour control">
+        <p class="surface-title" id="spec3"><span class="org">ASK</span> <span class="sep" aria-hidden="true">//</span> <span class="anc">apex solar kiss</span> <span class="sep" aria-hidden="true">//</span> <span class="page">current</span></p>
+      </nav>
+      <p class="spec-note">the control carries no links, so its roles show the foreground the shell assigns before any link treatment. v6 declares no colour, so the linked rows above must match it exactly.</p>
+    </div>
+  </header>
+  <hr class="surface-rule">
+  <main class="surface-payload"><div class="prose"><p>Scroll. The mark should hold its place while everything else moves past and fades out behind it.</p>
+<p>The breadcrumb carries the ruled Option F treatment: a magenta marker occupying its own inline slot, the linked words at whatever foreground their role already had, no rest underline, no permanent glow, no pulse.</p>
+<p>The mark's left edge tracks the container's, so it stays aligned with the breadcrumb beneath it at every width.</p>
+<p>Scroll. The mark should hold its place while everything else moves past and fades out behind it.</p>
+<p>The breadcrumb carries the ruled Option F treatment: a magenta marker occupying its own inline slot, the linked words at whatever foreground their role already had, no rest underline, no permanent glow, no pulse.</p>
+<p>The mark's left edge tracks the container's, so it stays aligned with the breadcrumb beneath it at every width.</p>
+<p>Scroll. The mark should hold its place while everything else moves past and fades out behind it.</p>
+<p>The breadcrumb carries the ruled Option F treatment: a magenta marker occupying its own inline slot, the linked words at whatever foreground their role already had, no rest underline, no permanent glow, no pulse.</p>
+<p>The mark's left edge tracks the container's, so it stays aligned with the breadcrumb beneath it at every width.</p>
+<p>Scroll. The mark should hold its place while everything else moves past and fades out behind it.</p>
+<p>The breadcrumb carries the ruled Option F treatment: a magenta marker occupying its own inline slot, the linked words at whatever foreground their role already had, no rest underline, no permanent glow, no pulse.</p>
+<p>The mark's left edge tracks the container's, so it stays aligned with the breadcrumb beneath it at every width.</p>
+<p>Scroll. The mark should hold its place while everything else moves past and fades out behind it.</p>
+<p>The breadcrumb carries the ruled Option F treatment: a magenta marker occupying its own inline slot, the linked words at whatever foreground their role already had, no rest underline, no permanent glow, no pulse.</p>
+<p>The mark's left edge tracks the container's, so it stays aligned with the breadcrumb beneath it at every width.</p>
+<p>Scroll. The mark should hold its place while everything else moves past and fades out behind it.</p>
+<p>The breadcrumb carries the ruled Option F treatment: a magenta marker occupying its own inline slot, the linked words at whatever foreground their role already had, no rest underline, no permanent glow, no pulse.</p>
+<p>The mark's left edge tracks the container's, so it stays aligned with the breadcrumb beneath it at every width.</p>
+</div></main>
+</div>
+<div id="ctl">
+  <div style="color:#ff0;margin-bottom:4px">v6 // contextual colour + in-flow marker</div>
+  <div class="r2">
+    <button class="lh" data-v="1.12">1.12</button>
+    <button class="lh" data-v="1.35">1.35</button>
+    <button class="lh" data-v="1.45">1.45</button>
+    <span id="o-lh"></span>
+  </div>
+  <div style="color:#888;margin-top:4px;max-width:250px;line-height:1.4">1.12 is the historical control — it overlaps. Judge 1.35 against 1.45. Applied at every width.</div>
+</div>
+<div id="pp"></div><button id="ppt" hidden>panel</button>
+<script>
+(function(){
+ var root=document.documentElement, out=document.getElementById('pp');
+ var mark=document.querySelector('.surface-mark');
+ var b1=document.getElementById('spec1'), b2=document.getElementById('spec2'),
+     b3=document.getElementById('spec3');
+
+ var o=document.getElementById('o-lh');
+ function setLh(v){
+   root.style.setProperty('--title-lh', v);
+   [].forEach.call(document.querySelectorAll('button.lh'), function(b){
+     b.classList.toggle('on', b.dataset.v===v); });
+   if(o) o.textContent=v; report();
+ }
+ [].forEach.call(document.querySelectorAll('button.lh'), function(b){
+   b.addEventListener('click', function(){ setLh(b.dataset.v); }); });
+ setLh('1.35');
+
+ function em(el){ return parseFloat(getComputedStyle(el).fontSize)||16; }
+ function shadowDx(a){                      /* read the offset, never assume it */
+   var m=/(-?[\d.]+)px/.exec(getComputedStyle(a,'::before').boxShadow||'');
+   return m?parseFloat(m[1]):0;
+ }
+ function padStart(a){ return parseFloat(getComputedStyle(a).paddingInlineStart)||0; }
+
+ function lineRects(el){
+   var r=document.createRange(); r.selectNodeContents(el);
+   var raw=[].slice.call(r.getClientRects()).filter(function(x){return x.width>0.5;});
+   var rows=[];
+   raw.forEach(function(x){
+     var g=rows.find(function(k){ return Math.abs(k.top-x.top)<2; });
+     if(g){ g.left=Math.min(g.left,x.left); g.right=Math.max(g.right,x.right);
+            g.bottom=Math.max(g.bottom,x.bottom); }
+     else rows.push({top:x.top,bottom:x.bottom,left:x.left,right:x.right});
+   });
+   return rows.sort(function(p,q){return p.top-q.top;});
+ }
+ function anchorLines(a){
+   var rs=[].slice.call(a.getClientRects()).filter(function(x){return x.width>0.5;});
+   var g=[];
+   rs.forEach(function(x){
+     var k=g.find(function(k){ return Math.abs(k.top-x.top)<2; });
+     if(k){ k.w+=x.width; k.left=Math.min(k.left,x.left); }
+     else g.push({top:x.top,left:x.left,w:x.width});
+   });
+   return g.sort(function(p,q){return p.top-q.top;});
+ }
+ function firstWordLeft(a){          /* where the TEXT starts, past the marker */
+   var t=a.firstChild;
+   while(t && t.nodeType!==3) t=t.nextSibling;
+   if(!t) return null;
+   var r=document.createRange(); r.selectNodeContents(t);
+   var rs=r.getClientRects();
+   return rs.length?rs[0].left:null;
+ }
+
+ function specimen(el,name){
+   var rows=lineRects(el), links=[].slice.call(el.querySelectorAll('a'));
+   var lh=parseFloat(getComputedStyle(el).lineHeight);
+   var gaps=[]; for(var i=1;i<rows.length;i++) gaps.push(rows[i].top-rows[i-1].top);
+   var gmin=gaps.length?Math.min.apply(null,gaps):0, gmax=gaps.length?Math.max.apply(null,gaps):0;
+   var uniform=gaps.length===0||(gmax-gmin)<0.75;
+   var clear=[]; for(var k=1;k<rows.length;k++) clear.push(rows[k].top-rows[k-1].bottom);
+   var minClear=clear.length?Math.min.apply(null,clear):null;
+   var overlap=0, worstOv=0;
+   for(var j=1;j<rows.length;j++){ var d=rows[j-1].bottom-rows[j].top;
+     if(d>0.5){ overlap++; worstOv=Math.max(worstOv,d); } }
+
+   var frag=0, orphan=0, sepCollide=0, spans=[], markInk=null, wordLeft=null;
+   links.forEach(function(a){
+     var L=anchorLines(a); spans.push(L.length);
+     if(L.length>1) frag++;
+     var thin=em(a)*0.28;
+     if(L.length>1 && L[0].w < thin*1.6) orphan++;
+     /* getClientRects on an inline returns BORDER boxes, so L[0].left already
+        includes the reserved padding. The ink sits one shadow-offset left of
+        where the ::before's own box starts. */
+     var ink=L[0].left + padStart(a) + shadowDx(a);
+     if(markInk===null){ markInk=ink; wordLeft=firstWordLeft(a); }
+     var prev=a.previousElementSibling;
+     if(prev && prev.classList.contains('sep')){
+       var pr=prev.getBoundingClientRect();
+       if(pr.right > ink + 0.5 && Math.abs(pr.top-L[0].top)<2) sepCollide++;
+     }
+   });
+   var titleLeft=el.getBoundingClientRect().left;
+   return {name:name, rows:rows.length, lh:lh, h:el.getBoundingClientRect().height,
+           gmin:gmin, gmax:gmax, uniform:uniform, minClear:minClear,
+           overlap:overlap, worstOv:worstOv, links:links.length, frag:frag,
+           orphan:orphan, spans:spans, sepCollide:sepCollide,
+           titleLeft:titleLeft, markInk:markInk, wordLeft:wordLeft,
+           outdent:markInk===null?0:(titleLeft-markInk)};
+ }
+
+ function roles(){                     /* the contextual-colour receipt */
+   function c(sel){ var e=document.querySelector(sel);
+     return e?getComputedStyle(e).color:'-'; }
+   return {
+     linkedOrg:   c('#spec1 a.org'),
+     controlOrg:  c('#spec3 .org'),
+     linkedAnc:   c('#spec1 a:not(.org)'),
+     controlAnc:  c('#spec3 .anc'),
+     page:        c('#spec1 .page'),
+     controlPage: c('#spec3 .page')
+   };
+ }
+
+ function line(s){ return '\n'+s; }
+ function report(){
+   var m=mark.getBoundingClientRect();
+   var sc=document.querySelector('.scrim');
+   var scr=sc?sc.getBoundingClientRect():{bottom:0,top:0};
+   var fadeLen=parseFloat(getComputedStyle(root).getPropertyValue('--fade-len'))||0;
+   var top=b1.getBoundingClientRect().top+scrollY;
+   var ovf=root.scrollWidth-root.clientWidth;
+   var s1=specimen(b1,'realistic'), s2=specimen(b2,'link wraps inside itself');
+   var R=roles();
+
+   function spec(s){
+     return line('<b>'+s.name+'</b>')
+     +line('  lines '+s.rows+'   line-height '+s.lh.toFixed(2)+'px   height '+s.h.toFixed(1))
+     +line('  baseline interval  '+(s.rows<2?'n/a — single line'
+        :(s.uniform?'<span class=ok>CONSTANT '+s.gmin.toFixed(2)+'px</span>'
+                   :'<span class=bad>VARIES '+s.gmin.toFixed(2)+'-'+s.gmax.toFixed(2)+'px</span>')))
+     +line('  line clearance     '+(s.minClear===null?'n/a'
+        :(s.minClear>=0?'<span class=ok>'+s.minClear.toFixed(2)+'px</span>'
+                       :'<span class=bad>'+s.minClear.toFixed(2)+'px — boxes OVERLAP</span>')))
+     +line('  title left         '+s.titleLeft.toFixed(2))
+     +line('  marker ink left    '+(s.markInk===null?'-':s.markInk.toFixed(2))
+        +'   '+(Math.abs(s.outdent)<0.5
+            ?'<span class=ok>ON the column</span>'
+            :'<span class=bad>'+s.outdent.toFixed(2)+'px OUTSIDE it</span>'))
+     +line('  first word left    '+(s.wordLeft===null?'-':s.wordLeft.toFixed(2))
+        +'   (marker slot '+(s.wordLeft===null||s.markInk===null?'-':(s.wordLeft-s.markInk).toFixed(2))+'px)')
+     +line('  markers            '+s.links+'   lines per link ['+s.spans.join(', ')+']')
+     +line('  marker repeated?   <span class=ok>NO — ::before is one inline box</span>')
+     +line('  marker orphaned?   '+(s.orphan===0?'<span class=ok>NO</span>':'<span class=bad>'+s.orphan+'</span>'))
+     +line('  marker vs sep      '+(s.sepCollide===0?'<span class=ok>clear</span>':'<span class=bad>'+s.sepCollide+'</span>'))
+     +line('  line overlap       '+(s.overlap===0?'<span class=ok>none</span>'
+        :'<span class=bad>'+s.overlap+', worst '+s.worstOv.toFixed(1)+'px</span>'));
+   }
+
+   out.innerHTML='<b>P2 v6 // contextual colour + in-flow marker</b>'
+   +line('viewport      '+innerWidth+'x'+innerHeight+'   scrollY '+Math.round(scrollY)
+     +'   '+(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))
+   +line('mark left     '+m.left.toFixed(2)+'   title left '+s1.titleLeft.toFixed(2)
+     +'   '+(Math.abs(m.left-s1.titleLeft)<1?'<span class=ok>aligned</span>':'<span class=bad>NOT aligned</span>'))
+   +line('marker ink    '+(s1.markInk===null?'-':s1.markInk.toFixed(2))
+     +'   vs mark left '+m.left.toFixed(2)+'   '
+     +(Math.abs((s1.markInk||0)-m.left)<0.75
+        ?'<span class=ok>marker sits ON the shell column</span>'
+        :'<span class=bad>off by '+((s1.markInk||0)-m.left).toFixed(2)+'px</span>'))
+   +line('solid to      '+(scr.bottom-fadeLen).toFixed(1)+'   mark bottom '+m.bottom.toFixed(1)
+     +'   '+(Math.abs((scr.bottom-fadeLen)-m.bottom)<1.5?'<span class=ok>OK</span>':'<span class=bad>MISMATCH</span>'))
+   +line('crisp at rest '+(top>=scr.bottom-1.5?'<span class=ok>YES</span>':'<span class=bad>NO</span>'))
+   +line('h-overflow    '+(ovf<=0?'<span class=ok>none</span>':'<span class=bad>'+ovf+'px</span>'))
+
+   +line('')
+   +line('<b>CONTEXTUAL FOREGROUND</b>  (v6 declares no colour)')
+   +line('  .org      linked '+R.linkedOrg+'   control '+R.controlOrg
+     +'  '+(R.linkedOrg===R.controlOrg?'<span class=ok>MATCH</span>':'<span class=bad>DIFFERS</span>'))
+   +line('  ancestor  linked '+R.linkedAnc+'   control '+R.controlAnc
+     +'  '+(R.linkedAnc===R.controlAnc?'<span class=ok>MATCH</span>':'<span class=bad>DIFFERS</span>'))
+   +line('  .page     '+R.page+'   control '+R.controlPage
+     +'  '+(R.page===R.controlPage?'<span class=ok>MATCH — inert</span>':'<span class=bad>DIFFERS</span>'))
+   +spec(s1)+spec(s2);
+ }
+ addEventListener('scroll',report,{passive:true});
+ addEventListener('resize',report);
+ setInterval(report,400); report();
+ window.__p2v6=function(){ return {w:innerWidth,
+   dark:matchMedia('(prefers-color-scheme: dark)').matches,
+   lh:getComputedStyle(b1).lineHeight, roles:roles(),
+   markLeft:document.querySelector('.surface-mark').getBoundingClientRect().left,
+   s1:specimen(b1,'realistic'), s2:specimen(b2,'internal wrap'),
+   ovf:document.documentElement.scrollWidth-document.documentElement.clientWidth}; };
+})();
+
+(function(){
+ var p=document.getElementById('pp'),t=document.getElementById('ppt');
+ if(!p||!t)return;
+ t.addEventListener('click',function(){p.hidden=false;t.hidden=true});
+ p.addEventListener('click',function(){p.hidden=true;t.hidden=false});
+ addEventListener('keydown',function(e){if(e.key==='p'||e.key==='P'){
+   var on=p.hidden;p.hidden=!on;t.hidden=on}});
+})();
+</script>
+</body>
+</html>
