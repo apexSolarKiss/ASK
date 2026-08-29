@@ -27,6 +27,17 @@
    takes over. */
 .shell { position: relative; z-index: 1; }
 
+/* PROTOTYPE-ONLY load guard. --ptx-travel is JS-derived, so before the first
+   measurement lands the band renders at its CONVERGED position and then jumps
+   up by `travel`. That is a LOAD artifact, not the scroll effect — but on a
+   cold mobile load it is exactly the kind of jump this round exists to judge,
+   so it must not contaminate the test. Hide until measured; geometry, travel
+   and timeline untouched. JS was already load-bearing for the VALUE of travel
+   (the motion itself stays CSS), so this adds no new dependency. A production
+   implementation would need a different answer here. */
+.ptx-marquee { visibility: hidden; }
+.ptx-marquee.measured { visibility: visible; }
+
 .ptx-marquee {
   position: fixed;
   left: 0;
@@ -1780,8 +1791,8 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
 (function(){
  var band=document.querySelector('.ptx-marquee'),root=document.documentElement;
  var hero=document.querySelector('.hero');
- var travel=0, edgeDoc=0, mutations=0, resizes=0, frozen=false;
- var lastScroll=null, lastEdge=null, violations=0, maxBack=0;
+ var travel=0, edgeDoc=0, bandH=0, startEdge=0;
+ var mutations=0, resizes=0, frozen=false, gate='pending';
 
  /* THE v1 BUG, for the record:
       travel = innerHeight - (edgeDoc - scrollY)
@@ -1792,94 +1803,170 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
     a scrolled hero and moved the animation's start point underneath it —
     reverse, overshoot, settle.
 
-    v2 derives travel from two scroll-INDEPENDENT quantities and freezes it. */
+    v2 derives travel from two scroll-INDEPENDENT quantities and freezes it.
+    THE FORMULA IS UNCHANGED IN THIS REVISION. Everything below it changed. */
  function measure(why){
    var r=hero.getBoundingClientRect();
-   edgeDoc = r.bottom + scrollY + 36.3;            /* document coordinate */
-   var bandH = band.getBoundingClientRect().height; /* NOT innerHeight: on iOS
+   edgeDoc = r.bottom + scrollY + 36.3;             /* document coordinate */
+   bandH   = band.getBoundingClientRect().height;   /* NOT innerHeight: on iOS
                                                        100svh and innerHeight
                                                        disagree while the
                                                        browser chrome moves */
-   travel = Math.max(0, bandH - edgeDoc);
+   travel  = Math.max(0, bandH - edgeDoc);
+   startEdge = bandH - travel;    /* the band's VIEWPORT bottom at progress 0.
+                                     Derived from the clamp, not from edgeDoc,
+                                     so it stays exact when travel clamps to 0. */
    root.style.setProperty('--ptx-travel', travel.toFixed(2)+'px');
-   mutations++;
-   return why;
+   band.classList.add('measured');
+   mutations++; gate=why;
  }
 
- /* Measure once the fonts and first layout have settled, then FREEZE. A
-    mid-scroll resize on mobile is the browser chrome moving, not a new layout,
-    and rebasing on it is what produced the jump. Only an orientation change
-    while at the top re-opens the measurement. */
- function settle(){ if(!frozen){ measure('initial'); frozen=true; } }
- if(document.fonts&&document.fonts.ready)document.fonts.ready.then(settle);
- addEventListener('load',settle);
- setTimeout(settle,700);
+ /* FONT READINESS IS THE PRIMARY GATE.
+    edgeDoc depends on the hero's bottom, which depends on the wordmark and
+    tagline metrics, which depend on the webfonts. Previously `load` and a
+    700ms timeout could freeze the measurement BEFORE the fonts settled, and
+    the later fonts.ready callback could not correct it — frozen was already
+    true. Now, where FontFaceSet exists, only fonts.ready freezes; the 3s
+    backstop exists solely so a FontFaceSet that never resolves cannot leave
+    the band unmeasured, and it names itself in the panel when it wins. */
+ function settleNow(why){ if(!frozen){ measure(why); frozen=true; } }
+ function afterFrames(fn){ requestAnimationFrame(function(){ requestAnimationFrame(fn); }); }
+ var hasFonts = !!(document.fonts && document.fonts.ready);
+ if(hasFonts){
+   document.fonts.ready.then(function(){ afterFrames(function(){ settleNow('fonts.ready'); }); });
+   setTimeout(function(){ settleNow('BACKSTOP 3s — fonts.ready never resolved'); },3000);
+ } else {
+   addEventListener('load',function(){ afterFrames(function(){ settleNow('load (no FontFaceSet)'); }); });
+   setTimeout(function(){ settleNow('700ms (no FontFaceSet)'); },700);
+ }
 
+ /* A mid-scroll resize on mobile is the browser chrome moving, not a new
+    layout, and rebasing on it is what produced the jump. Only a resize while
+    parked at the top, or an orientation change, re-opens the measurement. */
  addEventListener('resize',function(){
    resizes++;
-   if(scrollY<2){ frozen=false; settle(); }      /* safe: nothing to disturb */
+   if(scrollY<2){ frozen=false; afterFrames(function(){ settleNow('resize at top'); }); }
  });
  if(screen.orientation) screen.orientation.addEventListener('change',function(){
-   scrollTo(0,0); frozen=false; settle();
+   scrollTo(0,0); frozen=false; afterFrames(function(){ settleNow('orientation'); });
  });
 
- /* Monotonicity watch: the edge must never move UP the document as the page
-    scrolls DOWN. Any backward step is the defect reappearing. */
+ function maxScroll(){ return Math.max(1, root.scrollHeight - innerHeight); }
+ function visBottom(){                       /* visible viewport bottom, in the
+                                                same client coords as getBCR */
+   var vv=window.visualViewport;
+   return vv ? vv.offsetTop + vv.height : innerHeight;
+ }
+
+ /* MONOTONICITY, IN VIEWPORT COORDINATES.
+    The reported defect is visible reverse motion on the screen. The previous
+    check watched `bottom + scrollY`, a DOCUMENT coordinate — and scrollY grows
+    far faster than the band's own displacement, so a real on-screen reversal
+    could be swallowed whole by the scrollY term and still read as monotonic.
+    `getBoundingClientRect().bottom` alone is what the eye sees. Scrolling down
+    must never decrease it.
+    Rubber-band overscroll is excluded rather than counted: outside [0,max] a
+    fixed element travels with the page on iOS, which is not the defect. */
+ var lastY=null,lastEdge=null,violations=0,maxBack=0,samples=0,overscroll=0;
  addEventListener('scroll',function(){
-   var edge=band.getBoundingClientRect().bottom+scrollY;
-   if(lastScroll!==null && scrollY>lastScroll+1 && edge<lastEdge-1){
-     violations++; maxBack=Math.max(maxBack,lastEdge-edge);
+   var y=scrollY, m=maxScroll();
+   if(y<0||y>m){ lastY=null; overscroll++; return; }
+   var edgeVp=band.getBoundingClientRect().bottom;
+   if(lastY!==null && y>lastY+1){
+     samples++;
+     if(edgeVp<lastEdge-1){ violations++; maxBack=Math.max(maxBack,lastEdge-edgeVp); }
    }
-   lastScroll=scrollY; lastEdge=edge;
+   lastY=y; lastEdge=edgeVp;
  },{passive:true});
 
- /* Reporting only. This probe NEVER changes the driver — that was v1's second
-    discontinuity. */
- var probe={claims:CSS.supports('animation-timeline','scroll()'),drives:null};
- (function(){
-   var st=document.createElement('style');
-   st.textContent='@keyframes _pr{from{transform:translateY(0)}to{transform:translateY(400px)}}'
-     +'#_pr{position:absolute;left:-9999px;top:0;width:8px;height:8px;'
-     +'animation:_pr linear both;animation-timeline:scroll(root block);animation-duration:auto}';
-   document.head.appendChild(st);
-   var el=document.createElement('div'); el.id='_pr'; document.body.appendChild(el);
-   setTimeout(function(){
-     var max=Math.max(1,root.scrollHeight-innerHeight);
-     var y=new DOMMatrixReadOnly(getComputedStyle(el).transform).m42;
-     probe.measured=Math.round(y); probe.expected=Math.round(400*Math.min(1,scrollY/max));
-     probe.drives=Math.abs(y-probe.expected)<40;
-     el.remove(); st.remove();
-   },700);
- })();
+ /* SUPPORT CLASSIFICATION, ON THE BAND ITSELF, NEVER FROM A ZERO SAMPLE.
+    At scrollY 0 a driving timeline and an inert one produce the SAME transform,
+    so the previous probe could report YES having never moved. This one stays
+    UNMEASURED until the page has actually scrolled far enough for the two
+    hypotheses to be distinguishable, then compares the band's real transform
+    against both:
+      driving   translateY(travel*p - travel)
+      inert     translateY(-travel)          (the base rule, or a filled
+                                              from-state that never advances)
+    and reports how far off it is AND how far apart the two hypotheses are —
+    so a near-tie is visible rather than rounded into a verdict. The separate
+    hidden probe element is gone: measuring the band removes the inference
+    that a probe element behaves as the band does. */
+ var sup={claims:CSS.supports('animation-timeline','scroll()'),
+          state:'UNMEASURED', y0:null, need:'scroll >=80px AND expected displacement >=8px'};
+ addEventListener('scroll',function(){
+   if(sup.state!=='UNMEASURED' || !frozen) return;
+   if(sup.y0===null){ sup.y0=scrollY; return; }
+   var p=Math.min(1,Math.max(0,scrollY/maxScroll()));
+   var disp=travel*p;
+   sup.delta=Math.abs(scrollY-sup.y0); sup.disp=disp;
+   if(sup.delta<80 || disp<8) return;
+   var y=new DOMMatrixReadOnly(getComputedStyle(band).transform).m42;
+   var driving=travel*p-travel, inert=-travel;
+   sup.m42=y; sup.driving=driving; sup.inert=inert;
+   sup.err=Math.min(Math.abs(y-driving),Math.abs(y-inert)); /* off the winner */
+   sup.sep=Math.abs(driving-inert);                         /* how far apart they are */
+   sup.state=Math.abs(y-driving)<Math.abs(y-inert)?'DRIVES':'INERT';
+ },{passive:true});
 
  var out=document.getElementById('pp');
  function report(){
-   var b=band.getBoundingClientRect();
-   var max=Math.max(1, root.scrollHeight-innerHeight);
-   var p=Math.min(1,Math.max(0,scrollY/max));
-   var docH=root.scrollHeight, edge=b.bottom+scrollY, conv=Math.abs(edge-docH);
-   var expected=edgeDoc + (docH-edgeDoc)*p;
-   out.innerHTML='<b>P1 v2 // monotonic convergence</b>'
-   +'\ndriver        CSS scroll timeline only (no takeover)'
-   +'\ntravel        '+travel.toFixed(1)+'px   set '+mutations+'x'
-     +(mutations===1?' <span class=ok>(frozen)</span>':' <span class=bad>(REBASED — should be 1)</span>')
-   +'\nresize events '+resizes+'  (ignored while scrolled)'
-   +'\nprogress      '+(p*100).toFixed(1)+'%'
-   +'\nedge now      '+edge.toFixed(1)+'   expected '+expected.toFixed(1)
-     +'   delta '+(edge-expected).toFixed(1)
-   +'\nmonotonic     '+(violations===0
-      ?'<span class=ok>YES — edge never moved backwards</span>'
+   var edgeVp=band.getBoundingClientRect().bottom;
+   var m=maxScroll(), p=Math.min(1,Math.max(0,scrollY/m));
+   var expVp=startEdge + (bandH-startEdge)*p;
+   var vb=visBottom(), vv=window.visualViewport;
+   var convMech=Math.abs(edgeVp-bandH), convVis=Math.abs(edgeVp-vb);
+   var atEnd=p>0.995;
+   function verdict(v,label){
+     return atEnd ? (v<3?'<span class=ok>'+label+' ('+v.toFixed(1)+'px)</span>'
+                       :'<span class=bad>off by '+v.toFixed(1)+'px</span>')
+                  : 'scroll to the bottom';
+   }
+   out.innerHTML='<b>P1 v2 // monotonic PTX convergence</b>'
+   +'\ndriver         CSS scroll timeline only (no takeover)'
+   +'\nmeasured by    '+gate+(frozen?'  <span class=ok>frozen</span>':'  <span class=bad>NOT YET</span>')
+   +'\ntravel         '+travel.toFixed(1)+'px   set '+mutations+'x'
+     +(mutations===1?' <span class=ok>(frozen)</span>':mutations===0?'':' <span class=bad>(REBASED — should be 1)</span>')
+   +'\nresize events  '+resizes+'  (ignored while scrolled)'
+   +'\nprogress       '+(p*100).toFixed(1)+'%'
+
+   +'\n\n<b>COORDINATES</b>   (viewport / client, as the eye sees them)'
+   +'\nedge viewport  '+edgeVp.toFixed(1)+'   expected '+expVp.toFixed(1)
+     +'   delta '+(edgeVp-expVp).toFixed(1)
+   +'\nstart edge     '+startEdge.toFixed(1)+'  (frozen, = bandH - travel)'
+   +'\nband 100svh    '+bandH.toFixed(1)
+   +'\ninnerHeight    '+innerHeight
+   +'\nclientHeight   '+root.clientHeight
+   +'\nvisualViewport '+(vv?vv.height.toFixed(1)+'  offsetTop '+vv.offsetTop.toFixed(1)
+                             :'<span class=bad>unavailable</span>')
+   +'\n   these are reported separately ON PURPOSE — on iOS they disagree'
+
+   +'\n\n<b>MONOTONIC</b>   viewport-coordinate bottom edge'
+   +'\nsamples        '+samples+'  (down-scroll steps compared)'
+     +(overscroll?'   overscroll skipped '+overscroll:'')
+   +'\nresult         '+(samples===0?'<span class=bad>NO SAMPLES YET — scroll down</span>'
+      :violations===0?'<span class=ok>YES — edge never moved backwards</span>'
       :'<span class=bad>'+violations+' reversals, worst '+maxBack.toFixed(1)+'px</span>')
-   +'\nconvergence   '+(p>0.995
-      ?(conv<3?'<span class=ok>CONVERGED ('+conv.toFixed(1)+'px)</span>'
-              :'<span class=bad>off by '+conv.toFixed(1)+'px</span>')
-      :'scroll to the bottom')
-   +'\n\n<b>JS-free path on THIS device</b>'
-   +'\nCSS.supports  '+probe.claims
-   +'\nactually drives '+(probe.drives===null?'measuring…'
-      :(probe.drives?'<span class=ok>YES — motion is CSS-only</span>'
-                    :'<span class=bad>NO — band will not move here</span>'))
-   +(probe.measured!==undefined?'  ('+probe.measured+' vs '+probe.expected+')':'');
+
+   +'\n\n<b>CONVERGENCE</b>   two separate questions'
+   +'\nmechanism      edge vs band 100svh bottom'
+   +'\n               '+verdict(convMech,'CONVERGED')
+   +'\nvisible        edge vs current visible viewport bottom '+vb.toFixed(1)
+   +'\n               '+verdict(convVis,'CONVERGED')
+
+   +'\n\n<b>JS-FREE PATH ON THIS DEVICE</b>'
+   +'\nCSS.supports   '+sup.claims
+   +'\nband transform '+(sup.state==='UNMEASURED'
+      ?'<span class=bad>UNMEASURED</span> — '+sup.need
+        +(sup.delta!==undefined?'\n               so far: delta '+sup.delta.toFixed(0)
+           +'px, displacement '+sup.disp.toFixed(1)+'px':'')
+      :(sup.state==='DRIVES'
+        ?'<span class=ok>DRIVES — motion is CSS-only</span>'
+        :'<span class=bad>INERT — band will not move here</span>')
+       +'\n               m42 '+sup.m42.toFixed(1)+'   driving '+sup.driving.toFixed(1)
+         +'   inert '+sup.inert.toFixed(1)
+       +'\n               off the winner by '+sup.err.toFixed(1)+'px; the two hypotheses'
+         +' are '+sup.sep.toFixed(1)+'px apart');
  }
  addEventListener('scroll',report,{passive:true});
  addEventListener('resize',report);
