@@ -186,5 +186,10 @@
 <script src="/apex-solar-kiss/consciousness-free-will/cfw-controls.js"></script>
 <script src="/apex-solar-kiss/consciousness-free-will/cfw-atlas.js"></script>
 <script src="/apex-solar-kiss/consciousness-free-will/cfw-release.js"></script>
+<!-- PNG export. Loaded LAST and entirely additive: it reads window.CFW_VIEW,
+     the runtime surface cfw-atlas.js already publishes, and never reaches into
+     the engine. Remove this one line and the page is byte-equivalent to the
+     release that shipped without export. -->
+<script src="/apex-solar-kiss/consciousness-free-will/cfw-export-png.js"></script>
 </body>
 </html>
