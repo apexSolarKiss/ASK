@@ -1,0 +1,513 @@
+<!doctype html>
+<!-- ============================================================
+     SCRATCH PROTOTYPE — not the live site, not repo truth.
+     P2 v8 // magenta offset underline
+     Baseline: apexSolarKiss/ASK main @ 1360b41
+     Built by: Claude-58 // ecology-58 // 2026-08-29
+     ============================================================ -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROTOTYPE // P2 v8 // magenta offset underline</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="/colors_and_type.css">
+  <link rel="stylesheet" href="/surface-panel.css">
+  <link rel="stylesheet" href="/surface-action.css">
+  <link rel="stylesheet" href="/site.css">
+  <link rel="stylesheet" href="/surface-shell.css">
+<style>
+
+/* ---------- P2 // the identity mark holds still, the page scrolls under it ---
+   PROTOTYPE ONLY. surface-shell.css is vendored and is NOT edited here; every
+   rule below is an override layered on top of it. If adopted it belongs in the
+   vendored shell and lands on every consuming surface at once.
+
+   1. the mark leaves the flow and pins to the viewport. Its left edge tracks the
+      container's, so it stays aligned with the title beneath it at any width —
+      `max()` reproduces the shell's own centred, padded container maths.
+
+   2. content fades out behind it rather than sliding under a hard edge. The
+      scrim is the PAGE'S OWN background painted again in a fixed box and masked
+      to fade downward. Because the foundation paints the background with
+      `background-attachment: fixed`, repainting it in a fixed box reproduces it
+      exactly — no colour is guessed, and it stays right in both themes. */
+:root {
+  /* The mark's rendered height is derived, not typed: the <img> is 2160x974 in
+     a 116px slot, so the height follows from the aspect ratio and the fade
+     tracks the mark if the slot width ever changes. */
+  --mark-h: calc(116px * 974 / 2160);                    /* 52.31px */
+  --fade-solid: calc(var(--space-8) + var(--mark-h));    /* 116.31px — mark bottom */
+  --fade-len: 24px;                                      /* fade length BELOW that */
+  --fade-end: calc(var(--fade-solid) + var(--fade-len)); /* fully transparent here */
+}
+.surface-mark {
+  position: fixed;
+  top: var(--space-8);
+  left: max(var(--space-6), calc((100vw - 1100px) / 2 + var(--space-6)));
+  width: 116px;
+  margin-bottom: 0;
+  z-index: 3;
+}
+.scrim {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 2;
+  pointer-events: none;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+}
+
+/* v3. Opaque to the mark's bottom edge, transparent by --fade-end, and the
+   header reserves exactly enough room that content STARTS at --fade-end. So
+   nothing is ever faded at rest, and nothing survives to the mark. */
+.surface-head-main { padding-top: calc(var(--fade-end) - var(--space-8)); }
+.scrim {
+  height: var(--fade-end);
+  -webkit-mask-image: linear-gradient(to bottom, #000 var(--fade-solid), transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 var(--fade-solid), transparent 100%);
+}
+/* ---------- v4 // overscan, and wrapped-title clearance -------------------
+   THE PEEK. v3's scrim already began at top: 0, so "extend it to the top" was
+   already true — the peek comes from ABOVE the viewport: iOS rubber-band
+   overscroll, and the safe-area inset. The fix is opaque coverage above y=0,
+   with both mask stops pushed down by the same amount so the VISIBLE geometry
+   is untouched:
+
+     mark bottom   116.3   fade begins
+     fade ends     140.3   breadcrumb starts
+
+   Still the page's own gradient, not a flat fill, so it stays right in both
+   themes. */
+:root { --scrim-overscan: max(64px, env(safe-area-inset-top, 0px)); }
+.scrim {
+  top: calc(-1 * var(--scrim-overscan));
+  height: calc(var(--scrim-overscan) + var(--fade-end));
+  -webkit-mask-image: linear-gradient(to bottom,
+    #000 0,
+    #000 calc(var(--scrim-overscan) + var(--fade-solid)),
+    transparent calc(var(--scrim-overscan) + var(--fade-end)));
+  mask-image: linear-gradient(to bottom,
+    #000 0,
+    #000 calc(var(--scrim-overscan) + var(--fade-solid)),
+    transparent calc(var(--scrim-overscan) + var(--fade-end)));
+}
+
+/* WRAPPED-TITLE CLEARANCE. Separate defect, and it predates the magenta idea:
+   .surface-title is 24px on --lh-heading (1.12), a 26.88px line box, so a
+   wrapped breadcrumb has ~2.9px of total leading and the fragments nearly
+   touch. Any marker or focus treatment makes that worse.
+
+   This belongs to surface-shell, not to a link rule — the shell owns the
+   structural title and its responsive behaviour. Prototyped here only. */
+/* the 640px rule is deliberately absent in v8 — see P2V8_CSS */
+
+
+
+/* ---------- P2 v7 // the mark settles, then pins ---------------------------
+   THE OVER-CONSTRAINT v2/v3 RAN INTO. With the mark, the fade and the
+   breadcrumb all fixed, the fade could only grow by pushing the breadcrumb
+   down or by starting underneath it:
+
+     mark bottom     116.31
+     fade            116.31 -> 140.31
+     breadcrumb top  140.31        <- nothing left to give
+
+   ASK's solve removes the constraint instead of trading against it: give the
+   MARK two positions. The opening composition is preserved exactly; the empty
+   band above the mark is only spent once the reader has started navigating.
+
+     AT REST            AFTER 24px OF SCROLL, LOCKED
+       mark top   64.00   mark top    40.00
+       mark bot  116.31   mark bot    92.31
+       fade      116.31     clean gap 24.00
+              -> 140.31   fade      116.31 -> 140.31
+
+   So the settled stack is mark / 24px of protected clear space / 24px of fade /
+   content — bought from unused chrome rather than from the reader's content.
+
+   There is a neat correspondence in the first 24px: the mark rises by 24 while
+   the breadcrumb rises through the 24px fade, so the mark finishes its lift
+   exactly as the breadcrumb reaches the opaque boundary.
+
+   THE FADE IS NOT TOUCHED IN v7. Lengthening it at the same time would leave
+   two candidate causes for any improvement. If the fade still reads abruptly
+   after the lift, the recovered space can pay for a longer one in its own
+   comparison.
+
+   WHY `translate` AND NOT `transform`. surface-shell.css already owns
+   `a.surface-mark:active { transform: scale(0.97) }` and transitions it. The
+   individual `translate` property composes with that instead of overwriting
+   it, so the press limb survives untouched. Because the element itself moves,
+   the hit target and the focus ring travel with it.
+
+   The lift is CSS scroll-linked with no JS driver, clamped by animation-range
+   so there is nothing left to rebase when Safari's chrome moves later in the
+   scroll. Where scroll timelines are unsupported the mark simply keeps its
+   approved resting position, and reduced-motion does the same. The scrim
+   already prevents content crossing behind the mark, so this is enhancement,
+   never a safety dependency. */
+:root { --mark-lift: 24px; }
+
+@keyframes mark-settle {
+  from { translate: 0 0; }
+  to   { translate: 0 calc(-1 * var(--mark-lift)); }
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .surface-mark {
+      animation: mark-settle linear both;
+      animation-timeline: scroll(root block);
+      animation-duration: auto;
+      animation-range: 0 var(--mark-lift);
+    }
+  }
+}
+
+/* ---------- P2 v8 // the ruled magenta underline ---------------------------
+   THE OPTION LETTER WAS WRONG, NOT THE INTENT. In the P3 v1 comparison:
+
+     D   magenta border-bottom at rest, rgba(255,0,255,.55) -> full on hover
+     E   real text-decoration, 1px, 0.22em offset, .5 -> full on hover
+     F   leading magenta marker, no underline
+
+   ASK described "magenta underline, slightly opaque, full opacity at hover".
+   That is D and E's shared state behaviour — not F. v5/v6/v7 built F because
+   the letter was treated as controlling. The description governs.
+
+   This is E's mechanism carrying D's rest alpha. Not a new synthesis: D and E
+   already share the state behaviour, and they differ only in alpha (.55 vs .5)
+   and in anatomy. `text-decoration` with a 0.22em offset is chosen over
+   `border-bottom` deliberately — recolouring the border would reproduce the
+   jammed rule under the glyphs that started the complaint. The offset
+   underline also skips descenders, which a border cannot do.
+
+   :focus-visible is included per the ruling. See the panel: in LIGHT mode full
+   magenta measures 1.94:1 and 2.21:1 against the gradient stops, where the
+   shell's own --fg-1 focus underline measures 3.50:1 and 4.00:1. The toggle in
+   the control panel switches between them so the difference can be seen rather
+   than argued; the ruled magenta is the default.
+
+   The marker is gone: no ::before, no reserved slot, no padding. Link text
+   keeps its contextual foreground, as v6 established — no colour declaration.
+
+   Everything about the mark, the lift, the fade and the overscan is v7,
+   untouched. */
+
+/* leading — width-independent, breadcrumb-scoped, no breakpoint */
+.surface-breadcrumb .surface-title { line-height: var(--title-lh, 1.35); }
+
+.surface-breadcrumb .surface-title a {
+  border-bottom: none;                    /* the shell's rest rule, removed */
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: rgba(255, 0, 255, var(--link-rest-a, 0.55));
+}
+.surface-breadcrumb .surface-title a:hover {
+  text-decoration-color: var(--ask-emphasis-magenta);
+}
+/* (0,3,1) — beats the shell's own (0,2,1) focus rule, which is why the toggle
+   exists: overriding it replaces a measured-compliant indicator. */
+.surface-breadcrumb .surface-title a:focus-visible {
+  text-decoration-color: var(--focus-uc, var(--ask-emphasis-magenta));
+}
+
+/* specimen scaffolding — prototype chrome, never proposed */
+.spec-label { font-family: var(--font-mono); font-size: var(--fs-caption);
+  letter-spacing: var(--tracking-wide); text-transform: uppercase;
+  color: var(--ask-emphasis-violet); margin: var(--space-6) 0 var(--space-2); }
+.spec-note { font-size: var(--fs-caption); line-height: 1.5; color: var(--fg-3);
+  margin: var(--space-2) 0 0; }
+
+#ctl .r2 { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+#ctl button.lh, #ctl button.fu { font: 11px ui-monospace, Menlo, monospace;
+  padding: 4px 9px; color: #0f0; background: transparent;
+  border: 1px solid #0f0; border-radius: 3px; }
+#ctl button.lh.on, #ctl button.fu.on { background: #0f0; color: #000; }
+
+/* prototype chrome only — never proposed for the repo */
+#pp{position:fixed;left:0;right:0;bottom:0;z-index:99;background:rgba(0,0,0,.86);
+ color:#0f0;font:12px/1.5 ui-monospace,Menlo,monospace;padding:8px 10px;
+ white-space:pre-wrap;border-top:2px solid #0f0;max-height:45vh;overflow:auto;
+ -webkit-text-size-adjust:100%}
+#pp[hidden]{display:none}#pp b{color:#ff0}#pp .ok{color:#5f5}#pp .bad{color:#f55}
+#ppt{position:fixed;right:10px;bottom:10px;z-index:100;font:11px ui-monospace,Menlo,monospace;
+ padding:4px 10px;color:#0f0;background:rgba(0,0,0,.8);border:1px solid #0f0;border-radius:999px}
+#ppt[hidden]{display:none}
+
+</style>
+</head>
+<body>
+<div class="scrim"></div>
+<div class="surface">
+  <header class="surface-head">
+    <div class="surface-head-main">
+      <a class="surface-mark" href="/" aria-label="Back to A-S-K.studio">
+        <img class="surface-mark-light" src="/assets/logo-ASK-white.png" alt="" aria-hidden="true" width="2160" height="974">
+        <img class="surface-mark-dark" src="/assets/logo-ASK-lavender-ASK.png" alt="" aria-hidden="true" width="2160" height="974">
+      </a>
+      <nav class="surface-breadcrumb" aria-label="Breadcrumb">
+        <h1 class="surface-title" id="spec1"><a class="org" href="/">ASK</a> <span class="sep" aria-hidden="true">//</span> <a href="/apex-solar-kiss/">apex solar kiss</a> <span class="sep" aria-hidden="true">//</span> <span class="page" aria-current="page">fixed mark v8 // a deliberately long page name that wraps</span></h1>
+      </nav>
+      <p class="surface-lede">prototype // magenta underline, settle-and-pin mark</p>
+
+      <p class="spec-label">specimen 2 // a linked ancestor long enough to wrap inside the link</p>
+      <nav class="surface-breadcrumb" aria-label="Breadcrumb specimen">
+        <p class="surface-title" id="spec2"><a class="org" href="/">ASK</a> <span class="sep" aria-hidden="true">//</span> <a href="/apex-solar-kiss/">apex solar kiss and the consciousness plus free will research programme</a> <span class="sep" aria-hidden="true">//</span> <span class="page" aria-current="page">current</span></p>
+      </nav>
+
+      <p class="spec-label">colour control // the same breadcrumb with no anchors at all</p>
+      <nav class="surface-breadcrumb" aria-label="Colour control">
+        <p class="surface-title" id="spec3"><span class="org">ASK</span> <span class="sep" aria-hidden="true">//</span> <span class="anc">apex solar kiss</span> <span class="sep" aria-hidden="true">//</span> <span class="page">current</span></p>
+      </nav>
+      <p class="spec-note">the control carries no links, so its roles show the foreground the shell assigns before any link treatment.</p>
+    </div>
+  </header>
+  <hr class="surface-rule">
+  <main class="surface-payload"><div class="prose"><p>Scroll. The mark lifts 24px over the first 24px of scrolling, then holds — v7's geometry, unchanged.</p>
+<p>The breadcrumb now carries the ruled treatment: a thin magenta underline at 55 per cent, offset clear of the baseline, going to full magenta on hover and keyboard focus. No marker, no reserved slot, no glow, no pulse. The linked words keep whatever foreground their role already had.</p>
+<p>Scroll back to the top and the opening composition returns exactly.</p>
+<p>Scroll. The mark lifts 24px over the first 24px of scrolling, then holds — v7's geometry, unchanged.</p>
+<p>The breadcrumb now carries the ruled treatment: a thin magenta underline at 55 per cent, offset clear of the baseline, going to full magenta on hover and keyboard focus. No marker, no reserved slot, no glow, no pulse. The linked words keep whatever foreground their role already had.</p>
+<p>Scroll back to the top and the opening composition returns exactly.</p>
+<p>Scroll. The mark lifts 24px over the first 24px of scrolling, then holds — v7's geometry, unchanged.</p>
+<p>The breadcrumb now carries the ruled treatment: a thin magenta underline at 55 per cent, offset clear of the baseline, going to full magenta on hover and keyboard focus. No marker, no reserved slot, no glow, no pulse. The linked words keep whatever foreground their role already had.</p>
+<p>Scroll back to the top and the opening composition returns exactly.</p>
+<p>Scroll. The mark lifts 24px over the first 24px of scrolling, then holds — v7's geometry, unchanged.</p>
+<p>The breadcrumb now carries the ruled treatment: a thin magenta underline at 55 per cent, offset clear of the baseline, going to full magenta on hover and keyboard focus. No marker, no reserved slot, no glow, no pulse. The linked words keep whatever foreground their role already had.</p>
+<p>Scroll back to the top and the opening composition returns exactly.</p>
+<p>Scroll. The mark lifts 24px over the first 24px of scrolling, then holds — v7's geometry, unchanged.</p>
+<p>The breadcrumb now carries the ruled treatment: a thin magenta underline at 55 per cent, offset clear of the baseline, going to full magenta on hover and keyboard focus. No marker, no reserved slot, no glow, no pulse. The linked words keep whatever foreground their role already had.</p>
+<p>Scroll back to the top and the opening composition returns exactly.</p>
+<p>Scroll. The mark lifts 24px over the first 24px of scrolling, then holds — v7's geometry, unchanged.</p>
+<p>The breadcrumb now carries the ruled treatment: a thin magenta underline at 55 per cent, offset clear of the baseline, going to full magenta on hover and keyboard focus. No marker, no reserved slot, no glow, no pulse. The linked words keep whatever foreground their role already had.</p>
+<p>Scroll back to the top and the opening composition returns exactly.</p>
+</div></main>
+</div>
+<div id="ctl">
+  <div style="color:#ff0;margin-bottom:4px">v8 // magenta offset underline</div>
+  <div class="r2">
+    <span style="color:#888">leading</span>
+    <button class="lh" data-v="1.12">1.12</button>
+    <button class="lh" data-v="1.35">1.35</button>
+    <button class="lh" data-v="1.45">1.45</button>
+  </div>
+  <div class="r2" style="margin-top:4px">
+    <span style="color:#888">focus</span>
+    <button class="fu" data-v="magenta">magenta</button>
+    <button class="fu" data-v="fg1">--fg-1</button>
+  </div>
+  <div style="color:#888;margin-top:4px;max-width:250px;line-height:1.4">1.12 is historical evidence only. Judge 1.35 against 1.45. The focus toggle exists because full magenta measures under 3:1 in light mode.</div>
+</div>
+<div id="pp"></div><button id="ppt" hidden>panel</button>
+<script>
+(function(){
+ var root=document.documentElement, out=document.getElementById('pp');
+ var mark=document.querySelector('.surface-mark');
+ var b1=document.getElementById('spec1'), b2=document.getElementById('spec2'),
+     b3=document.getElementById('spec3');
+
+ function bindGroup(sel, apply, dflt){
+   var bs=[].slice.call(document.querySelectorAll(sel));
+   function set(v){ apply(v); bs.forEach(function(b){ b.classList.toggle('on', b.dataset.v===v); }); report(); }
+   bs.forEach(function(b){ b.addEventListener('click', function(){ set(b.dataset.v); }); });
+   set(dflt);
+ }
+
+ /* ---- colour maths, so the panel states a measured ratio not an opinion --- */
+ function parseRGB(s){
+   var m=/rgba?\(([^)]+)\)/.exec(s);
+   if(m){ var p=m[1].split(',').map(parseFloat); return [p[0],p[1],p[2],p.length>3?p[3]:1]; }
+   m=/^#([0-9a-f]{6})$/i.exec(s.trim());
+   if(m){ var h=m[1]; return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16),1]; }
+   return null;
+ }
+ function tok(name){
+   var v=getComputedStyle(root).getPropertyValue(name).trim();
+   if(!v) return null;
+   if(/^var\(/.test(v)) return null;
+   return parseRGB(v);
+ }
+ function srgb(c){ c=c/255; return c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4); }
+ function lum(c){ return 0.2126*srgb(c[0])+0.7152*srgb(c[1])+0.0722*srgb(c[2]); }
+ function over(fg,bg){ var a=fg[3];
+   return [fg[0]*a+bg[0]*(1-a), fg[1]*a+bg[1]*(1-a), fg[2]*a+bg[2]*(1-a), 1]; }
+ function ratio(fg,bg){ var A=lum(over(fg,bg)), B=lum(bg);
+   var hi=Math.max(A,B), lo=Math.min(A,B); return (hi+0.05)/(lo+0.05); }
+ function bgStops(){
+   var a=tok('--bg-from'), b=tok('--bg-to');
+   if(a&&b) return [a,b];
+   /* the tokens indirect through var(); fall back to painting them */
+   var probe=document.createElement('span');
+   probe.style.cssText='position:absolute;left:-9999px;background:var(--bg-from)';
+   document.body.appendChild(probe);
+   var f=parseRGB(getComputedStyle(probe).backgroundColor);
+   probe.style.background='var(--bg-to)';
+   var t=parseRGB(getComputedStyle(probe).backgroundColor);
+   probe.remove();
+   return [f,t];
+ }
+
+ /* ---- geometry ----------------------------------------------------------- */
+ function lineRects(el){
+   var r=document.createRange(); r.selectNodeContents(el);
+   var raw=[].slice.call(r.getClientRects()).filter(function(x){return x.width>0.5;});
+   var rows=[];
+   raw.forEach(function(x){
+     var g=rows.find(function(k){ return Math.abs(k.top-x.top)<2; });
+     if(g){ g.left=Math.min(g.left,x.left); g.right=Math.max(g.right,x.right);
+            g.bottom=Math.max(g.bottom,x.bottom); }
+     else rows.push({top:x.top,bottom:x.bottom,left:x.left,right:x.right});
+   });
+   return rows.sort(function(p,q){return p.top-q.top;});
+ }
+ function anchorLines(a){
+   var rs=[].slice.call(a.getClientRects()).filter(function(x){return x.width>0.5;});
+   var g=[];
+   rs.forEach(function(x){
+     var k=g.find(function(k){ return Math.abs(k.top-x.top)<2; });
+     if(k){ k.w+=x.width; } else g.push({top:x.top,left:x.left,w:x.width});
+   });
+   return g.sort(function(p,q){return p.top-q.top;});
+ }
+ function specimen(el,name){
+   var rows=lineRects(el), links=[].slice.call(el.querySelectorAll('a'));
+   var lh=parseFloat(getComputedStyle(el).lineHeight);
+   var gaps=[]; for(var i=1;i<rows.length;i++) gaps.push(rows[i].top-rows[i-1].top);
+   var gmin=gaps.length?Math.min.apply(null,gaps):0, gmax=gaps.length?Math.max.apply(null,gaps):0;
+   var uniform=gaps.length===0||(gmax-gmin)<0.75;
+   var clear=[]; for(var k=1;k<rows.length;k++) clear.push(rows[k].top-rows[k-1].bottom);
+   var minClear=clear.length?Math.min.apply(null,clear):null;
+   var overlap=0, worstOv=0;
+   for(var j=1;j<rows.length;j++){ var d=rows[j-1].bottom-rows[j].top;
+     if(d>0.5){ overlap++; worstOv=Math.max(worstOv,d); } }
+   var spans=links.map(function(a){ return anchorLines(a).length; });
+   /* the underline must survive fragmentation: every line of a wrapped anchor
+      carries it, which is exactly what a marker could not do */
+   var cs0=links.length?getComputedStyle(links[0]):null;
+   return {name:name, rows:rows.length, lh:lh, h:el.getBoundingClientRect().height,
+           gmin:gmin, gmax:gmax, uniform:uniform, minClear:minClear,
+           overlap:overlap, worstOv:worstOv, links:links.length, spans:spans,
+           titleLeft:el.getBoundingClientRect().left,
+           deco:cs0?cs0.textDecorationLine:'-', decoColor:cs0?cs0.textDecorationColor:'-',
+           thickness:cs0?cs0.textDecorationThickness:'-',
+           offset:cs0?cs0.textUnderlineOffset:'-',
+           border:cs0?cs0.borderBottomStyle:'-',
+           padStart:cs0?cs0.paddingInlineStart:'-',
+           before:cs0?getComputedStyle(links[0],'::before').content:'-'};
+ }
+ function roles(){
+   function c(sel){ var e=document.querySelector(sel); return e?getComputedStyle(e).color:'-'; }
+   return {linkedOrg:c('#spec1 a.org'), controlOrg:c('#spec3 .org'),
+           linkedAnc:c('#spec1 a:not(.org)'), controlAnc:c('#spec3 .anc'),
+           page:c('#spec1 .page'), controlPage:c('#spec3 .page')};
+ }
+
+ function line(s){ return '\n'+s; }
+ function report(){
+   var m=mark.getBoundingClientRect();
+   var sc=document.querySelector('.scrim');
+   var scr=sc?sc.getBoundingClientRect():{bottom:0,top:0};
+   var fadeLen=parseFloat(getComputedStyle(root).getPropertyValue('--fade-len'))||0;
+   var REST=parseFloat(getComputedStyle(root).getPropertyValue('--space-8'))||64;
+   var LIFT=parseFloat(getComputedStyle(root).getPropertyValue('--mark-lift'))||24;
+   var lift=REST-m.top, locked=scrollY>=LIFT-0.5;
+   var fs=scr.bottom-fadeLen, fe=scr.bottom, gap=fs-m.bottom;
+   var s1=specimen(b1,'realistic'), s2=specimen(b2,'link wraps inside itself');
+   var R=roles(), ovf=root.scrollWidth-root.clientWidth;
+   var stops=bgStops(), rest=parseRGB(s1.decoColor);
+   var mag=[255,0,255,1], fg1=parseRGB(getComputedStyle(b1).color)||[0,0,0,1];
+   function cr(c){ if(!c||!stops[0]) return '?';
+     return ratio(c,stops[0]).toFixed(2)+' / '+ratio(c,stops[1]).toFixed(2); }
+   function flag(c){ if(!c||!stops[0]) return '';
+     var lo=Math.min(ratio(c,stops[0]),ratio(c,stops[1]));
+     return lo>=3?'  <span class=ok>>=3:1</span>':'  <span class=bad>under 3:1</span>'; }
+
+   function spec(s){
+     return line('<b>'+s.name+'</b>')
+     +line('  lines '+s.rows+'   line-height '+s.lh.toFixed(2)+'px   height '+s.h.toFixed(1))
+     +line('  baseline interval  '+(s.rows<2?'n/a'
+        :(s.uniform?'<span class=ok>CONSTANT '+s.gmin.toFixed(2)+'px</span>'
+                   :'<span class=bad>VARIES</span>')))
+     +line('  line clearance     '+(s.minClear===null?'n/a'
+        :(s.minClear>=0?'<span class=ok>'+s.minClear.toFixed(2)+'px</span>'
+                       :'<span class=bad>'+s.minClear.toFixed(2)+'px OVERLAP</span>')))
+     +line('  lines per link     ['+s.spans.join(', ')+']   underline follows every fragment')
+     +line('  line overlap       '+(s.overlap===0?'<span class=ok>none</span>'
+        :'<span class=bad>'+s.overlap+', worst '+s.worstOv.toFixed(1)+'px</span>'));
+   }
+
+   out.innerHTML='<b>P2 v8 // magenta offset underline</b>'
+   +line('viewport      '+innerWidth+'x'+innerHeight+'   scrollY '+Math.round(scrollY)
+     +'   '+(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))
+   +line('mark top      '+m.top.toFixed(2)+'   lifted '+lift.toFixed(2)+' of '+LIFT.toFixed(0))
+   +line('lift state    '+(locked
+      ?(Math.abs(lift-LIFT)<0.6?'<span class=ok>LOCKED at -'+LIFT.toFixed(0)+'px</span>':'<span class=bad>lift '+lift.toFixed(2)+'</span>')
+      :(scrollY<0.5?(Math.abs(lift)<0.6?'<span class=ok>at rest</span>':'<span class=bad>'+lift.toFixed(2)+'</span>')
+                   :'settling '+(100*scrollY/LIFT).toFixed(0)+'%')))
+   +line('gap to fade   '+gap.toFixed(2)+'px   fade '+fs.toFixed(2)+' -> '+fe.toFixed(2)
+     +'   '+(Math.abs(fs-116.30)<1.5?'<span class=ok>v7 geometry</span>':'<span class=bad>MOVED</span>'))
+   +line('h-overflow    '+(ovf<=0?'<span class=ok>none</span>':'<span class=bad>'+ovf+'px</span>'))
+
+   +line('')
+   +line('<b>UNDERLINE</b>   (no marker, no slot, no glow)')
+   +line('  decoration    '+s1.deco+'   '+s1.thickness+'   offset '+s1.offset)
+   +line('  rest colour   '+s1.decoColor)
+   +line('  rest border   '+s1.border+'   padding-start '+s1.padStart
+     +'   ::before '+s1.before
+     +'   '+(s1.border==='none'&&s1.padStart==='0px'&&s1.before==='none'
+        ?'<span class=ok>marker fully removed</span>':'<span class=bad>marker residue</span>'))
+   +line('  contrast vs the two gradient stops')
+   +line('    rest  '+cr(rest)+flag(rest))
+   +line('    hover/focus magenta  '+cr(mag)+flag(mag))
+   +line('    --fg-1 (shell focus) '+cr(fg1)+flag(fg1))
+   +line('    the focus toggle above switches which of the last two is used')
+
+   +line('')
+   +line('<b>CONTEXTUAL FOREGROUND</b>  (no colour declared)')
+   +line('  .org      '+R.linkedOrg+'  vs control '+R.controlOrg
+     +'  '+(R.linkedOrg===R.controlOrg?'<span class=ok>MATCH</span>':'<span class=bad>DIFFERS</span>'))
+   +line('  ancestor  '+R.linkedAnc+'  vs control '+R.controlAnc
+     +'  '+(R.linkedAnc===R.controlAnc?'<span class=ok>MATCH</span>':'<span class=bad>DIFFERS</span>'))
+   +line('  .page     '+R.page+'  vs control '+R.controlPage
+     +'  '+(R.page===R.controlPage?'<span class=ok>MATCH — inert</span>':'<span class=bad>DIFFERS</span>'))
+   +spec(s1)+spec(s2);
+ }
+
+ bindGroup('button.lh', function(v){ root.style.setProperty('--title-lh', v); }, '1.35');
+ bindGroup('button.fu', function(v){
+   root.style.setProperty('--focus-uc', v==='fg1'?'var(--fg-1)':'var(--ask-emphasis-magenta)'); }, 'magenta');
+
+ addEventListener('scroll',report,{passive:true});
+ addEventListener('resize',report);
+ setInterval(report,400); report();
+ window.__p2v8=function(){
+   var m=mark.getBoundingClientRect();
+   var sc=document.querySelector('.scrim').getBoundingClientRect();
+   var fl=parseFloat(getComputedStyle(root).getPropertyValue('--fade-len'))||0;
+   var R=parseFloat(getComputedStyle(root).getPropertyValue('--space-8'))||64;
+   var L=parseFloat(getComputedStyle(root).getPropertyValue('--mark-lift'))||24;
+   return {w:innerWidth, scrollY:scrollY, dark:matchMedia('(prefers-color-scheme: dark)').matches,
+     markTop:m.top, markBottom:m.bottom, rest:R, liftMax:L, lift:R-m.top,
+     fadeStart:sc.bottom-fl, fadeEnd:sc.bottom, gap:(sc.bottom-fl)-m.bottom,
+     crumbTop:b1.getBoundingClientRect().top,
+     translate:getComputedStyle(mark).translate,
+     roles:roles(), s1:specimen(b1,'realistic'), s2:specimen(b2,'internal wrap'),
+     ovf:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+ };
+})();
+
+(function(){
+ var p=document.getElementById('pp'),t=document.getElementById('ppt');
+ if(!p||!t)return;
+ t.addEventListener('click',function(){p.hidden=false;t.hidden=true});
+ p.addEventListener('click',function(){p.hidden=true;t.hidden=false});
+ addEventListener('keydown',function(e){if(e.key==='p'||e.key==='P'){
+   var on=p.hidden;p.hidden=!on;t.hidden=on}});
+})();
+</script>
+</body>
+</html>
