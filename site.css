@@ -176,13 +176,16 @@ html:has(> body > .shell) { overflow-x: clip; }
   align-items: flex-start;
   gap: var(--space-3);
 }
+/* Band foreground: the ordinary hierarchy, in both themes. The category and the
+   supporting statement take --fg-2; the named primitive takes --fg-1. The semantic
+   tokens perform the theme switch, so this band needs no theme-specific color rule. */
 .positioning-category {
   font-family: var(--font-sans);
   font-weight: var(--fw-light);
   font-size: var(--fs-caption);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: var(--fg-high-contrast);
+  color: var(--fg-2);
   margin: 0;
 }
 /* The named primitive is a primary label on the family's shared METRIC —
@@ -201,30 +204,15 @@ html:has(> body > .shell) { overflow-x: clip; }
   font-weight: var(--fw-light);
   line-height: var(--lh-heading);
   letter-spacing: var(--tracking-tight);
-  color: var(--fg-high-contrast);
+  color: var(--fg-1);
   margin: 0;
 }
 .positioning-prop {
   font-size: var(--fs-small);
   font-weight: var(--fw-light);
   line-height: var(--lh-body);
-  color: var(--fg-high-contrast);
+  color: var(--fg-2);
   margin: 0;
-}
-/* Band text contrast: --fg-1/--fg-2 fall below WCAG AA (4.5:1 for normal text) on the light
-   gradient, so light mode uses --fg-high-contrast (#201D26, ~10:1). Dark mode restores the
-   lavender hierarchy (--fg-high-contrast is near-black, unreadable on the dark gradient),
-   mirroring colors_and_type.css's explicit-toggle + auto (OS-preference) dark mechanism. */
-:root[data-theme="dark"] .positioning-category,
-.theme-dark .positioning-category,
-:root[data-theme="dark"] .positioning-prop,
-.theme-dark .positioning-prop { color: var(--fg-2); }
-:root[data-theme="dark"] .positioning-primitive,
-.theme-dark .positioning-primitive { color: var(--fg-1); }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]):not([data-theme="dark"]) .positioning-category,
-  :root:not([data-theme="light"]):not([data-theme="dark"]) .positioning-prop { color: var(--fg-2); }
-  :root:not([data-theme="light"]):not([data-theme="dark"]) .positioning-primitive { color: var(--fg-1); }
 }
 
 /* ---------- Tier cards ---------- */
