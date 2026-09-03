@@ -89,6 +89,134 @@
     list.appendChild(li);
   });
 
+
+  /* ---- ASK conclusion --------------------------------------------------
+     Rendered from the generated payload's ask_conclusion field. There is NO
+     second prose copy in index.html: everything below is built from the data,
+     via textContent only, so nothing in the payload can inject markup. An
+     unrecognised inline kind, block kind or malformed section FAILS THE COMPLETE
+     ASK-conclusion render: one bounded error is shown and no partial conclusion
+     is attached. */
+  var AC = D.ask_conclusion;
+  if (AC) {
+    var acRoot = document.getElementById("askc");
+
+    /* Inline runs arrive already structured: {t:"plain"|"strong"|"em"|"code", v:"..."}.
+       Each becomes a real element via createElement + textContent. No markup is parsed
+       here and none can be injected.
+
+       UNKNOWN SPAN KIND, UNKNOWN BLOCK KIND OR A MALFORMED SECTION FAILS THE WHOLE RENDER.
+       Nothing is skipped, coerced or counted: the conclusion is built into a detached
+       fragment and attached only if all of it succeeds, otherwise one bounded error replaces
+       it. Part of a conclusion is not the conclusion.
+
+       THE VOCABULARY IS CLOSED AT RUNTIME TOO. The derivation refuses an unknown span or
+       block kind at build time; if one reached the browser anyway, rendering a coerced or
+       partial conclusion would present an incomplete projection as complete. acFail throws,
+       the whole conclusion is replaced by one bounded error, and nothing half-built is
+       left on the page. */
+    function acFail(why) { throw new Error("ask_conclusion: " + why); }
+
+    function acSpans(target, spans) {
+      if (!Array.isArray(spans)) acFail("spans is not an array");
+      spans.forEach(function (s) {
+        if (!s || typeof s.v !== "string") acFail("malformed span");
+        if (s.t === "strong")     target.appendChild(text(el("strong"), s.v));
+        else if (s.t === "em")    target.appendChild(text(el("em"), s.v));
+        else if (s.t === "code")  target.appendChild(text(el("code", "askc-code"), s.v));
+        else if (s.t === "plain") target.appendChild(document.createTextNode(s.v));
+        else acFail('unknown inline kind "' + s.t + '"');
+      });
+      return target;
+    }
+    function acBlock(b) {
+      if (!b || typeof b.type !== "string") acFail("malformed block");
+      if (b.type === "paragraph") return acSpans(el("p", "askc-p"), b.spans);
+      if (b.type === "quote")     return acSpans(el("blockquote", "askc-q"), b.spans);
+      if (b.type === "code") {
+        if (!Array.isArray(b.lines)) acFail("code block without lines");
+        return text(el("pre", "askc-pre"), b.lines.join("\n"));
+      }
+      if (b.type === "list") {
+        if (!Array.isArray(b.items)) acFail("list block without items");
+        var ul = el("ul", "askc-ul");
+        b.items.forEach(function (it) { ul.appendChild(acSpans(el("li"), it)); });
+        return ul;
+      }
+      acFail('unknown block type "' + b.type + '"');
+    }
+    function acAppend(target, blocks) {
+      if (!Array.isArray(blocks)) acFail("block run is not an array");
+      blocks.forEach(function (b) { target.appendChild(acBlock(b)); });
+    }
+
+    if (acRoot) {
+      /* Built into a DETACHED fragment: nothing reaches the page unless all of it does. */
+      var frag = document.createDocumentFragment();
+      try {
+        /* The section's real name comes from the payload, never from the markup. The h2
+           in index.html carries only a generic fallback so the heading is never blank. */
+        if (typeof AC.title !== "string" || !AC.title) acFail("missing title");
+        var h2 = document.getElementById("askc-title");
+        if (h2) text(h2, AC.title);
+        acSpans(frag.appendChild(el("p", "askc-intro")), AC.introduction);
+        acSpans(frag.appendChild(el("blockquote", "askc-pull")), AC.pull_quote);
+        acAppend(frag, AC.distinctions);
+
+        if (!Array.isArray(AC.sections) || AC.sections.length === 0) acFail("no sections");
+        AC.sections.forEach(function (s, i) {
+          if (!s || typeof s.heading !== "string" || s.number !== i + 1 || !s.id)
+            acFail("malformed section at index " + i);
+          var sec = el("section", "askc-sec");
+          sec.id = s.id;
+          sec.appendChild(text(el("h3", "askc-h"), String(s.number) + " // " + s.heading));
+          acAppend(sec, s.blocks);
+          frag.appendChild(sec);
+        });
+
+        var cmp = el("section", "askc-sec askc-compress");
+        cmp.appendChild(text(el("h3", "askc-h"), "compression"));
+        acSpans(cmp.appendChild(el("blockquote", "askc-pull")), AC.compression);
+        frag.appendChild(cmp);
+
+        acRoot.appendChild(frag);
+      } catch (e) {
+        while (acRoot.firstChild) acRoot.removeChild(acRoot.firstChild);
+        acRoot.appendChild(text(el("p", "askc-error"),
+          "The ASK conclusion could not be displayed: this page received it in a form it does " +
+          "not recognise. Nothing partial is shown, because part of a conclusion is not the " +
+          "conclusion. The research findings above are unaffected."));
+        if (window.console && console.error) console.error(e);
+      }
+    }
+  }
+
+  /* ---- top orientation action: dual-purpose ----------------------------
+     The orientation now carries a nine-section conclusion. A first-run reader at 375px
+     must be able to reach the map from the TOP rather than scrolling all of it. Before
+     the map has been entered the top control ENTERS the map; afterwards it CLOSES the
+     orientation. The bottom "explore the map" action is retained either way. */
+  (function () {
+    var top = document.getElementById("orientclose");
+    if (!top) return;
+    function syncTop() {
+      var entered = document.body.getAttribute("data-map") === "1";
+      text(top, entered ? "close and return to the map" : "explore the map");
+      top.setAttribute("data-mode", entered ? "close" : "enter");
+    }
+    syncTop();
+    top.addEventListener("click", function (ev) {
+      if (top.getAttribute("data-mode") === "enter") {
+        ev.stopImmediatePropagation();
+        var enter = document.getElementById("entermap");
+        if (enter) enter.click();
+        syncTop();
+      }
+    }, true);
+    var mo = new MutationObserver(syncTop);
+    mo.observe(document.body, { attributes: true, attributeFilter: ["data-map"] });
+  })();
+
   /* ---- counts ---------------------------------------------------------- */
   var byClass = {};
   D.objects.forEach(function (o) { byClass[o.class] = (byClass[o.class] || 0) + 1; });
@@ -235,8 +363,17 @@
 
   var closeBtn = document.getElementById("orientclose");
   if (closeBtn) closeBtn.addEventListener("click", function () { openOrient(false); });
+  /* On a small screen the reader lands with the orientation open and the map still
+     gated behind `data-map`. Closing the overlay there has to enter the map, or Escape
+     dismisses the only thing on screen and leaves nothing behind it. */
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && orient.getAttribute("data-open") === "1") openOrient(false);
+    if (e.key !== "Escape" || orient.getAttribute("data-open") !== "1") return;
+
+    if (SMALL.matches && document.body.getAttribute("data-map") !== "1") {
+      enterMap();
+    } else {
+      openOrient(false);
+    }
   });
 
   function applyMode() {
