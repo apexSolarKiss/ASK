@@ -363,8 +363,17 @@
 
   var closeBtn = document.getElementById("orientclose");
   if (closeBtn) closeBtn.addEventListener("click", function () { openOrient(false); });
+  /* On a small screen the reader lands with the orientation open and the map still
+     gated behind `data-map`. Closing the overlay there has to enter the map, or Escape
+     dismisses the only thing on screen and leaves nothing behind it. */
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && orient.getAttribute("data-open") === "1") openOrient(false);
+    if (e.key !== "Escape" || orient.getAttribute("data-open") !== "1") return;
+
+    if (SMALL.matches && document.body.getAttribute("data-map") !== "1") {
+      enterMap();
+    } else {
+      openOrient(false);
+    }
   });
 
   function applyMode() {
