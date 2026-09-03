@@ -25,9 +25,14 @@ Tier 1 (foundation) and Tier 2 (ASK design language, incl. the tagline).
 consumes the vendored `surface-shell` **pattern** (`surface-shell.css`) — a
 pinned, byte-identical copy of the canonical file in `design-system-ASK`, never
 hand-edited here. The shell owns the page container, the header, the wordmark
-slot, the structural title and lede, the header rule, and the footer's alignment
-and link behavior. `site.css` adds ASK's own payload layout and instance
-adaptations around it; it no longer owns a shared page shell of its own.
+slot, the structural title and lede, the header rule, and the footer ROW — its
+alignment and arrangement. It does not own each footer destination's
+presentation: those are compact actions, so their type, geometry, paint and
+interaction belong to the action rule. The shell is Tier-3-neutral — it carries
+no Tier 3 value and supplies none; this site supplies its own. ASK consumes no
+navigation runtime: the shell's optional navigation script is not vendored
+here. `site.css` adds ASK's own payload layout and instance adaptations around
+it; it no longer owns a shared page shell of its own.
 
 The 68 p5 sketch runners under `assets/asymptotic/p5/gallery/` are not content
 pages and are outside the shell: they are full-viewport canvas embeds loaded in
@@ -55,6 +60,15 @@ keeps its own element semantics, destinations, copy, row and placement decisions
 The panel rule deliberately leaves support-copy foreground local; the action rule
 owns its base foreground, with only the bounded `gal-link` on-image paint
 adaptation described below.
+
+**The browser-icon set is inherited too.** `favicon.svg`, `favicon-32.png`,
+`favicon.ico` and `apple-touch-icon.png` are vendored from `design-system-ASK`,
+which is the canonical implementation owner of the ASK browser-chrome
+expression. The three files this site already served remained byte-identical
+when that authority moved — only the ownership changed — and `favicon.ico` was
+added, answering the root probe browsers make without being asked for it. As
+with every other carrier here, they are pinned, byte-identical, and never
+hand-edited.
 
 **The homepage is the explicit exception.** `/index.html` keeps its own centered,
 viewport-height composition and does not adopt the shell. It does consume both
@@ -91,6 +105,10 @@ surface-action.css    vendored from design-system-ASK — the compact-action VIS
 colors_and_type.css   vendored from design-system-ASK (canonical tokens)
 fonts/                vendored Inter + JetBrains Mono (OFL)
 assets/logo-ASK.*     vendored wordmark (svg primary; white + lavender-ASK png pairings)
+favicon.svg           vendored from design-system-ASK — canonical browser icon, pinned + byte-identical
+favicon-32.png        vendored from design-system-ASK — 32px raster browser icon, pinned + byte-identical
+favicon.ico           vendored from design-system-ASK — the root-probe fallback browsers request unasked
+apple-touch-icon.png  vendored from design-system-ASK — the iOS home-screen icon, pinned + byte-identical
 apex-solar-kiss/      native builder subpage — the object map (practice + two domain applications + the builder machine)
 apex-solar-kiss/design/  native design gateway — live design-system surfaces + the retained external design-portfolio board
 apex-solar-kiss/consciousness-free-will/  CFW mind map + typed relation atlas, plus a distinct ASK-authored conclusion — a named full-viewport interactive-application exception to the shell; vendors spectral-state.css from design-system-ASK (pinned + byte-identical)

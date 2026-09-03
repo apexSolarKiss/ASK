@@ -4,8 +4,9 @@ Copyright 2026 Andrew S Klug // ASK
 The ASK meta-brand public landing site — a reference implementation of the
 ASK design family.
 
-This product vendors foundations, one pattern, and two visual rules from
-design-system-ASK (github.com/apexSolarKiss/design-system-ASK):
+This product vendors foundations, one pattern, two visual rules, and the
+canonical browser-icon set from design-system-ASK
+(github.com/apexSolarKiss/design-system-ASK):
   - colors_and_type.css        — canonical tokens (Tier 1 + Tier 2)
   - fonts/                      — Inter + JetBrains Mono variable webfonts (OFL; see fonts/*-OFL.txt)
   - assets/logo-ASK.*          — the logo-ASK wordmark (ASK Tier 3)
@@ -29,10 +30,21 @@ design-system-ASK (github.com/apexSolarKiss/design-system-ASK):
                                  the consuming surface keeps the element
                                  semantics, destination, copy, row and
                                  placement
+  - favicon.svg, favicon-32.png,
+    favicon.ico,
+    apple-touch-icon.png         — the canonical ASK browser-icon set, vendored
+                                 as pinned byte-identical copies and not
+                                 modified here. design-system-ASK is the
+                                 implementation owner; the three files this site
+                                 already served remained byte-identical when that
+                                 authority moved, and favicon.ico was added to
+                                 answer the root probe browsers make unasked
 
 design-system-ASK owns the shared page shell. It governs the page container,
 the header layout, the wordmark slot, the structural title and lede, the header
-rule, and the footer's alignment and link interaction. It also owns the panel
+rule, and the footer ROW — its alignment and arrangement. It does not own each
+footer destination's presentation: those are compact actions, so their type,
+geometry, paint and interaction belong to the action contract below. It also owns the panel
 and compact-action appearance through the two vendored visual rules, and the two
 splits differ:
 
@@ -46,11 +58,14 @@ splits differ:
     contextual-paint adaptation over that canonical base so it stays legible
     above a photograph.
 
-This site supplies its own Tier 3 identity into the shell's mark slot, keeps its
-own markup and semantics, and adds instance-specific payload and layout
+The shell itself is Tier-3-neutral: it carries no Tier 3 value and supplies
+none. This site supplies its own Tier 3 identity into the shell's mark slot and
+into the browser-icon set, keeps its own markup and semantics, and adds instance-specific payload and layout
 adaptations — it does not add all of its own layout, and it defines no new
-tokens. The homepage is the explicit exception: it keeps its own composition and
-does not consume the shell, though it does consume both visual rules.
+tokens. It consumes no navigation runtime: the shell's optional navigation
+script is not vendored here. The homepage is the explicit exception: it keeps
+its own composition and does not consume the shell, though it does consume both
+visual rules.
 
 One further route is a named exception: the CFW mind map at
 apex-solar-kiss/consciousness-free-will/ is a fixed full-viewport interactive
