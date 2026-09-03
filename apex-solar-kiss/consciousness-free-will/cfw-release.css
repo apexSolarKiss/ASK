@@ -251,7 +251,12 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
    On a small screen the orientation IS the landing surface and "explore the map"
    already plays that role, so the close control appears only once the map exists. */
 .orient-close {
-  display: none; margin: 0 0 var(--space-4);
+  /* Release 1.1: ALWAYS visible. The orientation now carries a nine-section conclusion,
+     so a first-run reader at 375px must be able to reach the map from the TOP rather than
+     scrolling the whole thing. The control is dual-purpose: before the map has been entered
+     it reads "explore the map" and enters; afterwards it closes. cfw-release.js owns the
+     label and the action; this rule only stops it being hidden. */
+  display: inline-block; margin: 0 0 var(--space-4);
   font-family: var(--font-mono); font-size: var(--fs-caption);
   letter-spacing: var(--tracking-wide); text-transform: uppercase;
   background: none; color: var(--fg-2); cursor: pointer;
@@ -260,8 +265,7 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
 }
 .orient-close:hover { color: var(--fg-1); }
 .orient-close:focus-visible { outline: 2px solid var(--fg-1); outline-offset: 2px; }
-@media (min-width: 768px) { .orient-close { display: inline-block; } }
-body[data-map="1"] .orient-close { display: inline-block; }
+/* the former width-gated and data-map-gated reveals are superseded by the rule above */
 
 /* ---- top-bar compact actions --------------------------------------------
    The two bar controls are COMPACT ACTIONS, not labels. design-system-ASK owns
@@ -356,3 +360,32 @@ body.filtering .bar .atlas-trigger .dot2 { background: var(--fg-1); }
 .bar .themer:hover { opacity: 0.92; background: var(--surface-glass); }
 .bar .themer:active { transform: scale(0.97); }
 .bar .themer .themer-g { font-size: 1.05em; line-height: 1; }
+
+/* ---- ASK conclusion ------------------------------------------------------
+   Deliberately NOT styled like .rulings. A ruling is a survey disposition in a
+   bordered card; this is ASK's own prose and must not be read as one. */
+.askc { display: flex; flex-direction: column; gap: var(--space-4); }
+.askc-intro { margin: 0; color: var(--fg-3); font-size: var(--fs-small); font-style: italic; }
+.askc-pull, .askc-q {
+  margin: 0; padding-left: var(--space-4); border-left: 2px solid var(--line-2);
+  color: var(--fg-1); font-size: var(--fs-body); line-height: var(--lh-body);
+}
+.askc-sec { display: flex; flex-direction: column; gap: var(--space-3); }
+.askc-h {
+  margin: var(--space-4) 0 0; font-family: var(--font-mono); font-size: var(--fs-caption);
+  text-transform: lowercase; letter-spacing: var(--tracking-normal); color: var(--fg-3);
+}
+.askc-p { margin: 0; color: var(--fg-2); font-size: var(--fs-small); line-height: var(--lh-body); }
+.askc-ul { margin: 0; padding-left: var(--space-4); color: var(--fg-2); font-size: var(--fs-small); }
+.askc-ul li { margin-bottom: var(--space-2); line-height: var(--lh-body); }
+.askc-pre {
+  margin: 0; padding: var(--space-3); overflow-x: auto;
+  border: 1px solid var(--line-2); border-radius: var(--radius-2);
+  font-family: var(--font-mono); font-size: var(--fs-caption);
+  line-height: var(--lh-body); color: var(--fg-2); white-space: pre;
+}
+.askc-compress .askc-pull { color: var(--fg-1); }
+.askc-error {
+  margin: 0; padding: var(--space-3); color: var(--fg-2); font-size: var(--fs-small);
+  line-height: var(--lh-body); border: 1px solid var(--line-2); border-radius: var(--radius-2);
+}

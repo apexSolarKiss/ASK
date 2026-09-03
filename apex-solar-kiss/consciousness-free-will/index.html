@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>consciousness + free will // mind map // A-S-K.studio</title>
-  <meta name="description" content="Consciousness + free will — a mind map over a typed relation atlas. Release 1.0: a structured survey of 548 objects and 479 evidence owners. No question wholly answered.">
+  <meta name="description" content="Consciousness + free will — a mind map over a typed relation atlas. Release 1.1: a structured survey of 548 objects and 479 evidence owners, plus a distinct ASK-authored conclusion. No question wholly answered.">
   <meta name="color-scheme" content="light dark">
   <link rel="canonical" href="https://a-s-k.studio/apex-solar-kiss/consciousness-free-will/">
   <meta property="og:title" content="consciousness + free will // mind map">
-  <meta property="og:description" content="A mind map over a typed relation atlas. Release 1.0 — a structured survey. No question wholly answered.">
+  <meta property="og:description" content="A mind map over a typed relation atlas. Release 1.1 — a structured survey, plus a distinct ASK-authored conclusion. No question wholly answered.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://a-s-k.studio/apex-solar-kiss/consciousness-free-will/">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://a-s-k.studio/apex-solar-kiss/consciousness-free-will/social-preview.png">
   <meta name="twitter:title" content="consciousness + free will // mind map">
-  <meta name="twitter:description" content="A mind map over a typed relation atlas. Release 1.0 — a structured survey. No question wholly answered.">
+  <meta name="twitter:description" content="A mind map over a typed relation atlas. Release 1.1 — a structured survey, plus a distinct ASK-authored conclusion. No question wholly answered.">
   <!-- Foundations come from the ASK root, already vendored there from
        design-system-ASK. This release adds NO second copy of the tokens, the
        fonts, the shell, the panel rule or the action rule. spectral-state.css is
@@ -40,7 +40,7 @@
   <link rel="stylesheet" href="/apex-solar-kiss/consciousness-free-will/cfw-release.css">
 </head>
 <body>
-<a class="skip" href="#orient-title" id="skip">skip to what this research concluded</a>
+<a class="skip" href="#orient-title" id="skip">skip to conclusions</a>
 <div class="shell">
 
   <header class="bar">
@@ -62,14 +62,14 @@
          vendored compact-action contract. -->
     <div class="bar-actions">
       <button class="surface-action" id="orientbtn" type="button" aria-expanded="false"
-              aria-controls="orient">what this concluded</button>
+              aria-controls="orient">conclusions</button>
       <button class="surface-action atlas-trigger" id="atlasbtn" type="button" aria-expanded="false"
               aria-controls="atlas"><span class="dot2"></span>atlas</button>
       <button class="themer" id="themer" type="button"><span class="themer-g" aria-hidden="true">◐</span><span class="sr-only">theme </span><span class="themer-l" id="themelabel" aria-live="polite" aria-atomic="true">auto</span></button>
     </div>
     <div class="stamp">
-      <span class="k">release 1.0</span><br>
-      structured survey // family generation v7
+      <span class="k">release 1.1</span><br>
+      structured survey + ASK conclusion // family generation v9
     </div>
   </header>
 
@@ -117,10 +117,10 @@
   </main>
 
   <!-- ORIENTATION. On a small screen this is the landing surface and the map is
-       entered deliberately; at any width it opens from "what this concluded".
+       entered deliberately; at any width it opens from "conclusions".
        Its content is rendered from the published payload, so the six rulings
        cannot drift from the data they describe. -->
-  <section class="orient" id="orient" aria-label="what the research concluded" aria-hidden="true">
+  <section class="orient" id="orient" aria-label="what the research concluded, and ASK's conclusion from it" aria-hidden="true">
     <div class="orient-inner">
       <header class="orient-head">
         <p class="orient-kicker">apex solar kiss // research artifacts</p>
@@ -128,10 +128,11 @@
         <p class="orient-sub">mind map // typed relation atlas</p>
         <button class="orient-close" id="orientclose" type="button">close and return to the map</button>
         <p class="orient-status">
-          <span class="tag">release 1.0</span>
+          <span class="tag">release 1.1</span>
           <span class="tag">structured survey</span>
+          <span class="tag">ASK conclusion</span>
           <span class="tag">no question wholly answered</span>
-          <span class="tag">family generation v7</span>
+          <span class="tag">family generation v9</span>
         </p>
       </header>
 
@@ -148,6 +149,12 @@
       conditional ruling, one carries a partial ruling, and three are re-held in
       sharper form.</p>
       <ol class="rulings" id="rulings"></ol>
+
+      <!-- generic fallback only. cfw-release.js replaces this with the payload's own
+           ask_conclusion.title, which is the section's real name. The full title is
+           deliberately NOT written here: one source, and this is not it. -->
+      <h2 class="orient-h" id="askc-title">ASK conclusion</h2>
+      <div class="askc" id="askc" role="region" aria-labelledby="askc-title"></div>
 
       <h2 class="orient-h">what is in it</h2>
       <ul class="counts" id="counts"></ul>

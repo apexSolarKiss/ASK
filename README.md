@@ -35,8 +35,12 @@ iframes, with no site chrome by design.
 
 One top-level route is a **named full-viewport interactive-application
 exception**: `/apex-solar-kiss/consciousness-free-will/`, the CFW mind map over
-its typed relation atlas. It is a fixed full-viewport application rather than a
-scrolling document, so it does not consume `surface-shell`; it follows the
+its typed relation atlas. The route carries two distinct things: an interactive
+structured survey over that atlas, and a separately labelled ASK-authored
+conclusion derived from the operator-side family hub. The conclusion is not a
+survey finding and settles none of the survey's held questions. The route is a
+fixed full-viewport application rather than a scrolling document, so it does not
+consume `surface-shell`; it follows the
 design-system interactive-diagram family grammar and carries ASK Tier 3 in its
 application bar and its orientation footer. The exception applies only to this
 named route and creates no exemption for ordinary non-home content pages.
@@ -89,7 +93,7 @@ fonts/                vendored Inter + JetBrains Mono (OFL)
 assets/logo-ASK.*     vendored wordmark (svg primary; white + lavender-ASK png pairings)
 apex-solar-kiss/      native builder subpage — the object map (practice + two domain applications + the builder machine)
 apex-solar-kiss/design/  native design gateway — live design-system surfaces + the retained external design-portfolio board
-apex-solar-kiss/consciousness-free-will/  CFW mind map + typed relation atlas — a named full-viewport interactive-application exception to the shell; vendors spectral-state.css from design-system-ASK (pinned + byte-identical)
+apex-solar-kiss/consciousness-free-will/  CFW mind map + typed relation atlas, plus a distinct ASK-authored conclusion — a named full-viewport interactive-application exception to the shell; vendors spectral-state.css from design-system-ASK (pinned + byte-identical)
 askproduktion/        native creative-production subpage (Track A.1)
 asymptotic-system-key/  native artistic-practice subpage (Track A.2; per-category p5.js pages)
 asymptotic-system-key/lineage/  public-safe influence lineage (canon as substrate: readymade >> pop >> appropriation >> generative systems)
