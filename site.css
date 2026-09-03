@@ -231,8 +231,10 @@ html:has(> body > .shell) { overflow-x: clip; }
    the tier-name anchor and the compact actions, and those carry their own
    treatment. The vendored module gives panel-level interaction only to
    `a.surface-panel`, which this is not, so no hover or transition arrives with
-   it. The gallery and external-link cards are `.gal-card-trigger` and
-   `.ext-card` — genuinely actionable, and owners of their own transitions.
+   it. The gallery card `.gal-card-trigger` is genuinely actionable and owns its
+   own transition. `.ext-card` is split: the asymptotic page's cards are
+   `a.surface-panel` and take the module's interaction, while studioLeoV's are
+   not yet and still own theirs locally.
 
    Only the local limb survives below. The column arrangement, the 12px stack,
    and every paint declaration resolve from the vendored module; the min-height
@@ -518,14 +520,29 @@ html:has(> body > .shell) { overflow-x: clip; }
 .yt-iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: var(--radius-lg); display: block; }
 
 /* ---------- Asymptotic: external (Lightroom) cards ---------- */
+/* The asymptotic page's six cards now carry `.surface-panel`, so the vendored
+   module supplies their glass, border, radius, padding and interaction, and the
+   local re-derivation of those is gone — the same retirement the `.card` rule
+   took above. Only the local limb survives here: the grid, the 110px floor that
+   keeps cards of unequal label length on one baseline, the space-between
+   distribution that pins the meta line to the bottom, the tighter space-2 stack,
+   and the overflow/wrapping rules further down that keep a long unbroken name
+   inside its card.
+
+   studioLeoV's ten cards use the same class and have NOT been migrated, so the
+   re-derivation survives for them alone, scoped by :not(.surface-panel). That
+   selector is the seam: when those cards adopt the panel too, both blocks below
+   simply go away. */
 .ext-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-4); grid-auto-rows: 1fr; }
 .ext-card {
   display: flex; flex-direction: column; gap: var(--space-2); min-height: 110px; justify-content: space-between;
+}
+.ext-card:not(.surface-panel) {
   padding: var(--space-5); border: 1px solid var(--line-1); border-radius: var(--radius-lg);
   background: var(--surface-glass); border-bottom-color: var(--line-1);
   transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out);
 }
-.ext-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--line-2); }
+.ext-card:not(.surface-panel):hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--line-2); }
 .ext-card-name { font-size: var(--fs-h3); font-weight: var(--fw-light); letter-spacing: var(--tracking-tight); }
 .ext-card-meta { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-3); }
 
