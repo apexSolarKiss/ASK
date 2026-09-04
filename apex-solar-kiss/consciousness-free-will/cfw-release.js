@@ -285,24 +285,29 @@
       var meta = [r.o.author, r.o.evidence_class, r.o.access, r.o.fidelity]
         .filter(Boolean).join("  ·  ");
       if (meta) d.appendChild(text(el("span", "ores-meta"), meta));
+      /* The two routes open a record two different ways, so the label must say
+         which one this page does. Promising "the inspector" on the conclusions
+         page named a panel that lives in the other document. */
       d.setAttribute("aria-label", "open " + r.o.id + ", " +
-        String(r.o.label || r.o.work || "").slice(0, 90) + ", in the inspector");
+        String(r.o.label || r.o.work || "").slice(0, 90) +
+        (window.CFW_VIEW ? ", in the inspector" : ", on the map"));
       ores.appendChild(d);
     });
   }
   if (oq) oq.addEventListener("input", search);
 
-  /* Opening a record: enter the map if it has not been entered, close the
-     orientation layer, then hand the id to the engine. All three are guarded, so
-     on the conclusions route — where the search lives but the engine does not —
-     this resolves to a no-op rather than reaching for a map in another document.
-     Deep-linking a record from the conclusions page into the map route is a
-     capability neither the engine nor this file has today; it is not silently
-     approximated here. */
+  /* Opening a record. Where the engine is in this document — the map route — hand
+     the id straight to it. On the conclusions route the engine lives in the other
+     document, so activating a result NAVIGATES to the map naming the record, and
+     the map opens it on arrival (see the arrival handler at the end of this file).
+     The split moved the search and the inspector into separate documents; this is
+     what keeps a result openable rather than leaving a control that does nothing. */
   if (ores) ores.addEventListener("click", function (ev) {
     var b = ev.target.closest ? ev.target.closest("button[data-open]") : null;
     if (!b) return;
-    openRecord(b.getAttribute("data-open"));
+    var id = b.getAttribute("data-open");
+    if (window.CFW_VIEW) { openRecord(id); return; }
+    location.href = "/apex-solar-kiss/consciousness-free-will/map/" + "#" + encodeURIComponent(id);
   });
 
   /* ---- responsive contract --------------------------------------------- */
@@ -437,4 +442,20 @@
     if (modeTimer) clearTimeout(modeTimer);
     modeTimer = setTimeout(applyMode, 60);
   });
+
+  /* ARRIVAL FROM THE CONCLUSIONS ROUTE. A result activated on the conclusions page
+     navigates here naming the record. Nothing else writes the hash, and a hash that
+     names no known object is ignored rather than error — a stale or hand-typed link
+     lands on the ordinary map instead of failing. */
+  (function () {
+    if (!window.CFW_VIEW) return;
+    var raw = (location.hash || "").replace(/^#/, "");
+    if (!raw) return;
+    var id;
+    try { id = decodeURIComponent(raw); } catch (e) { return; }
+    var V = window.CFW_VIEW;
+    var known = V.projection && V.projection.byId && V.projection.byId[id];
+    if (!known) return;
+    openRecord(id);
+  })();
 })();
