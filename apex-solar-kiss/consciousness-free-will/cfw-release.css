@@ -167,6 +167,11 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
 /* ---- the action into the map -------------------------------------------- */
 .orient-enter { margin-top: var(--space-6); }
 .orient-enter .orient-note { margin-top: var(--space-3); }
+/* The top instance carries no note, so it needs the separation the note would
+   have given it. One declaration: the inherited top margin already collapses
+   against the status row above, and this restores the same rhythm below, so
+   both actions sit in an identical space-6 gutter. */
+.orient-enter--top { margin-bottom: var(--space-6); }
 
 /* The three application-bar controls as one composition group. On a wide screen
    this must be invisible: the bar already sets an 18px gap between its own
