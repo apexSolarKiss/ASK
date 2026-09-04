@@ -1,5 +1,10 @@
 /* cfw-release.css — the ASK-local release layer.
  *
+ * This route also consumes the ROOT-VENDORED surface-text-link.css: its three
+ * orientation-footer destinations are unboxed textual traversal affordances and
+ * take the owner module by class. The route remains the fixed full-viewport
+ * application exception and still does not consume surface-shell.
+ *
  * The engine's own stylesheet (cfw-atlas.css) is vendored byte-identical from the
  * approved internal package and is NOT edited here. This file adds only what the
  * public release needs: the ASK wordmark in the bar, the orientation surface, and
@@ -163,9 +168,16 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
   border-top: 1px solid var(--line-2);
   display: flex; flex-wrap: wrap; gap: var(--space-4);
   font-family: var(--font-mono); font-size: var(--fs-caption);
+  /* Contextual foreground stays CONSUMER-OWNED and is declared on the region,
+     not on its anchors: surface-text-link inherits colour by design. */
+  color: var(--fg-2);
 }
-.orient-foot a { color: var(--fg-2); text-decoration: none; }
-.orient-foot a:hover { color: var(--fg-1); }
+/* The three orientation destinations consume the vendored surface-text-link
+   rule. The local `.orient-foot a` decoration/colour override and the
+   `:hover` brightening are RETIRED — they re-derived the treatment the owner
+   module owns. Layout, position, family, size and gap above are unchanged,
+   and this route remains the fixed full-viewport application exception: it
+   still does not import surface-shell. */
 
 /* The three application-bar controls as one composition group. On a wide screen
    this must be invisible: the bar already sets an 18px gap between its own

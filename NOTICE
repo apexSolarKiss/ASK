@@ -4,7 +4,7 @@ Copyright 2026 Andrew S Klug // ASK
 The ASK meta-brand public landing site — a reference implementation of the
 ASK design family.
 
-This product vendors foundations, one pattern, two visual rules, and the
+This product vendors foundations, one pattern, three visual rules, and the
 canonical browser-icon set from design-system-ASK
 (github.com/apexSolarKiss/design-system-ASK):
   - colors_and_type.css        — canonical tokens (Tier 1 + Tier 2)
@@ -30,6 +30,17 @@ canonical browser-icon set from design-system-ASK
                                  the consuming surface keeps the element
                                  semantics, destination, copy, row and
                                  placement
+  - surface-text-link.css      — the shared unboxed-textual-link contract,
+                                 vendored as a pinned byte-identical copy and
+                                 not modified here. It is OPT-IN BY CLASS: only
+                                 an element carrying `.surface-text-link` takes
+                                 it, and it is scoped to unboxed textual
+                                 traversal — shaped controls, marks, figures,
+                                 panels and image links are excluded. It owns
+                                 rest, hover, active and focus presentation and
+                                 deliberately sets NO foreground: the
+                                 contextual text colour remains this site's to
+                                 choose, supplied by the consuming region
   - favicon.svg, favicon-32.png,
     favicon.ico,
     apple-touch-icon.png         — the canonical ASK browser-icon set, vendored
@@ -45,7 +56,7 @@ the header layout, the wordmark slot, the structural title and lede, the header
 rule, and the footer ROW — its alignment and arrangement. It does not own each
 footer destination's presentation: those are compact actions, so their type,
 geometry, paint and interaction belong to the action contract below. It also owns the panel
-and compact-action appearance through the two vendored visual rules, and the two
+and compact-action appearance through the vendored visual rules, and the two
 splits differ:
 
   - the panel contract governs a panel's arrangement and paint and the type

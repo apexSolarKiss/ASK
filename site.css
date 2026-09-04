@@ -5,12 +5,15 @@
    canonical tokens (colors_and_type.css, vendored) and defines NO new colors,
    type choices, or scale.
 
-   It no longer owns all layout. Three canonical files are vendored as pinned
+   It no longer owns all layout. FOUR canonical files are vendored as pinned
    byte-identical copies and never hand-edited here: surface-shell.css, the page
    chrome, which every page except the homepage consumes; surface-panel.css, the
    live-content-panel visual rule, which the homepage's three tier panels
-   consume; and surface-action.css, the compact-action visual rule, which every
-   page's compact controls consume. What this file owns is the homepage
+   consume; surface-action.css, the compact-action visual rule, which every
+   page's compact controls consume; and surface-text-link.css, the unboxed
+   textual-link visual rule, opt-in by class, which twelve textual destinations
+   across seven files consume — including this homepage's three footer links,
+   whose local re-derivation is retired below. What this file owns is the homepage
    composition, page payload layout, row and placement decisions around the
    vendored controls, and a small set of instance adaptations around the shell.
    Per the tier model, this surface carries ASK's own Tier 3 (the
@@ -300,8 +303,11 @@ html:has(> body > .shell) { overflow-x: clip; }
   letter-spacing: var(--tracking-normal);
   color: var(--fg-2);
 }
-.footer a { color: var(--fg-2); border-bottom-color: var(--line-2); }
-.footer a:hover { color: var(--fg-1); }
+/* The homepage footer's three plain destinations consume the vendored
+   surface-text-link rule. The local `.footer a` / `:hover` pair that used to
+   re-derive that treatment is RETIRED — the owner module owns rest, hover,
+   active and focus. `.footer` above still supplies the contextual --fg-2,
+   which the module deliberately inherits rather than setting. */
 
 /* ---------- Sub-brand pages (migrated public-canonical content) ----------
    The shared subpage shell that used to live here is RETIRED. Four rules were
