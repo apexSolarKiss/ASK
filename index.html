@@ -1831,24 +1831,40 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
   addEventListener('resize', function () {
     var rotated = window.innerWidth !== lastW;
     lastW = window.innerWidth;
+
+    /* WIDTH IS THE DISCRIMINATOR, AND RETIREMENT IS IMMEDIATE. A width change is
+       a real rotation, and the travel measured in the old viewport is invalid the
+       instant it happens: a portrait value carried into landscape puts the whole
+       band above the top edge. Retiring here, synchronously, is what keeps the
+       stale geometry from ever being painted — deferring it to the debounce below
+       left a window in which the band was fixed, translated by the old travel and
+       entirely off-screen. Retiring needs no measurement, so nothing about it has
+       to wait for the layout to settle. */
+    if (rotated) {
+      if (t) { clearTimeout(t); t = null; }
+      retire();
+    }
+
     if (window.scrollY < 2) {
-      /* Parked at the top: re-decide in full. A re-measure here is benign —
-         the layout genuinely changed and nothing is mid-flight — and sync()
-         will retire the enhancement if the new viewport has no travel to
-         spend, rather than leaving the previous answer in place. */
+      /* Parked at the top: re-decide in full once the layout settles. Only the
+         RE-MEASURE is debounced — a measurement taken mid-resize is the thing
+         worth waiting out, and by now any stale answer is already gone. The
+         scroll position is re-checked when the timer fires, because the reader
+         may have started scrolling in the meantime and re-measuring under them
+         is the v1 defect. */
       if (t) clearTimeout(t);
-      t = setTimeout(sync, 120);
+      t = setTimeout(function () {
+        t = null;
+        if (window.scrollY < 2) sync();
+      }, 120);
       return;
     }
-    /* Scrolled. WIDTH is the discriminator. iOS collapsing its chrome during
-       momentum changes only the height, and re-measuring there is the v1
-       defect that moved the animation's start point under the reader — so it
-       is still ignored. A width change is a real rotation, and carrying a
-       portrait travel into landscape would strand the band off-screen, so the
-       enhancement retires to the shipped static band instead. Retiring needs
-       no measurement and does not move the reader; it is deliberately not a
-       re-measure, and never scrolls the page to the top to obtain one. */
-    if (rotated) retire();
+    /* Scrolled, and the width did not change. iOS collapsing its chrome during
+       momentum changes only the height, and re-measuring there is the v1 defect
+       that moved the animation's start point under the reader — so it is still
+       ignored, and nothing happens at all. A scrolled reader whose width DID
+       change was already retired above, to the shipped static band, without the
+       page being scrolled to obtain a measurement. */
   });
 })();
 </script>

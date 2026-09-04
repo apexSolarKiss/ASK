@@ -100,10 +100,28 @@
       <a class="surface-action surface-action--secondary" href="mailto:hello@A-S-K.studio">hello@A-S-K.studio</a>
     </footer>
 
+    <!-- The complete apex project set as siblings, so entering design does not
+         collapse the branch the root page offers. `design` itself is the unlabelled
+         current marker — the runtime fills it from the visible breadcrumb, and
+         authoring the word a second time would be a second source of truth for the
+         same string. -->
     <template class="surface-nav-source">
       <ul class="surface-nav-local">
-        <li data-surface-nav-current></li>
-        <li><a href="/apex-solar-kiss/consciousness-free-will/">consciousness + free will</a></li>
+        <li><a href="https://asset-pipeline.a-s-k.studio/">asset-pipeline-ASK</a></li>
+        <li><a href="https://urban-observatory.a-s-k.studio/">urban-observatory</a></li>
+        <li><a href="https://method.a-s-k.studio/">method-ASK</a></li>
+        <li><a href="https://control-surface.a-s-k.studio/">control-surface</a></li>
+        <li data-surface-nav-current>
+          <ul>
+            <li><a href="https://design-system.a-s-k.studio/">design-system-ASK</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="/apex-solar-kiss/consciousness-free-will/">consciousness + free will</a>
+          <ul>
+            <li><a href="/apex-solar-kiss/consciousness-free-will/map/">explore the map</a></li>
+          </ul>
+        </li>
       </ul>
     </template>
 
