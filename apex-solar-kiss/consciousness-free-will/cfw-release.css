@@ -1,9 +1,17 @@
 /* cfw-release.css — the ASK-local release layer.
  *
- * This route also consumes the ROOT-VENDORED surface-text-link.css: its three
- * orientation-footer destinations are unboxed textual traversal affordances and
- * take the owner module by class. The route remains the fixed full-viewport
- * application exception and still does not consume surface-shell.
+ * THE ROUTE IS TWO PAGES. The conclusions are an ORDINARY SHELL PAGE at the
+ * route root and consume surface-shell like every other subpage; the MAP, one
+ * level deeper, is the retained fixed full-viewport application and remains the
+ * shell exception. Both load this file, so it carries the map layer, the
+ * conclusions layer, and the responsive contract for both.
+ *
+ * The former orientation overlay's three footer destinations were this route's
+ * only consumers of the root-vendored surface-text-link.css; the shell footer
+ * now carries those destinations as compact actions. Both pages still link the
+ * module: whether to stop vendoring it here is a separate decision about this
+ * route's vendored set, not part of the route split, and is left explicit
+ * rather than made silently.
  *
  * The engine's own stylesheet (cfw-atlas.css) is vendored byte-identical from the
  * approved internal package and is NOT edited here. This file adds only what the
@@ -12,10 +20,12 @@
  * value below resolves to a design-system-ASK custom property.
  *
  * RESPONSIVE CONTRACT
- *   wide    >= 1024   full interactive map + atlas; orientation on demand
+ *   wide    >= 1024   full interactive map + atlas; the conclusions are a link
  *   tablet  768-1023  full map; legend and caption collapsed by default; touch
- *   small   <  768    orientation IS the landing surface; the map is entered
- *                     deliberately, never shrunk and presented as responsive
+ *   small   <  768    the map keeps its two-row application bar; it is never
+ *                     shrunk and presented as responsive. The conclusions are
+ *                     a separate route rather than a landing overlay, so a
+ *                     small screen reaches them by navigating, not by a mode.
  */
 
 /* ---- ASK wordmark in the engine bar ------------------------------------- */
@@ -35,7 +45,28 @@ html[data-theme="dark"]  .rel-mark .rel-mark-dark  { display: block; }
 html[data-theme="light"] .rel-mark .rel-mark-light { display: block; }
 html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
 
-/* ---- orientation surface ------------------------------------------------ */
+/* ---- conclusions: the payload inside the vendored shell -----------------
+   The conclusions are no longer a fixed overlay; they are the route root's own
+   page, laid out inside `<main class="surface-payload">`. The shell declares no
+   payload layout by contract, so the reading measure is this route's to set —
+   and it is the SAME 68ch the orientation carried, so the split changes where
+   the conclusions live without changing how they read.
+
+   No padding and no auto margin here: `.surface` already owns the page's edge
+   inset and its own centring, and a second set would inset the payload twice.
+   Everything below — .orient-status, .orient-prose, .orient-h, .rulings,
+   .counts, .orient-search, .orient-results, .askc* — is shared with the former
+   overlay and is unchanged by the split. */
+.cfw-conclusions { max-width: 68ch; }
+
+/* ---- orientation surface ------------------------------------------------
+   THE LAYER ITSELF IS INERT ON BOTH ROUTES. `#orient` was the hidden
+   conclusions layer inside the single full-viewport application; the split gave
+   the conclusions their own page, so neither page carries the element. The two
+   rules below, `.orient-inner`, `.orient-close` and `.orient-foot` are retained
+   unchanged and unconsumed — the mirror of cfw-release.js, whose overlay
+   machinery is retained behind element guards rather than rewritten. Retiring
+   the layer is a separate, deliberate operation on both files at once. */
 .orient {
   position: fixed; inset: 0; z-index: 40;
   overflow-y: auto; -webkit-overflow-scrolling: touch;
@@ -271,18 +302,21 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
   /* The long label takes the flexible column and wraps inside its own pill at the
      narrowest widths. The contract sets `white-space: normal` precisely so a long
      label wraps rather than forcing overflow — do not add nowrap here. */
-  .bar .bar-actions #orientbtn { width: 100%; min-width: 0; }
-  /* the map is present but inert until it is entered deliberately */
-  body:not([data-map="1"]) .canvas-wrap { visibility: hidden; }
+  .bar .bar-actions .bar-conclusions { width: 100%; min-width: 0; }
+  /* RETIRED with the overlay. The canvas used to be held invisible until the
+     reader left the orientation layer deliberately. The map is its own route
+     now, so arriving IS the deliberate entry and there is nothing left to gate:
+     the former rule would have hidden the whole page below 768px, because
+     nothing on this route ever sets `data-map` any more. */
   .orient-inner { padding: var(--space-5) var(--space-4) var(--space-6); }
   .orient-title { font-size: var(--fs-h2); }
   .rulings dl { grid-template-columns: 1fr; gap: var(--space-1) 0; }
   .rulings dt { margin-top: var(--space-2); }
 }
-@media (min-width: 768px) {
-  /* above small, entering the map is not a mode: the map is already the surface */
-  .orient-enter { display: none; }
-}
+/* The former `@media (min-width: 768px) { .orient-enter { display: none } }` is
+   RETIRED. It hid the bottom action above small because the map was already the
+   surface behind the overlay. The map is a separate route now, so the action is
+   the only route to it from this page and must be present at every width. */
 
 @media (prefers-reduced-motion: reduce) {
   .orient { scroll-behavior: auto; }

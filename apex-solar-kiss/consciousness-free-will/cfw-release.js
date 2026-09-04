@@ -1,8 +1,13 @@
 /* cfw-release.js — ASK-local release behaviour.
  *
- * Boots the vendored engine, renders the orientation surface FROM THE PUBLISHED
- * PAYLOAD (so the six rulings cannot drift from the data they describe), and
- * implements the responsive contract. The engine itself is not modified.
+ * ONE renderer for BOTH routes of this release: the conclusions page at the
+ * route root, and the map one level deeper. It boots the vendored engine where
+ * a canvas exists, renders the conclusions FROM THE PUBLISHED PAYLOAD (so the
+ * six rulings cannot drift from the data they describe), and implements the
+ * responsive contract. Every map-only and former-overlay behaviour is guarded
+ * on its element being present and no-ops when it is not, which is what lets
+ * one file serve two pages without a second copy of anything. The engine itself
+ * is not modified.
  */
 (function () {
   "use strict";
@@ -50,11 +55,24 @@
     apply("auto");
   })();
 
-  /* ---- boot the vendored engine ---------------------------------------- */
-  var P = CFWProjection.build(D);
-  CFWAtlas.mount({ projection: P });
+  /* ---- boot the vendored engine ----------------------------------------
+     ONE RENDERER, TWO ROUTES. The conclusions page and the map are separate
+     routes and both load THIS file. The map carries the canvas and the engine;
+     the conclusions page carries neither, and loads only the payload and this
+     renderer. So the boot is conditional on the canvas AND the engine actually
+     being here.
 
-  /* ---- orientation: the six rulings, rendered from the payload ---------- */
+     Everything below the boot renders from the published payload and runs on
+     either route. Every behaviour that reaches into the map or into the former
+     overlay is guarded on the element it needs: absent element, NO-OP. That is
+     the whole tolerance mechanism — there is no second renderer and no second
+     copy of the payload-rendering logic, because there is one source and this
+     is it. */
+  if (document.getElementById("stage") && window.CFWProjection && window.CFWAtlas) {
+    CFWAtlas.mount({ projection: CFWProjection.build(D) });
+  }
+
+  /* ---- conclusions: the six rulings, rendered from the payload --------- */
   var ORDER = ["ruled", "retained", "adopted", "re-held", "residual", "NOT"];
   var LABEL = {
     "ruled": "ruled", "retained": "retained", "adopted": "adopted",
@@ -68,7 +86,7 @@
     .sort(function (a, b) { return a.id < b.id ? -1 : 1; });
 
   var list = document.getElementById("rulings");
-  questions.forEach(function (q) {
+  if (list) questions.forEach(function (q) {
     var li = el("li");
     li.appendChild(text(el("span", "rq"), q.id));
     li.appendChild(text(el("strong", "rtitle"), q.question || q.label));
@@ -232,14 +250,14 @@
     [questions.length, "held questions"]
   ];
   var counts = document.getElementById("counts");
-  COUNTS.forEach(function (row) {
+  if (counts) COUNTS.forEach(function (row) {
     var li = el("li");
     li.appendChild(text(el("span", "n"), row[0].toLocaleString()));
     li.appendChild(text(el("span", "w"), row[1]));
     counts.appendChild(li);
   });
 
-  /* ---- orientation search ---------------------------------------------- */
+  /* ---- conclusions search ----------------------------------------------- */
   var oq = document.getElementById("oq"), ores = document.getElementById("ores");
   var INDEX = D.objects.map(function (o) {
     return { o: o, hay: ((o.id || "") + " " + (o.label || "") + " " + (o.work || "") + " " + (o.author || "")).toLowerCase() };
@@ -272,11 +290,16 @@
       ores.appendChild(d);
     });
   }
-  oq.addEventListener("input", search);
+  if (oq) oq.addEventListener("input", search);
 
-  /* Opening a record from orientation: enter the map if it has not been entered,
-     close the orientation layer, then hand the id to the engine. */
-  ores.addEventListener("click", function (ev) {
+  /* Opening a record: enter the map if it has not been entered, close the
+     orientation layer, then hand the id to the engine. All three are guarded, so
+     on the conclusions route — where the search lives but the engine does not —
+     this resolves to a no-op rather than reaching for a map in another document.
+     Deep-linking a record from the conclusions page into the map route is a
+     capability neither the engine nor this file has today; it is not silently
+     approximated here. */
+  if (ores) ores.addEventListener("click", function (ev) {
     var b = ev.target.closest ? ev.target.closest("button[data-open]") : null;
     if (!b) return;
     openRecord(b.getAttribute("data-open"));
@@ -297,7 +320,13 @@
   var bar = document.querySelector(".bar");
   var mapMain = document.getElementById("canvaswrap");
 
+  /* THE OVERLAY IS ROUTE-DEPENDENT. `#orient` was the hidden conclusions layer
+     inside the single full-viewport application. The conclusions are now their
+     own route and the map is another, so neither page carries the layer and
+     every one of these controls is optional. Each is guarded rather than
+     assumed. */
   function openOrient(open, auto) {
+    if (!orient || !orientBtn) return;
     var was = orient.getAttribute("data-open") === "1";
     /* The overlay covers the viewport. Leaving the surfaces behind it in the tab order
        sends a keyboard user to controls they cannot see. `inert` removes them from both
@@ -342,19 +371,20 @@
     if (insp) { insp.setAttribute("tabindex", "-1"); insp.focus(); }
   }
   function enterMap() {
+    if (!mapMain) return;
     document.body.setAttribute("data-map", "1");
     openOrient(false);
     if (window.dispatchEvent) window.dispatchEvent(new Event("resize"));
   }
 
-  orientBtn.addEventListener("click", function () {
+  if (orientBtn) orientBtn.addEventListener("click", function () {
     openOrient(orient.getAttribute("data-open") !== "1");
   });
-  enterBtn.addEventListener("click", enterMap);
+  if (enterBtn) enterBtn.addEventListener("click", enterMap);
   /* The skip link's target lives inside the orientation, which is display:none while
      closed — so the link has to OPEN the surface it skips to, not just jump at it. */
   var skip = document.getElementById("skip");
-  if (skip) skip.addEventListener("click", function (e) {
+  if (skip && orient) skip.addEventListener("click", function (e) {
     e.preventDefault();
     if (orient.getAttribute("data-open") !== "1") openOrient(true);
     var h = document.getElementById("orient-title");
@@ -367,7 +397,7 @@
      gated behind `data-map`. Closing the overlay there has to enter the map, or Escape
      dismisses the only thing on screen and leaves nothing behind it. */
   document.addEventListener("keydown", function (e) {
-    if (e.key !== "Escape" || orient.getAttribute("data-open") !== "1") return;
+    if (!orient || e.key !== "Escape" || orient.getAttribute("data-open") !== "1") return;
 
     if (SMALL.matches && document.body.getAttribute("data-map") !== "1") {
       enterMap();
@@ -377,14 +407,16 @@
   });
 
   function applyMode() {
-    var small = SMALL.matches;
-    var entered = document.body.getAttribute("data-map") === "1";
-    if (small && !entered) {
-      // small: orientation IS the landing surface until the map is entered
-      openOrient(true, true);
-    } else if (!small && autoOpen) {
-      // left small: retract the automatic landing, but never a user-opened panel
-      openOrient(false);
+    if (orient) {
+      var small = SMALL.matches;
+      var entered = document.body.getAttribute("data-map") === "1";
+      if (small && !entered) {
+        // small: orientation IS the landing surface until the map is entered
+        openOrient(true, true);
+      } else if (!small && autoOpen) {
+        // left small: retract the automatic landing, but never a user-opened panel
+        openOrient(false);
+      }
     }
     // tablet: overlays collapsed by default, never auto-expanded
     document.body.setAttribute("data-overlays", TABLET.matches ? "0" : "1");
