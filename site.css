@@ -733,3 +733,55 @@ html:has(> body > .shell) { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) {
   .ptx-track { animation: none; transform: translateX(-50%); }
 }
+
+/* ---------- P1 v3 // scroll convergence ---------------------------------
+   The band's bottom edge descends with the page, holds at the visible bottom,
+   and retracts when the reader scrolls back up.
+
+   THE ENDPOINT IS THE WHOLE OF v3. v2 measured the band at `100svh` — the
+   SMALL viewport, the height with browser chrome expanded. On a hard downward
+   flick iOS collapses that chrome, the visual viewport grows past the small
+   one, and the band ran out of travel before the screen ran out of scroll: the
+   edge reached its end and the page kept moving, so the edge bounced back off
+   the bottom instead of converging. `100lvh` is the LARGE viewport — the
+   height with chrome collapsed — which is the height the edge must still be
+   converging at when the flick ends. Nothing else about the mechanism changes.
+
+   ONE DRIVER. The CSS scroll timeline is the only thing that moves the band.
+   JS derives the travel VALUE once and then stops; it never drives the motion
+   and never re-drives it mid-scroll.
+
+   THE APPROVED COMPOSITION IS THE FALLBACK, NOT A HIDDEN STATE. The prototype
+   held the band invisible until its first measurement, and said in terms that a
+   production answer had to differ. It does: the absolute band above is left
+   exactly as it shipped, and the fixed converging form is applied only once
+   `--ptx-travel` actually holds a measured value, by the same JS that measures
+   it. So a reader with no JS, or a browser with no scroll timeline, gets the
+   composition that was approved rather than a blank band or a jump — and the
+   class and the value land together, so the converging form is never rendered
+   at a travel it has not been given. */
+@supports (animation-timeline: scroll()) {
+  html.ptx-converged .ptx-marquee {
+    position: fixed;
+    top: 0;
+    bottom: auto;
+    left: 0;
+    width: 100vw;
+    height: 100lvh;
+    transform: translateY(calc(-1 * var(--ptx-travel, 0px)));
+    will-change: transform;
+    animation: ptx-converge linear both;
+    animation-timeline: scroll(root block);
+    animation-duration: auto;
+  }
+  @keyframes ptx-converge {
+    from { transform: translateY(calc(-1 * var(--ptx-travel, 0px))); }
+    to   { transform: translateY(0); }
+  }
+  /* Reduced motion keeps the band where the reader can see it and simply does
+     not travel: the convergence is the motion being opted out of, so the band
+     rests at its converged position rather than disappearing or re-animating. */
+  @media (prefers-reduced-motion: reduce) {
+    html.ptx-converged .ptx-marquee { animation: none; transform: translateY(0); }
+  }
+}
