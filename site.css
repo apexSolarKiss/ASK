@@ -778,10 +778,8 @@ html:has(> body > .shell) { overflow-x: clip; }
     from { transform: translateY(calc(-1 * var(--ptx-travel, 0px))); }
     to   { transform: translateY(0); }
   }
-  /* Reduced motion keeps the band where the reader can see it and simply does
-     not travel: the convergence is the motion being opted out of, so the band
-     rests at its converged position rather than disappearing or re-animating. */
-  @media (prefers-reduced-motion: reduce) {
-    html.ptx-converged .ptx-marquee { animation: none; transform: translateY(0); }
-  }
+  /* Reduced motion never reaches this block. The script returns before it adds
+     `html.ptx-converged`, so the band stays exactly the absolute one that
+     shipped — the approved static composition, which is the fallback here as it
+     is for no JS and no scroll-timeline support. */
 }

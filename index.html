@@ -60,7 +60,9 @@
            must not be handed 800 lines of transcript in place of the page.
 
            Two identical halves, as the tagline band above does it: the -50 per cent
-           loop makes the seam invisible. CSS only; the front door stays JS-free. -->
+           loop makes the seam invisible. The horizontal loop is CSS only; the
+           vertical scroll convergence takes one bounded geometry measurement
+           (script at the end of this file) and leaves the motion CSS-driven. -->
       <div class="ptx-marquee" aria-hidden="true">
         <div class="ptx-track">
 <pre class="ptx-half"># 2026-07-29_36-goals-consciousness-PTX
@@ -1736,8 +1738,8 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
 
 <!-- P1 v3 // the one measurement the convergence needs.
      THIS ENDS THE HOMEPAGE'S JS-FREE POSTURE, and that is a real change: the
-     band comment above still says "CSS only; the front door stays JS-free",
-     which was true until this script. It is here because `travel` cannot be
+     front door was CSS-only until this script, and the band comment above now
+     says so rather than the reverse. It is here because `travel` cannot be
      expressed in CSS — it is the distance between the band's large-viewport
      height and the document position of the hero's lower edge, and no CSS
      value addresses the second. Everything else stays declarative: this
@@ -1755,15 +1757,17 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
   if (!window.matchMedia || !window.CSS || !CSS.supports) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (!CSS.supports('animation-timeline', 'scroll()')) return;
+  if (!CSS.supports('height', '100lvh')) return;
 
   var hero = document.querySelector('.hero');
   var band = document.querySelector('.ptx-marquee');
   if (!hero || !band) return;
 
   /* The band is not fixed yet, so its height is the absolute band's, not the
-     large viewport's. Probe 100lvh directly. A browser without lvh resolves
-     nothing and the probe measures 0, which bails to the fallback rather than
-     computing a travel from a unit the browser does not have. */
+     large viewport's. Probe 100lvh directly. Support for the unit is tested
+     above rather than inferred from the measurement; the zero-height guard
+     below stays as a safety net, so a probe that resolves to nothing bails to
+     the fallback rather than computing a travel from it. */
   function largeViewport() {
     var probe = document.createElement('div');
     probe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100lvh;' +
