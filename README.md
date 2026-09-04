@@ -52,10 +52,12 @@ exemption for ordinary non-home content pages.
 
 The route root, `/apex-solar-kiss/consciousness-free-will/`, is an **ordinary
 conclusions shell page**: it adopts `surface-shell` and the shell's navigation
-like every other subpage, and links to the map. It carries two distinct things
-— a structured survey over that atlas, and a separately labelled ASK-authored
-conclusion derived from the operator-side family hub. The conclusion is not a
-survey finding and settles none of the survey's held questions. The orientation
+like every other subpage, and links to the map. It carries three distinct
+things — a structured survey over that atlas, a separately labelled ASK-authored
+conclusion derived from the operator-side family hub, and a separately labelled
+ASK prospective axis: the question-space that research opened and did not survey.
+Neither ASK section is a survey finding, and neither settles any of the survey's
+held questions. The prospective axis is not a seventh held question either. The orientation
 overlay that used to hold the conclusions inside the application, and its
 footer, no longer exist.
 
@@ -129,7 +131,7 @@ favicon.ico           vendored from design-system-ASK — the root-probe fallbac
 apple-touch-icon.png  vendored from design-system-ASK — the iOS home-screen icon, pinned + byte-identical
 apex-solar-kiss/      native builder subpage — the object map (practice + two domain applications + the builder machine)
 apex-solar-kiss/design/  native design gateway — live design-system surfaces + the retained external design-portfolio board
-apex-solar-kiss/consciousness-free-will/  CFW conclusions — the structured survey over the typed relation atlas, plus a distinct ASK-authored conclusion; an ordinary shell page
+apex-solar-kiss/consciousness-free-will/  CFW conclusions — the structured survey over the typed relation atlas, a distinct ASK-authored conclusion + an ASK prospective axis; an ordinary shell page
 apex-solar-kiss/consciousness-free-will/map/  the interactive CFW mind map — the one named full-viewport interactive-application exception to the shell; vendors spectral-state.css from design-system-ASK (pinned + byte-identical)
 askproduktion/        native creative-production subpage (Track A.1)
 asymptotic-system-key/  native artistic-practice subpage (Track A.2; per-category p5.js pages)
