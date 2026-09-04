@@ -60,7 +60,9 @@
            must not be handed 800 lines of transcript in place of the page.
 
            Two identical halves, as the tagline band above does it: the -50 per cent
-           loop makes the seam invisible. CSS only; the front door stays JS-free. -->
+           loop makes the seam invisible. The horizontal loop is CSS only; the
+           vertical scroll convergence takes one bounded geometry measurement
+           (script at the end of this file) and leaves the motion CSS-driven. -->
       <div class="ptx-marquee" aria-hidden="true">
         <div class="ptx-track">
 <pre class="ptx-half"># 2026-07-29_36-goals-consciousness-PTX
@@ -1733,5 +1735,122 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
     </footer>
   </main>
 
+
+<!-- P1 v3 // the one measurement the convergence needs.
+     THIS ENDS THE HOMEPAGE'S JS-FREE POSTURE, and that is a real change: the
+     front door was CSS-only until this script, and the band comment above now
+     says so rather than the reverse. It is here because `travel` cannot be
+     expressed in CSS — it is the distance between the band's large-viewport
+     height and the document position of the hero's lower edge, and no CSS
+     value addresses the second. Everything else stays declarative: this
+     derives ONE number, hands it to the stylesheet, and never moves anything.
+     The scroll timeline does the motion.
+
+     It is also the whole opt-in. Until this runs, `.ptx-marquee` is exactly
+     the absolute band that shipped; the converging form applies only under
+     `html.ptx-converged`, which is added here and only after the number is
+     real. No JS, no scroll-timeline support, or reduced motion -> the reader
+     gets the approved composition, not a degraded one. -->
+<script>
+(function () {
+  var root = document.documentElement;
+  if (!window.matchMedia || !window.CSS || !CSS.supports) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!CSS.supports('animation-timeline', 'scroll()')) return;
+  if (!CSS.supports('height', '100lvh')) return;
+
+  var hero = document.querySelector('.hero');
+  var band = document.querySelector('.ptx-marquee');
+  if (!hero || !band) return;
+
+  /* The band is not fixed yet, so its height is the absolute band's, not the
+     large viewport's. Probe 100lvh directly. Support for the unit is tested
+     above rather than inferred from the measurement; the zero-height guard
+     below stays as a safety net, so a probe that resolves to nothing bails to
+     the fallback rather than computing a travel from it. */
+  function largeViewport() {
+    var probe = document.createElement('div');
+    probe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100lvh;' +
+                          'visibility:hidden;pointer-events:none';
+    document.body.appendChild(probe);
+    var h = probe.getBoundingClientRect().height;
+    probe.remove();
+    return h;
+  }
+
+  /* Both terms are scroll-INDEPENDENT. `edgeDoc` is a document coordinate, so
+     it does not move as the page scrolls; adding scrollY converts the live
+     viewport rect back into that fixed document position. The v1 defect was
+     subtracting it instead, which made travel grow as the reader scrolled and
+     moved the animation's start point underneath them mid-flick. 36.3px is the
+     same drop past the tagline the stylesheet already declares. */
+  function measure() {
+    var bandH = largeViewport();
+    if (!(bandH > 0)) return false;
+    var edgeDoc = hero.getBoundingClientRect().bottom + window.scrollY + 36.3;
+    var travel = bandH - edgeDoc;
+    /* NO TRAVEL, NO OPT-IN. Where the large viewport is shorter than the hero's
+       lower edge — a short landscape phone, say — the band has nowhere to
+       descend and the convergence has nothing to show. Opting in anyway would
+       still swap the absolute band for a fixed one, and because .ptx-half
+       stretches to the track's height that re-lays the transcript into shorter
+       columns: a visible change to the approved composition bought for no
+       effect. Measured at 844x390, where travel resolves to 0. Below the
+       threshold the reader keeps exactly the band that shipped. */
+    if (!(travel > 1)) return false;
+    root.style.setProperty('--ptx-travel', travel.toFixed(2) + 'px');
+    return true;
+  }
+
+  /* ONE OPERATION, BOTH DIRECTIONS. Opting in and retiring are the same
+     decision, so they live in the same function. An add-only path can leave
+     the class and a stale travel behind when a later measurement declines —
+     which is how a portrait value could survive into landscape and translate
+     a 100lvh band entirely above the viewport. */
+  function sync() {
+    if (measure()) { root.classList.add('ptx-converged'); return true; }
+    retire();
+    return false;
+  }
+  function retire() {
+    root.classList.remove('ptx-converged');
+    root.style.removeProperty('--ptx-travel');
+  }
+
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
+  else sync();
+
+  /* Re-measure ONLY while parked at the top. A re-measure there is benign: the
+     layout genuinely changed and nothing is mid-flight. Re-measuring after
+     scrolling has begun is the defect — it moves the animation's start point
+     under the reader, which is what made v1 reverse and overshoot when iOS
+     collapsed its chrome mid-scroll. So chrome movement during a flick is
+     deliberately ignored. */
+  var t = null;
+  var lastW = window.innerWidth;
+  addEventListener('resize', function () {
+    var rotated = window.innerWidth !== lastW;
+    lastW = window.innerWidth;
+    if (window.scrollY < 2) {
+      /* Parked at the top: re-decide in full. A re-measure here is benign —
+         the layout genuinely changed and nothing is mid-flight — and sync()
+         will retire the enhancement if the new viewport has no travel to
+         spend, rather than leaving the previous answer in place. */
+      if (t) clearTimeout(t);
+      t = setTimeout(sync, 120);
+      return;
+    }
+    /* Scrolled. WIDTH is the discriminator. iOS collapsing its chrome during
+       momentum changes only the height, and re-measuring there is the v1
+       defect that moved the animation's start point under the reader — so it
+       is still ignored. A width change is a real rotation, and carrying a
+       portrait travel into landscape would strand the band off-screen, so the
+       enhancement retires to the shipped static band instead. Retiring needs
+       no measurement and does not move the reader; it is deliberately not a
+       re-measure, and never scrolls the page to the top to obtain one. */
+    if (rotated) retire();
+  });
+})();
+</script>
 </body>
 </html>
