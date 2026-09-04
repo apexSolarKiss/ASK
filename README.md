@@ -42,17 +42,22 @@ The 68 p5 sketch runners under `assets/asymptotic/p5/gallery/` are not content
 pages and are outside the shell: they are full-viewport canvas embeds loaded in
 iframes, with no site chrome by design.
 
-One top-level route is a **named full-viewport interactive-application
-exception**: `/apex-solar-kiss/consciousness-free-will/`, the CFW mind map over
-its typed relation atlas. The route carries two distinct things: an interactive
-structured survey over that atlas, and a separately labelled ASK-authored
-conclusion derived from the operator-side family hub. The conclusion is not a
-survey finding and settles none of the survey's held questions. The route is a
-fixed full-viewport application rather than a scrolling document, so it does not
-consume `surface-shell`; it follows the
+One page is a **named full-viewport interactive-application exception**:
+`/apex-solar-kiss/consciousness-free-will/map/`, the CFW mind map over its typed
+relation atlas. The map is a fixed full-viewport application rather than a
+scrolling document, so it does not consume `surface-shell`; it follows the
 design-system interactive-diagram family grammar and carries ASK Tier 3 in its
-application bar and its orientation footer. The exception applies only to this
-named route and creates no exemption for ordinary non-home content pages.
+application bar. The exception applies only to that one page and creates no
+exemption for ordinary non-home content pages.
+
+The route root, `/apex-solar-kiss/consciousness-free-will/`, is an **ordinary
+conclusions shell page**: it adopts `surface-shell` and the shell's navigation
+like every other subpage, and links to the map. It carries two distinct things
+— a structured survey over that atlas, and a separately labelled ASK-authored
+conclusion derived from the operator-side family hub. The conclusion is not a
+survey finding and settles none of the survey's held questions. The orientation
+overlay that used to hold the conclusions inside the application, and its
+footer, no longer exist.
 
 **Three visual rules are inherited too.** `surface-panel.css` (the shared visual
 contract for live content panels), `surface-action.css` (the shared
@@ -67,9 +72,10 @@ owns its base foreground, with only the bounded `gal-link` on-image paint
 adaptation described below. The text-link rule is **opt-in by class** — only an
 element carrying `.surface-text-link` takes it — and it sets no foreground at
 all: the contextual text colour stays consumer-owned, supplied by whichever
-region the link sits in. Nine unboxed prose destinations across six subpages
+region the link sits in. Six unboxed prose destinations across five subpages
 consume it; every shaped control, mark, image link, breadcrumb and footer action
-is excluded by design.
+is excluded by design, and neither CFW page consumes it at all now that the
+orientation footer is gone.
 
 **The browser-icon set is inherited too.** `favicon.svg`, `favicon-32.png`,
 `favicon.ico` and `apple-touch-icon.png` are vendored from `design-system-ASK`,
@@ -87,7 +93,7 @@ visual rules.
 On ordinary ASK pages, light/dark follows the system preference
 (`prefers-color-scheme`) with no toggle or theming JS; the two diagonal
 gradients switch with the OS. The named
-`/apex-solar-kiss/consciousness-free-will/` full-viewport application is the
+`/apex-solar-kiss/consciousness-free-will/map/` full-viewport application is the
 local exception: it carries a non-persistent `auto / light / dark` selector
 implemented by its route-local release layer. The design system's style-guide
 theme selector is **not** vendored here.
@@ -123,7 +129,8 @@ favicon.ico           vendored from design-system-ASK — the root-probe fallbac
 apple-touch-icon.png  vendored from design-system-ASK — the iOS home-screen icon, pinned + byte-identical
 apex-solar-kiss/      native builder subpage — the object map (practice + two domain applications + the builder machine)
 apex-solar-kiss/design/  native design gateway — live design-system surfaces + the retained external design-portfolio board
-apex-solar-kiss/consciousness-free-will/  CFW mind map + typed relation atlas, plus a distinct ASK-authored conclusion — a named full-viewport interactive-application exception to the shell; vendors spectral-state.css from design-system-ASK (pinned + byte-identical)
+apex-solar-kiss/consciousness-free-will/  CFW conclusions — the structured survey over the typed relation atlas, plus a distinct ASK-authored conclusion; an ordinary shell page
+apex-solar-kiss/consciousness-free-will/map/  the interactive CFW mind map — the one named full-viewport interactive-application exception to the shell; vendors spectral-state.css from design-system-ASK (pinned + byte-identical)
 askproduktion/        native creative-production subpage (Track A.1)
 asymptotic-system-key/  native artistic-practice subpage (Track A.2; per-category p5.js pages)
 asymptotic-system-key/lineage/  public-safe influence lineage (canon as substrate: readymade >> pop >> appropriation >> generative systems)
@@ -145,7 +152,7 @@ A reference implementation of the [ASK design family](https://github.com/apexSol
 it vendors the canonical foundations (tokens, fonts, wordmark), **the
 `surface-shell` pattern**, and **the `surface-panel` and `surface-action` visual
 rules**, then adds its own payload layout and instance adaptations around them.
-The shared page chrome is owned upstream, not here. The CFW route named above is
+The shared page chrome is owned upstream, not here. The CFW map named above is
 the one full-viewport application exception to that chrome, and it vendors one
 further design-system primitive, `spectral-state.css`, on the same terms.
 

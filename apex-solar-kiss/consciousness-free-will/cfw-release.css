@@ -1,21 +1,31 @@
 /* cfw-release.css — the ASK-local release layer.
  *
- * This route also consumes the ROOT-VENDORED surface-text-link.css: its three
- * orientation-footer destinations are unboxed textual traversal affordances and
- * take the owner module by class. The route remains the fixed full-viewport
- * application exception and still does not consume surface-shell.
+ * THE ROUTE IS TWO PAGES. The conclusions are an ORDINARY SHELL PAGE at the
+ * route root and consume surface-shell like every other subpage; the MAP, one
+ * level deeper, is the retained fixed full-viewport application and remains the
+ * shell exception. Both load this file, so it carries the map layer, the
+ * conclusions layer, and the responsive contract for both.
+ *
+ * The former orientation overlay's three footer destinations were this route's
+ * only consumers of the root-vendored surface-text-link.css; the shell footer
+ * now carries those destinations as compact actions. With the overlay retired
+ * neither page has a `.surface-text-link` element left, so NEITHER PAGE LINKS
+ * THE MODULE any more. The root-vendored file itself stays where it is — other
+ * subpages consume it.
  *
  * The engine's own stylesheet (cfw-atlas.css) is vendored byte-identical from the
  * approved internal package and is NOT edited here. This file adds only what the
- * public release needs: the ASK wordmark in the bar, the orientation surface, and
+ * public release needs: the ASK wordmark in the bar, the conclusions layer, and
  * the responsive contract. It defines NO token: every colour, size and spacing
  * value below resolves to a design-system-ASK custom property.
  *
  * RESPONSIVE CONTRACT
- *   wide    >= 1024   full interactive map + atlas; orientation on demand
+ *   wide    >= 1024   full interactive map + atlas; the conclusions are a link
  *   tablet  768-1023  full map; legend and caption collapsed by default; touch
- *   small   <  768    orientation IS the landing surface; the map is entered
- *                     deliberately, never shrunk and presented as responsive
+ *   small   <  768    the map keeps its two-row application bar; it is never
+ *                     shrunk and presented as responsive. The conclusions are
+ *                     a separate route rather than a landing overlay, so a
+ *                     small screen reaches them by navigating, not by a mode.
  */
 
 /* ---- ASK wordmark in the engine bar ------------------------------------- */
@@ -35,30 +45,24 @@ html[data-theme="dark"]  .rel-mark .rel-mark-dark  { display: block; }
 html[data-theme="light"] .rel-mark .rel-mark-light { display: block; }
 html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
 
-/* ---- orientation surface ------------------------------------------------ */
-.orient {
-  position: fixed; inset: 0; z-index: 40;
-  overflow-y: auto; -webkit-overflow-scrolling: touch;
-  background: var(--bg-gradient); background-attachment: fixed;
-  display: none;
-}
-.orient[data-open="1"] { display: block; }
-.orient-inner { max-width: 68ch; margin: 0 auto; padding: var(--space-6) var(--space-5) var(--space-7); }
+/* ---- conclusions: the payload inside the vendored shell -----------------
+   The conclusions are no longer a fixed overlay; they are the route root's own
+   page, laid out inside `<main class="surface-payload">`. The shell declares no
+   payload layout by contract, so the reading measure is this route's to set —
+   and it is the SAME 68ch the orientation carried, so the split changes where
+   the conclusions live without changing how they read.
 
-.orient-kicker {
-  font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: var(--fw-light);
-  letter-spacing: var(--tracking-wide); text-transform: uppercase;
-  color: var(--fg-2); margin: 0 0 var(--space-3);
-}
-.orient-title {
-  font-size: var(--fs-h1); font-weight: var(--fw-light);
-  letter-spacing: var(--tracking-tight); line-height: var(--lh-heading);
-  margin: 0 0 var(--space-2); color: var(--fg-1);
-}
-.orient-sub {
-  font-family: var(--font-mono); font-size: var(--fs-body); font-weight: var(--fw-light);
-  color: var(--fg-2); margin: 0 0 var(--space-4);
-}
+   No padding and no auto margin here: `.surface` already owns the page's edge
+   inset and its own centring, and a second set would inset the payload twice.
+   Everything below — .orient-status, .orient-prose, .orient-h, .rulings,
+   .counts, .orient-search, .orient-results, .askc* — is shared with the former
+   overlay and is unchanged by the split. These are the surviving CONTENT roles,
+   and they keep the historical `orient-` prefix deliberately: renaming a
+   working selector to tidy a prefix is churn, not a repair. The LAYER those
+   roles used to sit in carried its own chrome; that chrome is gone, along with
+   the machinery in cfw-release.js that drove it. */
+.cfw-conclusions { max-width: 68ch; }
+
 .orient-status { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 var(--space-5); }
 .orient-status .tag {
   font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: var(--fw-light);
@@ -160,24 +164,14 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
 .orient-results .ores-meta { display: block; margin-top: 4px; color: var(--fg-3); font-size: var(--fs-caption); }
 .orient-results .ores-none { color: var(--fg-3); font-size: var(--fs-small); }
 
-/* ---- enter + footer ----------------------------------------------------- */
+/* ---- the action into the map -------------------------------------------- */
 .orient-enter { margin-top: var(--space-6); }
 .orient-enter .orient-note { margin-top: var(--space-3); }
-.orient-foot {
-  margin-top: var(--space-7); padding-top: var(--space-4);
-  border-top: 1px solid var(--line-2);
-  display: flex; flex-wrap: wrap; gap: var(--space-4);
-  font-family: var(--font-mono); font-size: var(--fs-caption);
-  /* Contextual foreground stays CONSUMER-OWNED and is declared on the region,
-     not on its anchors: surface-text-link inherits colour by design. */
-  color: var(--fg-2);
-}
-/* The three orientation destinations consume the vendored surface-text-link
-   rule. The local `.orient-foot a` decoration/colour override and the
-   `:hover` brightening are RETIRED — they re-derived the treatment the owner
-   module owns. Layout, position, family, size and gap above are unchanged,
-   and this route remains the fixed full-viewport application exception: it
-   still does not import surface-shell. */
+/* The top instance carries no note, so it needs the separation the note would
+   have given it. One declaration: the inherited top margin already collapses
+   against the status row above, and this restores the same rhythm below, so
+   both actions sit in an identical space-6 gutter. */
+.orient-enter--top { margin-bottom: var(--space-6); }
 
 /* The three application-bar controls as one composition group. On a wide screen
    this must be invisible: the bar already sets an 18px gap between its own
@@ -271,44 +265,14 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
   /* The long label takes the flexible column and wraps inside its own pill at the
      narrowest widths. The contract sets `white-space: normal` precisely so a long
      label wraps rather than forcing overflow — do not add nowrap here. */
-  .bar .bar-actions #orientbtn { width: 100%; min-width: 0; }
-  /* the map is present but inert until it is entered deliberately */
-  body:not([data-map="1"]) .canvas-wrap { visibility: hidden; }
-  .orient-inner { padding: var(--space-5) var(--space-4) var(--space-6); }
-  .orient-title { font-size: var(--fs-h2); }
+  .bar .bar-actions .bar-conclusions { width: 100%; min-width: 0; }
   .rulings dl { grid-template-columns: 1fr; gap: var(--space-1) 0; }
   .rulings dt { margin-top: var(--space-2); }
 }
-@media (min-width: 768px) {
-  /* above small, entering the map is not a mode: the map is already the surface */
-  .orient-enter { display: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .orient { scroll-behavior: auto; }
-}
-
-/* The orientation covers the whole viewport, so while it is open the controls behind
-   it are made inert: tabbing must not land on a button the reader cannot see. That
-   removes the bar's toggle from the cycle, so the overlay carries its own way out.
-   On a small screen the orientation IS the landing surface and "explore the map"
-   already plays that role, so the close control appears only once the map exists. */
-.orient-close {
-  /* Release 1.1: ALWAYS visible. The orientation now carries a nine-section conclusion,
-     so a first-run reader at 375px must be able to reach the map from the TOP rather than
-     scrolling the whole thing. The control is dual-purpose: before the map has been entered
-     it reads "explore the map" and enters; afterwards it closes. cfw-release.js owns the
-     label and the action; this rule only stops it being hidden. */
-  display: inline-block; margin: 0 0 var(--space-4);
-  font-family: var(--font-mono); font-size: var(--fs-caption);
-  letter-spacing: var(--tracking-wide); text-transform: uppercase;
-  background: none; color: var(--fg-2); cursor: pointer;
-  border: 1px solid var(--line-1); border-radius: var(--radius-pill);
-  padding: var(--space-2) var(--space-3);
-}
-.orient-close:hover { color: var(--fg-1); }
-.orient-close:focus-visible { outline: 2px solid var(--fg-1); outline-offset: 2px; }
-/* the former width-gated and data-map-gated reveals are superseded by the rule above */
+/* The former `@media (min-width: 768px) { .orient-enter { display: none } }` is
+   RETIRED. It hid the bottom action above small because the map was already the
+   surface behind the overlay. The map is a separate route now, so the action is
+   the only route to it from this page and must be present at every width. */
 
 /* ---- top-bar compact actions --------------------------------------------
    The two bar controls are COMPACT ACTIONS, not labels. design-system-ASK owns
@@ -351,8 +315,8 @@ body.filtering .bar .atlas-trigger .dot2 { background: var(--fg-1); }
    above small — a wide screen reader met a page with no h1 at all.) */
 .bar .title-block .t, .bar .title-block .s { margin: 0; }
 
-/* Skip link: the first stop for a keyboard user, straight to the prose account of
-   what the research concluded. Visible only while focused. */
+/* Skip link: the first stop for a keyboard user, straight to this page's own
+   payload. Visible only while focused. */
 .skip {
   position: absolute; left: var(--space-3); top: var(--space-3); z-index: 100;
   transform: translateY(-200%);
@@ -363,19 +327,14 @@ body.filtering .bar .atlas-trigger .dot2 { background: var(--fg-1); }
 }
 .skip:focus { transform: none; outline: 2px solid var(--fg-1); outline-offset: 2px; }
 
-/* Orientation search results are controls: they open the record in the inspector. */
+/* Search results are controls: they open the record. On the map that is the
+   inspector in this document; on the conclusions page it is the map, named. */
 .orient-results button.ores-r {
   display: block; width: 100%; text-align: left; font: inherit; color: inherit;
   background: none; border: 0; cursor: pointer;
 }
 .orient-results button.ores-r:hover .ores-title { color: var(--fg-high-contrast); }
 .orient-results button.ores-r:focus-visible { outline: 2px solid var(--fg-1); outline-offset: 2px; }
-
-/* Opening the orientation moves focus to its heading so a screen reader lands on the
-   surface rather than on the button behind it. The heading is not a control, and a
-   mouse user who just clicked should not be shown a focus ring on a title — the
-   full-viewport surface change already says where they are. */
-.orient-title:focus { outline: none; }
 
 /* ---- theme selector -----------------------------------------------------
    Conformed to the design-system style guide's theme-selector grammar: a quiet

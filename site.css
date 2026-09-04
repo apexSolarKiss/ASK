@@ -14,7 +14,7 @@
    surface-action.css, the compact-action visual rule, which every page's compact
    controls consume — including this homepage's three footer destinations; and
    surface-text-link.css, the unboxed textual-link visual rule, opt-in by class,
-   which 9 prose destinations across 6 subpages consume. The homepage no longer
+   which 6 prose destinations across 5 subpages consume. The homepage no longer
    consumes the textual-link rule: its footer is compact actions, so the local
    footer-link re-derivation that used to live here is retired. What this file owns is the homepage
    composition, page payload layout, row and placement decisions around the

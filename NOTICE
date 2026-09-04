@@ -19,8 +19,8 @@ canonical browser-icon set from design-system-ASK
                                  only: it owns no markup and no semantics
   - spectral-state.css         — the spectral-state primitive, vendored as a
                                  pinned byte-identical copy and not modified
-                                 here. It is carried by the CFW mind-map route
-                                 under apex-solar-kiss/consciousness-free-will/,
+                                 here. It is carried by the CFW mind map at
+                                 apex-solar-kiss/consciousness-free-will/map/,
                                  which requires its governed-state custom
                                  properties
   - surface-action.css         — the shared compact-action visual contract,
@@ -80,12 +80,14 @@ keeps its own composition and does not consume the shell or its runtime, though
 it does consume the panel and compact-action visual rules — its footer
 destinations are compact actions like every other footer on the site.
 
-One further route is a named exception: the CFW mind map at
-apex-solar-kiss/consciousness-free-will/ is a fixed full-viewport interactive
-application, not a scrolling document, and does not consume the shell. It
-carries ASK Tier 3 in its application bar and orientation footer and follows the
+One further page is a named exception: the CFW mind map at
+apex-solar-kiss/consciousness-free-will/map/ is a fixed full-viewport
+interactive application, not a scrolling document, and does not consume the
+shell. It carries ASK Tier 3 in its application bar and follows the
 design-system interactive-diagram family grammar. The exception is specific to
-that route; ordinary non-home content pages continue to consume the shell.
+that page: the CFW conclusions at apex-solar-kiss/consciousness-free-will/ are
+an ordinary shell page and consume the shell and its navigation runtime, as
+every other non-home content page continues to do.
 
 When this site and design-system-ASK disagree on a foundation value, on the
 shell, or on a vendored visual rule, the canonical design-system-ASK file
