@@ -1802,10 +1802,23 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
     return true;
   }
 
-  function apply() { if (measure()) root.classList.add('ptx-converged'); }
+  /* ONE OPERATION, BOTH DIRECTIONS. Opting in and retiring are the same
+     decision, so they live in the same function. An add-only path can leave
+     the class and a stale travel behind when a later measurement declines —
+     which is how a portrait value could survive into landscape and translate
+     a 100lvh band entirely above the viewport. */
+  function sync() {
+    if (measure()) { root.classList.add('ptx-converged'); return true; }
+    retire();
+    return false;
+  }
+  function retire() {
+    root.classList.remove('ptx-converged');
+    root.style.removeProperty('--ptx-travel');
+  }
 
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(apply);
-  else apply();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
+  else sync();
 
   /* Re-measure ONLY while parked at the top. A re-measure there is benign: the
      layout genuinely changed and nothing is mid-flight. Re-measuring after
@@ -1814,10 +1827,28 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
      collapsed its chrome mid-scroll. So chrome movement during a flick is
      deliberately ignored. */
   var t = null;
+  var lastW = window.innerWidth;
   addEventListener('resize', function () {
-    if (window.scrollY >= 2) return;
-    if (t) clearTimeout(t);
-    t = setTimeout(measure, 120);
+    var rotated = window.innerWidth !== lastW;
+    lastW = window.innerWidth;
+    if (window.scrollY < 2) {
+      /* Parked at the top: re-decide in full. A re-measure here is benign —
+         the layout genuinely changed and nothing is mid-flight — and sync()
+         will retire the enhancement if the new viewport has no travel to
+         spend, rather than leaving the previous answer in place. */
+      if (t) clearTimeout(t);
+      t = setTimeout(sync, 120);
+      return;
+    }
+    /* Scrolled. WIDTH is the discriminator. iOS collapsing its chrome during
+       momentum changes only the height, and re-measuring there is the v1
+       defect that moved the animation's start point under the reader — so it
+       is still ignored. A width change is a real rotation, and carrying a
+       portrait travel into landscape would strand the band off-screen, so the
+       enhancement retires to the shipped static band instead. Retiring needs
+       no measurement and does not move the reader; it is deliberately not a
+       re-measure, and never scrolls the page to the top to obtain one. */
+    if (rotated) retire();
   });
 })();
 </script>
