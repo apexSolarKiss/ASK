@@ -73,10 +73,12 @@ The shell itself is Tier-3-neutral: it carries no Tier 3 value and supplies
 none. This site supplies its own Tier 3 identity into the shell's mark slot and
 into the browser-icon set, keeps its own markup and semantics, and adds instance-specific payload and layout
 adaptations — it does not add all of its own layout, and it defines no new
-tokens. It consumes no navigation runtime: the shell's optional navigation
-script is not vendored here. The homepage is the explicit exception: it keeps
-its own composition and does not consume the shell, though it does consume both
-visual rules.
+tokens. It consumes the shell's optional navigation runtime:
+`surface-shell.js` is vendored once at the repo root, and each shell page opts
+in by authoring a navigation source. The homepage is the explicit exception: it
+keeps its own composition and does not consume the shell or its runtime, though
+it does consume the panel and compact-action visual rules — its footer
+destinations are compact actions like every other footer on the site.
 
 One further route is a named exception: the CFW mind map at
 apex-solar-kiss/consciousness-free-will/ is a fixed full-viewport interactive

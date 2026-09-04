@@ -29,9 +29,13 @@ slot, the structural title and lede, the header rule, and the footer ROW — its
 alignment and arrangement. It does not own each footer destination's
 presentation: those are compact actions, so their type, geometry, paint and
 interaction belong to the action rule. The shell is Tier-3-neutral — it carries
-no Tier 3 value and supplies none; this site supplies its own. ASK consumes no
-navigation runtime: the shell's optional navigation script is not vendored
-here. `site.css` adds ASK's own payload layout and instance adaptations around
+no Tier 3 value and supplies none; this site supplies its own. ASK **consumes the shell's
+optional navigation runtime**: `surface-shell.js` is vendored once at the repo
+root and every shell page loads it. The runtime is opt-in per page — it acts
+only where that page authors a `template.surface-nav-source`, and without it a
+page keeps an ordinary home link rather than a dead control. The visible
+breadcrumb remains the single authored path; the panel derives the current
+location from it, so no page states its own position twice. `site.css` adds ASK's own payload layout and instance adaptations around
 it; it no longer owns a shared page shell of its own.
 
 The 68 p5 sketch runners under `assets/asymptotic/p5/gallery/` are not content
@@ -63,7 +67,7 @@ owns its base foreground, with only the bounded `gal-link` on-image paint
 adaptation described below. The text-link rule is **opt-in by class** — only an
 element carrying `.surface-text-link` takes it — and it sets no foreground at
 all: the contextual text colour stays consumer-owned, supplied by whichever
-region the link sits in. Twelve unboxed textual destinations across seven files
+region the link sits in. Nine unboxed prose destinations across six subpages
 consume it; every shaped control, mark, image link, breadcrumb and footer action
 is excluded by design.
 
@@ -107,7 +111,8 @@ index.html            the homepage (inline logo-ASK wordmark; three tier panels;
 site.css              ASK payload layout + shell instance adaptations, on top of the tokens (no new tokens)
 surface-shell.css     vendored from design-system-ASK — the surface-shell PATTERN, pinned + byte-identical; every non-home content page consumes it
 surface-panel.css     vendored from design-system-ASK — the live-content-panel VISUAL RULE, pinned + byte-identical; the homepage tier panels consume it (presentation only — ASK keeps its own markup, semantics, and support foreground)
-surface-text-link.css vendored from design-system-ASK — the unboxed-textual-link VISUAL RULE, pinned + byte-identical; opt-in by class, twelve targets across seven files
+surface-shell.js      vendored from design-system-ASK — the shell's optional NAVIGATION RUNTIME, pinned + byte-identical; opt-in per page through template.surface-nav-source
+surface-text-link.css vendored from design-system-ASK — the unboxed-textual-link VISUAL RULE, pinned + byte-identical; opt-in by class; the homepage does not consume it
 surface-action.css    vendored from design-system-ASK — the compact-action VISUAL RULE, pinned + byte-identical; every page's compact controls consume it (the owner owns the base surface, foreground, border, geometry and interaction; ASK keeps the element semantics, destination, copy, row and placement)
 colors_and_type.css   vendored from design-system-ASK (canonical tokens)
 fonts/                vendored Inter + JetBrains Mono (OFL)
