@@ -25,9 +25,14 @@ Tier 1 (foundation) and Tier 2 (ASK design language, incl. the tagline).
 consumes the vendored `surface-shell` **pattern** (`surface-shell.css`) — a
 pinned, byte-identical copy of the canonical file in `design-system-ASK`, never
 hand-edited here. The shell owns the page container, the header, the wordmark
-slot, the structural title and lede, the header rule, and the footer's alignment
-and link behavior. `site.css` adds ASK's own payload layout and instance
-adaptations around it; it no longer owns a shared page shell of its own.
+slot, the structural title and lede, the header rule, and the footer ROW — its
+alignment and arrangement. It does not own each footer destination's
+presentation: those are compact actions, so their type, geometry, paint and
+interaction belong to the action rule. The shell is Tier-3-neutral — it carries
+no Tier 3 value and supplies none; this site supplies its own. ASK consumes no
+navigation runtime: the shell's optional navigation script is not vendored
+here. `site.css` adds ASK's own payload layout and instance adaptations around
+it; it no longer owns a shared page shell of its own.
 
 The 68 p5 sketch runners under `assets/asymptotic/p5/gallery/` are not content
 pages and are outside the shell: they are full-viewport canvas embeds loaded in
@@ -45,16 +50,31 @@ design-system interactive-diagram family grammar and carries ASK Tier 3 in its
 application bar and its orientation footer. The exception applies only to this
 named route and creates no exemption for ordinary non-home content pages.
 
-**Two visual rules are inherited too.** `surface-panel.css` (the shared visual
-contract for live content panels) and `surface-action.css` (the shared
-compact-action contract) are vendored the same way — pinned, byte-identical, never
+**Three visual rules are inherited too.** `surface-panel.css` (the shared visual
+contract for live content panels), `surface-action.css` (the shared
+compact-action contract) and `surface-text-link.css` (the shared unboxed
+textual-link contract) are vendored the same way — pinned, byte-identical, never
 hand-edited here. The homepage's three tier panels consume the panel rule; every
 page's compact controls consume the action rule. Both own presentation — and the
 action rule its interaction as well — but neither owns markup or semantics. ASK
 keeps its own element semantics, destinations, copy, row and placement decisions.
 The panel rule deliberately leaves support-copy foreground local; the action rule
 owns its base foreground, with only the bounded `gal-link` on-image paint
-adaptation described below.
+adaptation described below. The text-link rule is **opt-in by class** — only an
+element carrying `.surface-text-link` takes it — and it sets no foreground at
+all: the contextual text colour stays consumer-owned, supplied by whichever
+region the link sits in. Twelve unboxed textual destinations across seven files
+consume it; every shaped control, mark, image link, breadcrumb and footer action
+is excluded by design.
+
+**The browser-icon set is inherited too.** `favicon.svg`, `favicon-32.png`,
+`favicon.ico` and `apple-touch-icon.png` are vendored from `design-system-ASK`,
+which is the canonical implementation owner of the ASK browser-chrome
+expression. The three files this site already served remained byte-identical
+when that authority moved — only the ownership changed — and `favicon.ico` was
+added, answering the root probe browsers make without being asked for it. As
+with every other carrier here, they are pinned, byte-identical, and never
+hand-edited.
 
 **The homepage is the explicit exception.** `/index.html` keeps its own centered,
 viewport-height composition and does not adopt the shell. It does consume both
@@ -87,10 +107,15 @@ index.html            the homepage (inline logo-ASK wordmark; three tier panels;
 site.css              ASK payload layout + shell instance adaptations, on top of the tokens (no new tokens)
 surface-shell.css     vendored from design-system-ASK — the surface-shell PATTERN, pinned + byte-identical; every non-home content page consumes it
 surface-panel.css     vendored from design-system-ASK — the live-content-panel VISUAL RULE, pinned + byte-identical; the homepage tier panels consume it (presentation only — ASK keeps its own markup, semantics, and support foreground)
+surface-text-link.css vendored from design-system-ASK — the unboxed-textual-link VISUAL RULE, pinned + byte-identical; opt-in by class, twelve targets across seven files
 surface-action.css    vendored from design-system-ASK — the compact-action VISUAL RULE, pinned + byte-identical; every page's compact controls consume it (the owner owns the base surface, foreground, border, geometry and interaction; ASK keeps the element semantics, destination, copy, row and placement)
 colors_and_type.css   vendored from design-system-ASK (canonical tokens)
 fonts/                vendored Inter + JetBrains Mono (OFL)
 assets/logo-ASK.*     vendored wordmark (svg primary; white + lavender-ASK png pairings)
+favicon.svg           vendored from design-system-ASK — canonical browser icon, pinned + byte-identical
+favicon-32.png        vendored from design-system-ASK — 32px raster browser icon, pinned + byte-identical
+favicon.ico           vendored from design-system-ASK — the root-probe fallback browsers request unasked
+apple-touch-icon.png  vendored from design-system-ASK — the iOS home-screen icon, pinned + byte-identical
 apex-solar-kiss/      native builder subpage — the object map (practice + two domain applications + the builder machine)
 apex-solar-kiss/design/  native design gateway — live design-system surfaces + the retained external design-portfolio board
 apex-solar-kiss/consciousness-free-will/  CFW mind map + typed relation atlas, plus a distinct ASK-authored conclusion — a named full-viewport interactive-application exception to the shell; vendors spectral-state.css from design-system-ASK (pinned + byte-identical)
