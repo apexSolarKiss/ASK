@@ -5,15 +5,18 @@
    canonical tokens (colors_and_type.css, vendored) and defines NO new colors,
    type choices, or scale.
 
-   It no longer owns all layout. FOUR canonical files are vendored as pinned
+   It no longer owns all layout. FIVE canonical files are vendored as pinned
    byte-identical copies and never hand-edited here: surface-shell.css, the page
-   chrome, which every page except the homepage consumes; surface-panel.css, the
-   live-content-panel visual rule, which the homepage's three tier panels
-   consume; surface-action.css, the compact-action visual rule, which every
-   page's compact controls consume; and surface-text-link.css, the unboxed
-   textual-link visual rule, opt-in by class, which twelve textual destinations
-   across seven files consume — including this homepage's three footer links,
-   whose local re-derivation is retired below. What this file owns is the homepage
+   chrome, which every page except the homepage consumes; surface-shell.js, the
+   shell's optional navigation runtime, which every shell page opts into by
+   authoring a navigation source; surface-panel.css, the live-content-panel
+   visual rule, which the homepage's three tier panels consume;
+   surface-action.css, the compact-action visual rule, which every page's compact
+   controls consume — including this homepage's three footer destinations; and
+   surface-text-link.css, the unboxed textual-link visual rule, opt-in by class,
+   which 9 prose destinations across 6 subpages consume. The homepage no longer
+   consumes the textual-link rule: its footer is compact actions, so the local
+   footer-link re-derivation that used to live here is retired. What this file owns is the homepage
    composition, page payload layout, row and placement decisions around the
    vendored controls, and a small set of instance adaptations around the shell.
    Per the tier model, this surface carries ASK's own Tier 3 (the
