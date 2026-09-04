@@ -4,15 +4,13 @@
  * route root, and the map one level deeper. It boots the vendored engine where
  * a canvas exists, renders the conclusions FROM THE PUBLISHED PAYLOAD (so the
  * six rulings cannot drift from the data they describe), and implements the
- * responsive contract. Every map-only and former-overlay behaviour is guarded
- * on its element being present and no-ops when it is not, which is what lets
- * one file serve two pages without a second copy of anything. The engine itself
- * is not modified.
+ * responsive contract. Every map-only behaviour is guarded on its element being
+ * present and no-ops when it is not, which is what lets one file serve two
+ * pages without a second copy of anything. The engine itself is not modified.
  */
 (function () {
   "use strict";
 
-  var SMALL = window.matchMedia("(max-width: 767px)");
   var TABLET = window.matchMedia("(min-width: 768px) and (max-width: 1023px)");
   var D = window.CFW_ATLAS;
 
@@ -63,11 +61,10 @@
      being here.
 
      Everything below the boot renders from the published payload and runs on
-     either route. Every behaviour that reaches into the map or into the former
-     overlay is guarded on the element it needs: absent element, NO-OP. That is
-     the whole tolerance mechanism — there is no second renderer and no second
-     copy of the payload-rendering logic, because there is one source and this
-     is it. */
+     either route. Every behaviour that reaches into the map is guarded on the
+     element it needs: absent element, NO-OP. That is the whole tolerance
+     mechanism — there is no second renderer and no second copy of the
+     payload-rendering logic, because there is one source and this is it. */
   if (document.getElementById("stage") && window.CFWProjection && window.CFWAtlas) {
     CFWAtlas.mount({ projection: CFWProjection.build(D) });
   }
@@ -209,32 +206,6 @@
     }
   }
 
-  /* ---- top orientation action: dual-purpose ----------------------------
-     The orientation now carries a nine-section conclusion. A first-run reader at 375px
-     must be able to reach the map from the TOP rather than scrolling all of it. Before
-     the map has been entered the top control ENTERS the map; afterwards it CLOSES the
-     orientation. The bottom "explore the map" action is retained either way. */
-  (function () {
-    var top = document.getElementById("orientclose");
-    if (!top) return;
-    function syncTop() {
-      var entered = document.body.getAttribute("data-map") === "1";
-      text(top, entered ? "close and return to the map" : "explore the map");
-      top.setAttribute("data-mode", entered ? "close" : "enter");
-    }
-    syncTop();
-    top.addEventListener("click", function (ev) {
-      if (top.getAttribute("data-mode") === "enter") {
-        ev.stopImmediatePropagation();
-        var enter = document.getElementById("entermap");
-        if (enter) enter.click();
-        syncTop();
-      }
-    }, true);
-    var mo = new MutationObserver(syncTop);
-    mo.observe(document.body, { attributes: true, attributeFilter: ["data-map"] });
-  })();
-
   /* ---- counts ---------------------------------------------------------- */
   var byClass = {};
   D.objects.forEach(function (o) { byClass[o.class] = (byClass[o.class] || 0) + 1; });
@@ -310,62 +281,12 @@
     location.href = "/apex-solar-kiss/consciousness-free-will/map/" + "#" + encodeURIComponent(id);
   });
 
-  /* ---- responsive contract --------------------------------------------- */
-  var orient = document.getElementById("orient");
-  var orientBtn = document.getElementById("orientbtn");
-  var enterBtn = document.getElementById("entermap");
-
-  // autoOpen tracks WHY the orientation is open. A small-screen landing is
-  // automatic and must close again when the viewport leaves small; a user
-  // pressing "what this concluded" is explicit and must survive a resize.
-  var autoOpen = false;
-
-  var lastFocus = null;
-
-  var bar = document.querySelector(".bar");
-  var mapMain = document.getElementById("canvaswrap");
-
-  /* THE OVERLAY IS ROUTE-DEPENDENT. `#orient` was the hidden conclusions layer
-     inside the single full-viewport application. The conclusions are now their
-     own route and the map is another, so neither page carries the layer and
-     every one of these controls is optional. Each is guarded rather than
-     assumed. */
-  function openOrient(open, auto) {
-    if (!orient || !orientBtn) return;
-    var was = orient.getAttribute("data-open") === "1";
-    /* The overlay covers the viewport. Leaving the surfaces behind it in the tab order
-       sends a keyboard user to controls they cannot see. `inert` removes them from both
-       the tab order and the accessibility tree, and Escape plus the overlay's own close
-       control keep a way out — so nothing is trapped. */
-    [bar, mapMain].forEach(function (n) {
-      if (!n) return;
-      if (open) n.setAttribute("inert", "");
-      else n.removeAttribute("inert");
-    });
-    orient.setAttribute("data-open", open ? "1" : "0");
-    orient.setAttribute("aria-hidden", open ? "false" : "true");
-    orientBtn.setAttribute("aria-expanded", open ? "true" : "false");
-    autoOpen = open ? !!auto : false;
-    if (open) {
-      orient.scrollTop = 0;
-      /* Focus follows the surface, or a keyboard user is left on a button behind a
-         full-screen layer. `auto` is the small-screen landing, which is where the
-         page already starts — moving focus there would fight the reader. */
-      if (!was && !auto) {
-        lastFocus = document.activeElement;
-        var h = document.getElementById("orient-title");
-        if (h && h.focus) h.focus();
-      }
-    } else if (was && lastFocus && lastFocus.focus) {
-      lastFocus.focus(); lastFocus = null;
-    }
-  }
-
-  /* The orientation surface and the map are two views of one payload. Activating a
-     search result there must land in the inspector here. */
+  /* ---- opening a record ON THE MAP -------------------------------------
+     The engine is in this document, so the id goes straight to it: an evidence
+     owner opens in the inspector, any other object is selected and centred.
+     There is nothing to enter and nothing to close — the map is its own route,
+     so arriving here IS the entry. */
   function openRecord(id) {
-    if (document.body.getAttribute("data-map") !== "1" && SMALL.matches) enterMap();
-    else openOrient(false);
     var V = window.CFW_VIEW;
     if (!V) return;
     var o = (V.projection && V.projection.byId) ? V.projection.byId[id] : null;
@@ -375,55 +296,15 @@
     var insp = document.getElementById("insp");
     if (insp) { insp.setAttribute("tabindex", "-1"); insp.focus(); }
   }
-  function enterMap() {
-    if (!mapMain) return;
-    document.body.setAttribute("data-map", "1");
-    openOrient(false);
-    if (window.dispatchEvent) window.dispatchEvent(new Event("resize"));
-  }
 
-  if (orientBtn) orientBtn.addEventListener("click", function () {
-    openOrient(orient.getAttribute("data-open") !== "1");
-  });
-  if (enterBtn) enterBtn.addEventListener("click", enterMap);
-  /* The skip link's target lives inside the orientation, which is display:none while
-     closed — so the link has to OPEN the surface it skips to, not just jump at it. */
-  var skip = document.getElementById("skip");
-  if (skip && orient) skip.addEventListener("click", function (e) {
-    e.preventDefault();
-    if (orient.getAttribute("data-open") !== "1") openOrient(true);
-    var h = document.getElementById("orient-title");
-    if (h && h.focus) h.focus();
-  });
-
-  var closeBtn = document.getElementById("orientclose");
-  if (closeBtn) closeBtn.addEventListener("click", function () { openOrient(false); });
-  /* On a small screen the reader lands with the orientation open and the map still
-     gated behind `data-map`. Closing the overlay there has to enter the map, or Escape
-     dismisses the only thing on screen and leaves nothing behind it. */
-  document.addEventListener("keydown", function (e) {
-    if (!orient || e.key !== "Escape" || orient.getAttribute("data-open") !== "1") return;
-
-    if (SMALL.matches && document.body.getAttribute("data-map") !== "1") {
-      enterMap();
-    } else {
-      openOrient(false);
-    }
-  });
-
+  /* ---- responsive contract ----------------------------------------------
+     TABLET ONLY. Between 768 and 1023 the legend and the caption are collapsed
+     by default and expanded again above that; `data-overlays` is the flag the
+     stylesheet reads. Nothing here is width-gated on the conclusions any more:
+     they are a separate route, so a narrow viewport reaches them by navigating
+     rather than by a mode, and there is no landing surface to open, retract or
+     track. */
   function applyMode() {
-    if (orient) {
-      var small = SMALL.matches;
-      var entered = document.body.getAttribute("data-map") === "1";
-      if (small && !entered) {
-        // small: orientation IS the landing surface until the map is entered
-        openOrient(true, true);
-      } else if (!small && autoOpen) {
-        // left small: retract the automatic landing, but never a user-opened panel
-        openOrient(false);
-      }
-    }
-    // tablet: overlays collapsed by default, never auto-expanded
     document.body.setAttribute("data-overlays", TABLET.matches ? "0" : "1");
   }
   applyMode();
@@ -431,12 +312,8 @@
   // reliably under emulated viewport resizing, which would strand the page in
   // whichever mode it loaded in. window.resize is the dependable backstop; both
   // are wired, and applyMode is idempotent so double-firing is harmless.
-  if (SMALL.addEventListener) {
-    SMALL.addEventListener("change", applyMode);
-    TABLET.addEventListener("change", applyMode);
-  } else if (SMALL.addListener) {
-    SMALL.addListener(applyMode); TABLET.addListener(applyMode);
-  }
+  if (TABLET.addEventListener) TABLET.addEventListener("change", applyMode);
+  else if (TABLET.addListener) TABLET.addListener(applyMode);
   var modeTimer = null;
   window.addEventListener("resize", function () {
     if (modeTimer) clearTimeout(modeTimer);
