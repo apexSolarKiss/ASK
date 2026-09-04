@@ -1788,7 +1788,16 @@ dddaf845c8514501df8a73d9a6cec71c130f8c43
     var bandH = largeViewport();
     if (!(bandH > 0)) return false;
     var edgeDoc = hero.getBoundingClientRect().bottom + window.scrollY + 36.3;
-    var travel = Math.max(0, bandH - edgeDoc);
+    var travel = bandH - edgeDoc;
+    /* NO TRAVEL, NO OPT-IN. Where the large viewport is shorter than the hero's
+       lower edge — a short landscape phone, say — the band has nowhere to
+       descend and the convergence has nothing to show. Opting in anyway would
+       still swap the absolute band for a fixed one, and because .ptx-half
+       stretches to the track's height that re-lays the transcript into shorter
+       columns: a visible change to the approved composition bought for no
+       effect. Measured at 844x390, where travel resolves to 0. Below the
+       threshold the reader keeps exactly the band that shipped. */
+    if (!(travel > 1)) return false;
     root.style.setProperty('--ptx-travel', travel.toFixed(2) + 'px');
     return true;
   }
