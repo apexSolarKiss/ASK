@@ -105,33 +105,41 @@
   });
 
 
-  /* ---- ASK conclusion --------------------------------------------------
-     Rendered from the generated payload's ask_conclusion field. There is NO
-     second prose copy in index.html: everything below is built from the data,
-     via textContent only, so nothing in the payload can inject markup. An
-     unrecognised inline kind, block kind or malformed section FAILS THE COMPLETE
-     ASK-conclusion render: one bounded error is shown and no partial conclusion
-     is attached. */
-  var AC = D.ask_conclusion;
-  if (AC) {
-    var acRoot = document.getElementById("askc");
+  /* ---- ASK structured-text sections ------------------------------------
+     ONE renderer, two payload objects. Both the ASK conclusion and the ASK
+     prospective next axis are built from the generated payload — there is NO second
+     prose copy in index.html — via textContent only, so nothing in the payload can
+     inject markup.
+
+     THE VOCABULARY IS CLOSED AT RUNTIME. An unrecognised inline kind, block kind or
+     malformed section FAILS THAT SECTION COMPLETELY: the section is built into a
+     detached fragment and attached only if all of it succeeds, otherwise one bounded
+     error replaces it. Part of a section is not the section.
+
+     CONTAINER FIRST, THEN PAYLOAD. A route that carries no container for a section
+     does not own that section — the map has no conclusions DOM and must stay silent.
+     But a route that DOES carry the container has already promised the reader a
+     section, so a missing payload object there is a failure to REPORT, not a thing to
+     skip. Returning silently would leave a generic heading above an empty box.
+
+     THE TITLE IS PART OF THE TRANSACTION. The payload title is written only after the
+     whole body validates. A failed section keeps its generic fallback heading rather
+     than advertising a payload title for content that never arrived.
+
+     THE TWO SECTIONS FAIL INDEPENDENTLY. Each resolves its own container, builds its
+     own fragment, and catches its own error. A malformed or missing ask_next_axis
+     cannot erase, truncate or suppress a valid ask_conclusion, and the reverse holds
+     equally. The absence of one is not the absence of the other. */
+  function renderStructuredSection(key, rootId, titleId, failLine) {
+    var acRoot = document.getElementById(rootId);
+    if (!acRoot) return;              /* this route does not own the section */
+    var AC = D[key];
+
+    function acFail(why) { throw new Error(key + ": " + why); }
 
     /* Inline runs arrive already structured: {t:"plain"|"strong"|"em"|"code", v:"..."}.
        Each becomes a real element via createElement + textContent. No markup is parsed
-       here and none can be injected.
-
-       UNKNOWN SPAN KIND, UNKNOWN BLOCK KIND OR A MALFORMED SECTION FAILS THE WHOLE RENDER.
-       Nothing is skipped, coerced or counted: the conclusion is built into a detached
-       fragment and attached only if all of it succeeds, otherwise one bounded error replaces
-       it. Part of a conclusion is not the conclusion.
-
-       THE VOCABULARY IS CLOSED AT RUNTIME TOO. The derivation refuses an unknown span or
-       block kind at build time; if one reached the browser anyway, rendering a coerced or
-       partial conclusion would present an incomplete projection as complete. acFail throws,
-       the whole conclusion is replaced by one bounded error, and nothing half-built is
-       left on the page. */
-    function acFail(why) { throw new Error("ask_conclusion: " + why); }
-
+       here and none can be injected. */
     function acSpans(target, spans) {
       if (!Array.isArray(spans)) acFail("spans is not an array");
       spans.forEach(function (s) {
@@ -165,46 +173,51 @@
       blocks.forEach(function (b) { target.appendChild(acBlock(b)); });
     }
 
-    if (acRoot) {
-      /* Built into a DETACHED fragment: nothing reaches the page unless all of it does. */
-      var frag = document.createDocumentFragment();
-      try {
-        /* The section's real name comes from the payload, never from the markup. The h2
-           in index.html carries only a generic fallback so the heading is never blank. */
-        if (typeof AC.title !== "string" || !AC.title) acFail("missing title");
-        var h2 = document.getElementById("askc-title");
-        if (h2) text(h2, AC.title);
-        acSpans(frag.appendChild(el("p", "askc-intro")), AC.introduction);
-        acSpans(frag.appendChild(el("blockquote", "askc-pull")), AC.pull_quote);
-        acAppend(frag, AC.distinctions);
+    /* Built into a DETACHED fragment: nothing reaches the page unless all of it does. */
+    var frag = document.createDocumentFragment();
+    try {
+      if (!AC) acFail("payload object absent");
+      if (typeof AC.title !== "string" || !AC.title) acFail("missing title");
+      acSpans(frag.appendChild(el("p", "askc-intro")), AC.introduction);
+      acSpans(frag.appendChild(el("blockquote", "askc-pull")), AC.pull_quote);
+      acAppend(frag, AC.distinctions);
 
-        if (!Array.isArray(AC.sections) || AC.sections.length === 0) acFail("no sections");
-        AC.sections.forEach(function (s, i) {
-          if (!s || typeof s.heading !== "string" || s.number !== i + 1 || !s.id)
-            acFail("malformed section at index " + i);
-          var sec = el("section", "askc-sec");
-          sec.id = s.id;
-          sec.appendChild(text(el("h3", "askc-h"), String(s.number) + " // " + s.heading));
-          acAppend(sec, s.blocks);
-          frag.appendChild(sec);
-        });
+      if (!Array.isArray(AC.sections) || AC.sections.length === 0) acFail("no sections");
+      AC.sections.forEach(function (s, i) {
+        if (!s || typeof s.heading !== "string" || s.number !== i + 1 || !s.id)
+          acFail("malformed section at index " + i);
+        var sec = el("section", "askc-sec");
+        sec.id = s.id;
+        sec.appendChild(text(el("h3", "askc-h"), String(s.number) + " // " + s.heading));
+        acAppend(sec, s.blocks);
+        frag.appendChild(sec);
+      });
 
-        var cmp = el("section", "askc-sec askc-compress");
-        cmp.appendChild(text(el("h3", "askc-h"), "compression"));
-        acSpans(cmp.appendChild(el("blockquote", "askc-pull")), AC.compression);
-        frag.appendChild(cmp);
+      var cmp = el("section", "askc-sec askc-compress");
+      cmp.appendChild(text(el("h3", "askc-h"), "compression"));
+      acSpans(cmp.appendChild(el("blockquote", "askc-pull")), AC.compression);
+      frag.appendChild(cmp);
 
-        acRoot.appendChild(frag);
-      } catch (e) {
-        while (acRoot.firstChild) acRoot.removeChild(acRoot.firstChild);
-        acRoot.appendChild(text(el("p", "askc-error"),
-          "The ASK conclusion could not be displayed: this page received it in a form it does " +
-          "not recognise. Nothing partial is shown, because part of a conclusion is not the " +
-          "conclusion. The research findings above are unaffected."));
-        if (window.console && console.error) console.error(e);
-      }
+      /* Everything validated. Only now does the real name replace the fallback. */
+      var h2 = document.getElementById(titleId);
+      if (h2) text(h2, AC.title);
+      acRoot.appendChild(frag);
+    } catch (e) {
+      while (acRoot.firstChild) acRoot.removeChild(acRoot.firstChild);
+      acRoot.appendChild(text(el("p", "askc-error"), failLine));
+      if (window.console && console.error) console.error(e);
     }
   }
+
+  renderStructuredSection("ask_conclusion", "askc", "askc-title",
+    "The ASK conclusion could not be displayed: this page received it in a form it does " +
+    "not recognise, or did not receive it at all. Nothing partial is shown, because part " +
+    "of a conclusion is not the conclusion. The research findings above are unaffected.");
+
+  renderStructuredSection("ask_next_axis", "nextaxis", "nextaxis-title",
+    "The ASK prospective axis could not be displayed: this page received it in a form it " +
+    "does not recognise, or did not receive it at all. Nothing partial is shown. The " +
+    "research findings and the ASK conclusion above are unaffected.");
 
   /* ---- counts ---------------------------------------------------------- */
   var byClass = {};
