@@ -448,6 +448,11 @@ html:has(> body > .shell) { overflow-x: clip; }
 .gal-card { display: flex; flex-direction: column; gap: var(--space-2); }
 .gal-card-trigger {
   display: block; width: 100%; text-align: left; padding: 0; margin: 0; cursor: pointer;
+  /* Form controls may receive a UA-defined foreground instead of resolving through
+     the page's inherited ASK foreground. The card title inside carries no color of
+     its own (unlike .gal-card-credit below), so restore the governed page value at
+     the interactive ancestor, where the substitution happens. */
+  color: inherit;
   background: var(--surface-glass);
   border: 1px solid var(--line-1);
   border-radius: var(--radius-lg);
@@ -516,6 +521,8 @@ html:has(> body > .shell) { overflow-x: clip; }
 .yt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-3); }
 .yt-facade {
   position: relative; padding: 0; margin: 0; cursor: pointer; aspect-ratio: 16 / 9; overflow: hidden;
+  /* Same control-foreground restoration as .gal-card-trigger above. */
+  color: inherit;
   border: 1px solid var(--line-1); border-radius: var(--radius-lg); background: var(--surface-glass);
 }
 .yt-facade img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform var(--dur-2) var(--ease-out); }
