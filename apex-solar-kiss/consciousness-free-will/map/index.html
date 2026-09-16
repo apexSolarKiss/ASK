@@ -90,7 +90,10 @@
     <div id="stage" role="presentation" aria-hidden="true"></div>
 
     <div class="glass atlas-panel" id="atlas" aria-hidden="true" aria-label="atlas controls"></div>
-    <div class="glass inspector" id="insp"></div>
+    <div class="glass inspector" id="insp">
+      <div class="insp-bar"><span class="panel-h insp-label">inspector</span><button class="insp-toggle" id="insptoggle" type="button" aria-controls="inspbody" aria-expanded="true" aria-label="collapse the inspector" title="collapse the inspector">&minus;</button></div>
+      <div id="inspbody"></div>
+    </div>
     <div class="glass legend" id="legend" role="note" aria-label="map legend — colour, line and shape encoding"></div>
 
     <div class="glass hud">

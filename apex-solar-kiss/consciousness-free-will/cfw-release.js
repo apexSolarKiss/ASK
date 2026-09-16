@@ -1,12 +1,13 @@
 /* cfw-release.js — ASK-local release behaviour.
  *
  * ONE renderer for BOTH routes of this release: the conclusions page at the
- * route root, and the map one level deeper. It boots the vendored engine where
+ * route root, and the map one level deeper. It boots the map engine where
  * a canvas exists, renders the conclusions FROM THE PUBLISHED PAYLOAD (so the
  * six rulings cannot drift from the data they describe), and implements the
  * responsive contract. Every map-only behaviour is guarded on its element being
  * present and no-ops when it is not, which is what lets one file serve two
- * pages without a second copy of anything. The engine itself is not modified.
+ * pages without a second copy of anything. It reaches the engine only through the
+ * runtime surface the engine publishes.
  */
 (function () {
   "use strict";
@@ -28,7 +29,7 @@
 
      This reproduces the design-system style guide's ruled behaviour locally. That
      controller declares itself style-guide-only and is deliberately NOT vendored,
-     and the vendored map engine is not modified to carry it. */
+     and the map engine does not carry it. */
   var themer = document.getElementById("themer");
   var themeLbl = document.getElementById("themelabel");
   (function () {
@@ -53,7 +54,7 @@
     apply("auto");
   })();
 
-  /* ---- boot the vendored engine ----------------------------------------
+  /* ---- boot the map engine ---------------------------------------------
      ONE RENDERER, TWO ROUTES. The conclusions page and the map are separate
      routes and both load THIS file. The map carries the canvas and the engine;
      the conclusions page carries neither, and loads only the payload and this
