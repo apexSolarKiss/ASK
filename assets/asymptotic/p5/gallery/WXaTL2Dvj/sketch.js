@@ -88,6 +88,7 @@ function draw() {
 }
 
 function windowResized() {
+  if (!colorsASK) return;
   resizeCanvas(windowWidth, windowHeight);
   renderColors();
 }
