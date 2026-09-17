@@ -378,7 +378,7 @@
       computeVisible();
       paintVisibility();
       updateCensus();
-      if (refit !== false) fitTo(visibleBounds());
+      if (refit !== false) fitTo(visibleBounds(), true);
       else apply();
       if (locked && !visible[locked]) { locked = null; paint(null); inspect(null); }
       else paint(locked);
@@ -386,6 +386,18 @@
 
     /* ---------------- view ---------------- */
     var view = { k: 1, x: 0, y: 0 }, fitK = 1, lastFit = null;
+    /* viewAtFit: the reader is looking at a whole-map fit. wholeK: that fit's
+       scale, which stays the zoom floor after a group or section is framed. */
+    var viewAtFit = false, wholeK = 0;
+    /* SMALL: the inspector expands as a sheet across the top. COMPACT: the
+       inspector opens collapsed — a viewport at most 767px wide, or a touch screen
+       at most 520px tall. COARSE: a touch screen. */
+    function mq(q) { return root.matchMedia ? root.matchMedia(q) : { matches: false }; }
+    var SMALL = mq("(max-width: 767px)");
+    var COMPACT = mq("(max-width: 767px), (max-height: 520px) and (pointer: coarse)");
+    var COARSE = mq("(pointer: coarse)");
+    var inspEl = document.getElementById("insp");
+    var inspToggle = document.getElementById("insptoggle");
     function project(n) { return { x: n.x * view.k + view.x, y: n.y * view.k + view.y }; }
 
     /* Upright callout labels, de-collided in SCREEN space.
@@ -610,48 +622,93 @@
       placeLabels(L2);
     }
 
-    /* The atlas panel is an OVERLAY on the left. When it is open the fit helper
-       reserves its band too, so opening the controls never puts chrome over the
-       map. When it is closed the reservation set is exactly v1's. */
-    function fitTo(b) {
-      var open = document.body.classList.contains("atlas-open");
-      var r = root.DIAGRAM_FIT.compute({
+    /* FIT. The shared helper places the whole active drawing inside the part of
+       the canvas the reader can see and reports whether the placement `clear`s the
+       chrome. The side lane reserves the inspector and legend on the right, the
+       HUD, its export row and the caption below, and the atlas panel on the left
+       while it is open. Where the inspector opens collapsed (COMPACT) a vertical
+       band is computed too — the pill above; HUD, export row, legend and caption
+       below — as the interactive-spine family does for a narrow canvas, and the
+       larger placement that clears wins. The reservation covers the drawing's
+       extent; a callout label can reach beyond that extent and pass under chrome.
+       When no placement clears (the atlas panel open across a phone) the side
+       placement is kept and __FITREPORT says clear: false. */
+    function fitCandidate(b, edges) {
+      return root.DIAGRAM_FIT.compute({
         wrap: wrapEl,
         bounds: { minX: b.x, minY: b.y, maxX: b.x + b.w, maxY: b.y + b.h },
         viewport: { width: stage.clientWidth, height: stage.clientHeight },
         clearanceX: 22, clearanceY: 22, gutter: 16, maxScale: 1.2,
-        rightSelector: ".inspector, .legend",
-        bottomSelector: ".hud, .cfw-caption",
-        topSelector: null,
-        leftSelector: open ? ".atlas-panel" : null
+        rightSelector: edges.right, bottomSelector: edges.bottom,
+        topSelector: edges.top, leftSelector: edges.left
       });
-      view.k = r.scale; view.x = r.tx; view.y = r.ty;
-      fitK = r.scale; lastFit = r; root.__FITREPORT = r; apply();
     }
-    function fit() { fitTo(filtering() ? visibleBounds() : L.bounds); }
+    function fitTo(b, whole) {
+      var left = document.body.classList.contains("atlas-open") ? ".atlas-panel" : null;
+      var r = fitCandidate(b, { right: ".inspector, .legend", left: left, top: null,
+                                bottom: ".hud, .hud-row-export, .cfw-caption" });
+      r.mode = "side";
+      if (COMPACT.matches) {
+        var band = fitCandidate(b, { top: ".inspector", left: left, right: null,
+                                     bottom: ".hud, .hud-row-export, .legend, .cfw-caption" });
+        if (band.clear && (!r.clear || band.scale > r.scale)) { r = band; r.mode = "band"; }
+      }
+      view.k = r.scale; view.x = r.tx; view.y = r.ty;
+      fitK = r.scale; if (whole) wholeK = r.scale;
+      lastFit = r; root.__FITREPORT = r;
+      viewAtFit = !!whole;
+      apply();
+    }
+    function fit() { fitTo(filtering() ? visibleBounds() : L.bounds, true); }
 
+    /* one zoom range for buttons, wheel and pinch: down to the whole-map fit (or
+       0.24 where that fit is larger), up to 14 */
+    function clampK(k) { return Math.max(Math.min(fitK, wholeK || fitK, 0.24), Math.min(k, 14)); }
     function zoom(f, cx, cy) {
       var W = stage.clientWidth, H = stage.clientHeight;
       cx = cx === undefined ? W / 2 : cx; cy = cy === undefined ? H / 2 : cy;
-      var nk = Math.max(Math.min(fitK, 0.24), Math.min(view.k * f, 14));
+      var nk = clampK(view.k * f);
       view.x = cx - (cx - view.x) * (nk / view.k);
       view.y = cy - (cy - view.y) * (nk / view.k);
-      view.k = nk; apply();
+      view.k = nk; viewAtFit = false; scheduleApply();
+    }
+    /* apply() re-places every label, so continuous input renders once per frame */
+    var frame = 0;
+    function scheduleApply() {
+      if (frame) return;
+      frame = (root.requestAnimationFrame || function (fn) { return setTimeout(fn, 16); })(
+        function () { frame = 0; apply(); });
+    }
+
+    /* The part of the canvas the reader can see, in stage coordinates: the last
+       fit's reserved bands, corrected by the inspector as it is now — a sheet
+       across the top below 768px wide, a panel on the right elsewhere. */
+    function visibleRegion() {
+      var W = stage.clientWidth, H = stage.clientHeight;
+      var fr = root.__FITREPORT || {};
+      var r = { x0: document.body.classList.contains("atlas-open") ? (fr.leftBand || 0) : 0,
+                y0: fr.topBand || 0, x1: W - (fr.rightBand || 0), y1: H - (fr.bottomBand || 0) };
+      if (inspEl && !inspCollapsed()) {
+        var ir = inspEl.getBoundingClientRect(), sr = stage.getBoundingClientRect();
+        if (SMALL.matches) r.y0 = Math.max(r.y0, ir.bottom - sr.top + 12);
+        else r.x1 = Math.min(r.x1, ir.left - sr.left - 12);
+      }
+      if (r.y1 - r.y0 < 80) { r.y0 = 0; r.y1 = H; }
+      if (r.x1 - r.x0 < 80) { r.x0 = 0; r.x1 = W; }
+      return r;
     }
 
     /* centre one object, at a scale where its own name is legible */
     function centreOn(id, k) {
       var n = byId[id]; if (!n) return false;
-      var W = stage.clientWidth, H = stage.clientHeight;
       var nk = Math.max(Math.min(k || 1.35, 14), 0.24);
       view.k = nk;
-      /* bias off the reserved right band so the focused object is not under the
-         inspector it just populated */
-      var fr = root.__FITREPORT || {};
-      var cx = (W - (fr.rightBand || 0) + (document.body.classList.contains("atlas-open")
-                 ? (fr.leftBand || 0) : 0)) / 2;
-      var cy = (H - (fr.bottomBand || 0)) / 2;
+      /* center in the part of the canvas the reader can see, so the focused object
+         is not under the inspector it just populated */
+      var vr = visibleRegion();
+      var cx = (vr.x0 + vr.x1) / 2, cy = (vr.y0 + vr.y1) / 2;
       view.x = cx - n.x * nk; view.y = cy - n.y * nk;
+      viewAtFit = false;
       apply(); return true;
     }
 
@@ -667,28 +724,157 @@
         x1 = Math.max(x1, n.x + n.r * 2); y1 = Math.max(y1, n.y + n.r * 2);
       });
       var pad = 60;
-      fitTo({ x: x0 - pad, y: y0 - pad, w: (x1 - x0) + pad * 2, h: (y1 - y0) + pad * 2 });
+      fitTo({ x: x0 - pad, y: y0 - pad, w: (x1 - x0) + pad * 2, h: (y1 - y0) + pad * 2 }, false);
       select(id);
       return true;
     }
 
-    var drag = null;
-    stage.addEventListener("mousedown", function (e) {
-      drag = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y };
+    /* ---------------- pointer: pan, pinch, tap ----------------
+       ONE controller for mouse, pen and touch, on Pointer Events.
+         one pointer    pans once it travels past the tap slop — 4px for a mouse,
+                        12px for a finger or pen — so a tap still selects a concept
+                        and a tap on empty canvas still clears the selection
+         two pointers   pinch: the world point under the starting centroid stays
+                        under the moving centroid; lifting one finger keeps panning
+         moved gesture  swallows the click that follows it, before a concept or the
+                        canvas sees it, so a pan never clears or changes the selection
+       Only the primary mouse button pans. `touch-action: none` on #stage hands
+       gestures to the page on the stage only; the inspector, atlas panel and HUD
+       keep native scrolling and taps. */
+    var pointers = {}, gesture = null, swallowClick = false;
+    function stagePoint(e) {
+      var r = stage.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    }
+    function activeIds() { return Object.keys(pointers); }
+    function markMoved() {
+      if (stage.classList.contains("panning")) return;
       stage.classList.add("panning");
+      activeIds().forEach(function (id) {
+        try { stage.setPointerCapture(+id); } catch (err) { /* pointer already gone */ }
+      });
+    }
+    function beginPan(id, carried, type) {
+      var p = pointers[id];
+      gesture = { kind: "pan", id: id, x0: p.x, y0: p.y, vx: view.x, vy: view.y,
+                  moved: !!carried, slop: type === "mouse" ? 4 : 12 };
+    }
+    function beginPinch() {
+      var ids = activeIds(), a = pointers[ids[0]], b = pointers[ids[1]];
+      var cx = (a.x + b.x) / 2, cy = (a.y + b.y) / 2;
+      gesture = { kind: "pinch", d0: Math.hypot(b.x - a.x, b.y - a.y) || 1, k0: view.k,
+                  wx: (cx - view.x) / view.k, wy: (cy - view.y) / view.k, moved: true };
+      markMoved();
+    }
+    stage.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      /* a pointer still on record missed its pointerup (a context menu can swallow
+         one): start over rather than pinch against a stale record */
+      if (pointers[e.pointerId]) { pointers = {}; gesture = null; stage.classList.remove("panning"); }
+      var n = activeIds().length;
+      if (n >= 2) return;                         // a third finger changes nothing
+      if (!n) { swallowClick = false; gesture = null; }
+      pointers[e.pointerId] = stagePoint(e);
+      if (!n) beginPan(e.pointerId, false, e.pointerType); else beginPinch();
     });
-    window.addEventListener("mousemove", function (e) {
-      if (!drag) return;
-      view.x = drag.vx + (e.clientX - drag.x); view.y = drag.vy + (e.clientY - drag.y); apply();
+    window.addEventListener("pointermove", function (e) {
+      if (!gesture || !pointers[e.pointerId]) return;
+      if (e.pointerType !== "touch" && e.buttons === 0) { endPointer(e); return; }
+      pointers[e.pointerId] = stagePoint(e);
+      if (gesture.kind === "pan") {
+        if (String(e.pointerId) !== String(gesture.id)) return;
+        var p = pointers[gesture.id], dx = p.x - gesture.x0, dy = p.y - gesture.y0;
+        if (!gesture.moved && Math.abs(dx) + Math.abs(dy) <= gesture.slop) return;
+        if (!gesture.moved) { gesture.moved = true; markMoved(); }
+        view.x = gesture.vx + dx; view.y = gesture.vy + dy;
+      } else {
+        var ids = activeIds(), a = pointers[ids[0]], b = pointers[ids[1]];
+        var nk = clampK(gesture.k0 * (Math.hypot(b.x - a.x, b.y - a.y) || 1) / gesture.d0);
+        view.k = nk;
+        view.x = (a.x + b.x) / 2 - gesture.wx * nk;
+        view.y = (a.y + b.y) / 2 - gesture.wy * nk;
+      }
+      viewAtFit = false;
+      scheduleApply();
     });
-    window.addEventListener("mouseup", function () { drag = null; stage.classList.remove("panning"); });
+    function endPointer(e) {
+      if (!pointers[e.pointerId]) return;
+      delete pointers[e.pointerId];
+      try { stage.releasePointerCapture(e.pointerId); } catch (err) { /* not captured */ }
+      if (gesture && gesture.moved) swallowClick = true;
+      var ids = activeIds();
+      if (ids.length === 1) beginPan(ids[0], gesture ? gesture.moved : false, "touch");
+      else if (!ids.length) { gesture = null; stage.classList.remove("panning"); }
+    }
+    window.addEventListener("pointerup", endPointer);
+    window.addEventListener("pointercancel", endPointer);
+    stage.addEventListener("click", function (e) {
+      if (!swallowClick) return;
+      swallowClick = false; e.stopPropagation(); e.preventDefault();
+    }, true);
+    /* iOS Safari delivers its own pinch-to-zoom as gesture events; the stage keeps them */
+    stage.addEventListener("gesturestart", function (e) { e.preventDefault(); }, { passive: false });
     stage.addEventListener("wheel", function (e) {
       e.preventDefault();
       var rect = stage.getBoundingClientRect();
       zoom(e.deltaY < 0 ? 1.13 : 1 / 1.13, e.clientX - rect.left, e.clientY - rect.top);
     }, { passive: false });
-    stage.addEventListener("click", function () { select(null); });
-    window.addEventListener("resize", fit);
+    stage.addEventListener("click", function () {
+      select(null);
+      if (COMPACT.matches) setInspectorOpen(false);
+    });
+    /* A resize refits the map. On a touch screen a resize that changes only the
+       height — the address bar or the keyboard — keeps the reader's own pan and
+       zoom when the reader is not at the fit, holding the view's center. */
+    var stageW = stage.clientWidth, stageH = stage.clientHeight;
+    window.addEventListener("resize", function () {
+      var W = stage.clientWidth, H = stage.clientHeight;
+      if (!viewAtFit && COARSE.matches && W === stageW && H !== stageH) {
+        view.y += (H - stageH) / 2; apply();
+      } else fit();
+      stageW = W; stageH = H;
+    });
+    /* the HUD's export row is added after the first fit; take it into account */
+    window.addEventListener("load", function () { if (viewAtFit) fit(); });
+
+    /* ---------------- inspector: collapse + expand ----------------
+       A viewport at most 767px wide, or a touch screen at most 520px tall, opens
+       the inspector COLLAPSED to a labelled pill, so the first fit uses the canvas.
+       Opening a record — a selection, an evidence owner, a search result — expands
+       a collapsed inspector at any width without rescaling the map (below 768px
+       wide it expands as a sheet across the top) and brings a selected concept into
+       the part of the canvas still visible. On those compact viewports a tap on
+       empty canvas or Escape collapses it again. The toggle works at every width
+       and refits while the reader is at the fit. */
+    function inspCollapsed() { return document.body.classList.contains("insp-collapsed"); }
+    function setInspectorOpen(on, opts) {
+      opts = opts || {};
+      var changed = inspCollapsed() === !!on;
+      document.body.classList.toggle("insp-collapsed", !on);
+      if (inspToggle) {
+        var name = on ? "collapse the inspector" : "expand the inspector";
+        inspToggle.setAttribute("aria-expanded", on ? "true" : "false");
+        inspToggle.setAttribute("aria-label", name);
+        inspToggle.setAttribute("title", name);
+        inspToggle.textContent = on ? "\u2212" : "+";
+      }
+      if (changed && opts.refit && viewAtFit) { fit(); return; }
+      if (on && !opts.refit && (changed || COMPACT.matches)) viewAtFit = false;
+      if (on && opts.reveal) reveal(opts.reveal);
+    }
+    function reveal(id) {
+      var n = byId[id]; if (!n) return;
+      var vr = visibleRegion(), p = project(n);
+      if (p.x >= vr.x0 + 12 && p.x <= vr.x1 - 12 && p.y >= vr.y0 + 12 && p.y <= vr.y1 - 12) return;
+      view.x += (vr.x0 + vr.x1) / 2 - p.x; view.y += (vr.y0 + vr.y1) / 2 - p.y;
+      viewAtFit = false; apply();
+    }
+    if (inspToggle) inspToggle.addEventListener("click", function (ev) {
+      ev.stopPropagation(); setInspectorOpen(inspCollapsed(), { refit: true });
+    });
+    function onCompactChange() { setInspectorOpen(!COMPACT.matches, { refit: true }); }
+    if (COMPACT.addEventListener) COMPACT.addEventListener("change", onCompactChange);
+    else if (COMPACT.addListener) COMPACT.addListener(onCompactChange);
 
     /* ---------------- reveal ---------------- */
     var locked = null, sourceOrigin = null;
@@ -713,7 +899,10 @@
       });
     }
     function preview(id) { if (sourceOrigin) return; paint(id); inspect(id); }
-    function select(id) { sourceOrigin = null; locked = id; paint(id); inspect(id); }
+    function select(id) {
+      sourceOrigin = null; locked = id; paint(id); inspect(id);
+      if (id && (inspCollapsed() || COMPACT.matches)) setInspectorOpen(true, { reveal: id });
+    }
 
     function authorityBlock(title, val, cls) {
       if (val === null || val === undefined || val === "") return "";
@@ -780,6 +969,7 @@
     function inspectSource(id, originId) {
       var o = P.byId[id];
       var box = document.getElementById("insp");
+      var body = document.getElementById("inspbody") || box;
       if (!o || o.class !== "CFW-S") return false;
       sourceOrigin = originId || sourceOrigin || null;
       var h = '<div class="panel-h">CFW-S — evidence owner · inspector plane</div>';
@@ -835,10 +1025,11 @@
       h += '<div class="note">This evidence owner sits in the inspector plane by the atlas\u2019s ' +
            'declared plane assignment. It is searchable and resolvable by exact identifier, and ' +
            'it is never promoted into the graph.</div>';
-      box.innerHTML = h;
+      body.innerHTML = h;
       box.style.removeProperty("--st");          // neutral chrome, no governed state
       box.scrollTop = 0;
       wireInspector();
+      if (inspCollapsed() || COMPACT.matches) setInspectorOpen(true);
       announce("Evidence owner " + o.id + ", " + String(o.work || o.label).slice(0, 80));
       return true;
     }
@@ -876,9 +1067,10 @@
 
     function inspect(id) {
       var box = document.getElementById("insp");
+      var body = document.getElementById("inspbody") || box;
       if (id !== locked) evShowAll = false;
       if (!id || !byId[id]) {
-        box.innerHTML = '<div class="panel-h">inspector</div>' +
+        body.innerHTML = '<div class="panel-h">inspector</div>' +
           '<div class="idle">Hover a concept to preview it. Click to lock. Evidence owners, ' +
           'quotation fidelity and authority detail resolve here — never in hue, and never ' +
           'in position.<br><br>Use <b>atlas</b> in the top bar to search all 1,027 objects by ' +
@@ -888,7 +1080,7 @@
       var n = byId[id];
       if (n.kind !== "leaf") {
         var vc = n.kind === "region" ? (regionVis[n.id] || 0) : (branchVis[n.id] || 0);
-        box.innerHTML = '<div class="panel-h">' + esc(n.kind) + '</div>' +
+        body.innerHTML = '<div class="panel-h">' + esc(n.kind) + '</div>' +
           '<div class="name">' + esc(n.label) + '</div>' +
           '<div class="field"><span class="lbl">objects under it</span><span class="val">' +
           (filtering() ? vc + " in this section, of " + n.count : n.count) + '</span></div>' +
@@ -961,7 +1153,7 @@
           h += '<button class="showall" type="button" data-showall="1">show all ' + ev.length +
                ' evidence owners</button>';
       }
-      box.innerHTML = h;
+      body.innerHTML = h;
       box.style.setProperty("--st", "var(--state-" + st + ")");
       box.scrollTop = 0;
       wireInspector();
@@ -1160,7 +1352,11 @@
     document.addEventListener("keydown", function (ev) {
       if (ev.key !== "Escape") return;
       if (qInp.value.trim()) { qInp.value = ""; runSearch(); qInp.focus(); announce("search cleared"); }
-      else if (sourceOrigin || locked) { select(null); announce("selection cleared"); }
+      else if (sourceOrigin || locked) {
+        select(null);
+        if (COMPACT.matches) setInspectorOpen(false);
+        announce("selection cleared");
+      }
       else if (filtering()) { resetFilters(true); }
       else if (document.body.classList.contains("atlas-open")) { openPanel(false); btn.focus(); }
     });
@@ -1169,6 +1365,7 @@
     document.getElementById("zout").addEventListener("click", function () { zoom(1 / 1.3); });
     document.getElementById("zfit").addEventListener("click", fit);
 
+    if (COMPACT.matches) setInspectorOpen(false);
     inspect(null);
     computeVisible();
     paintVisibility();
@@ -1186,6 +1383,9 @@
       inspectSource: inspectSource,
       centreOn: centreOn, focusGroup: focusGroup,
       openPanel: openPanel,
+      setInspectorOpen: setInspectorOpen,
+      atFit: function () { return viewAtFit; },
+      lockedId: function () { return locked; },
       setFilter: function (dim, vals) {
         panel.querySelectorAll('input[data-dim="' + dim + '"]').forEach(function (cb) {
           if (!cb.disabled) cb.checked = vals.indexOf(cb.value) >= 0;

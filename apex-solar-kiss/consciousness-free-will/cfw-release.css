@@ -13,19 +13,25 @@
  * THE MODULE any more. The root-vendored file itself stays where it is — other
  * subpages consume it.
  *
- * The engine's own stylesheet (cfw-atlas.css) is vendored byte-identical from the
- * approved internal package and is NOT edited here. This file adds only what the
+ * The engine's own stylesheet (cfw-atlas.css) came from the approved internal
+ * package; the engine and that stylesheet are maintained in this repo and are no
+ * longer byte-identical to it. This file edits neither. It adds only what the
  * public release needs: the ASK wordmark in the bar, the conclusions layer, and
- * the responsive contract. It defines NO token: every colour, size and spacing
+ * the responsive contract. It defines NO token: every color, size and spacing
  * value below resolves to a design-system-ASK custom property.
  *
  * RESPONSIVE CONTRACT
  *   wide    >= 1024   full interactive map + atlas; the conclusions are a link
- *   tablet  768-1023  full map; legend and caption collapsed by default; touch
- *   small   <  768    the map keeps its two-row application bar; it is never
- *                     shrunk and presented as responsive. The conclusions are
+ *   tablet  768-1023  full map; legend and caption collapsed by default
+ *   small   <  768    the map keeps its two-row application bar and opens with
+ *                     the inspector collapsed to a pill, as a touch screen at
+ *                     most 520px tall also does; opening a record expands the
+ *                     inspector as a sheet across the top. The conclusions are
  *                     a separate route rather than a landing overlay, so a
  *                     small screen reaches them by navigating, not by a mode.
+ *   every   width     one finger pans, two fingers pinch around the fingers, a
+ *                     tap selects, and Fit keeps the drawing's extent clear of
+ *                     the chrome it reserves
  */
 
 /* ---- ASK wordmark in the engine bar ------------------------------------- */
@@ -268,6 +274,12 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
   .bar .bar-actions .bar-conclusions { width: 100%; min-width: 0; }
   .rulings dl { grid-template-columns: 1fr; gap: var(--space-1) 0; }
   .rulings dt { margin-top: var(--space-2); }
+
+  /* the map's inspector: a sheet across the top while expanded, a pill at the top
+     right while collapsed; inset past the canvas corner ticks */
+  .inspector { top: var(--space-5); right: var(--space-5); left: var(--space-5);
+               width: auto; max-height: 46%; }
+  body.insp-collapsed .inspector { left: auto; }
 }
 /* The former `@media (min-width: 768px) { .orient-enter { display: none } }` is
    RETIRED. It hid the bottom action above small because the map was already the
