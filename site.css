@@ -490,9 +490,13 @@ html:has(> body > .shell) { overflow-x: clip; }
 /* Hover adapts the SCRIM ONLY. The canonical `opacity: 0.92` limb is no longer
    overridden here: holding it at 1 forked this one control away from the family
    hover the module defines, for no on-image reason — the scrim already carries
-   the legibility work. The border stays a local value because a photograph is
-   underneath and the two white steps are what read against it. */
-.gal-card .gal-link:hover { background: rgba(0,0,0,.72); border-color: rgba(255,255,255,.45); }
+   the legibility work. */
+.gal-card .gal-link:hover { background: rgba(0,0,0,.72); }
+/* Hover and keyboard focus take the module's shared magenta edge over the scrim.
+   The resting border above would otherwise win on source order and hold it back,
+   and in dark, where the module paints no ring, focus would match rest. */
+.gal-card .gal-link:hover,
+.gal-card .gal-link:focus-visible { border-color: var(--ask-emphasis-magenta); }
 
 /* ---------- Asymptotic: philosophy (collapsible, default open) ---------- */
 .philosophy { border-top: 1px solid var(--line-1); padding-top: var(--space-4); margin-top: var(--space-2); }

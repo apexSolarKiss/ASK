@@ -310,6 +310,10 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
    Foreground and the dot carry it. */
 body.filtering .bar .atlas-trigger { border-color: var(--fg-1); }
 body.filtering .bar .atlas-trigger .dot2 { background: var(--fg-1); }
+/* Hover and focus still take the shared magenta edge while filtering; the dot
+   keeps carrying the filter. */
+body.filtering .bar .atlas-trigger:hover,
+body.filtering .bar .atlas-trigger:focus-visible { border-color: var(--ask-emphasis-magenta); }
 
 /* ---- source links in the inspector --------------------------------------
    The inspector now renders locators as either a "source link" or a "citation",
