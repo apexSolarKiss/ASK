@@ -307,7 +307,8 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
 }
 /* An active filter is UI STATE, not a governed state, and it must stay inside the
    one compact-action grammar: no weight change, no uppercase, no second geometry.
-   Foreground and the dot carry it. */
+   At rest the border and dot carry the filter; during hover or keyboard focus,
+   the dot retains it. */
 body.filtering .bar .atlas-trigger { border-color: var(--fg-1); }
 body.filtering .bar .atlas-trigger .dot2 { background: var(--fg-1); }
 /* Hover and focus still take the shared magenta edge while filtering; the dot
