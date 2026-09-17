@@ -86,10 +86,10 @@ surface treatments, of which the page uses the surface axes for its held-questio
 rulings, and the attention rail and its label) and `surface-document-overflow.js`
 (the register's optional overflow cue) are vendored the same way — pinned,
 byte-identical, never hand-edited here. The conclusions page consumes all three,
-and the panel rule for its held-question rulings; the release layer,
-`cfw-release.css`, keeps only the conclusions' reading measure, rows and grids,
-count figures, search and section error line. The map consumes none of the
-three.
+and the panel rule for its held-question rulings; its own layer,
+`cfw-conclusions.css`, keeps only the reading measure, rows and grids, count
+figures, search and section error line. The map keeps its own layer,
+`cfw-release.css`, and consumes none of the three.
 
 **The browser-icon set is inherited too.** `favicon.svg`, `favicon-32.png`,
 `favicon.ico` and `apple-touch-icon.png` are vendored from `design-system-ASK`,

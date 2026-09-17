@@ -86,7 +86,7 @@
   /* PRESENTATION. Each element takes a role from the vendored document register
      (surface-document.css), the vendored panel rule (surface-panel.css) or the
      vendored surface treatments (surface-treatments.css); the local class stays
-     beside it as a layout hook for cfw-release.css. A class changes how a string
+     beside it as a layout hook for cfw-conclusions.css. A class changes how a string
      looks, never which string is written or in what order.
      A held-question ruling is a separate surface set in the reading flow, not a
      raised panel: one material that does not blur, free corners and FLUSH
