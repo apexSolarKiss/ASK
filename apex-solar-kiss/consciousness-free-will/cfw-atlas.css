@@ -354,7 +354,11 @@ body.atlas-open .atlas-panel { display: block; }
 .hud .fstate.active { color: var(--fg-1); font-weight: 500; }
 
 /* ---- keyboard: a visible focus ring on every reachable control ---- */
-.atlas-panel :focus-visible, .bar :focus-visible, .hud :focus-visible,
+/* Bar compact actions are excluded: surface-action.css paints their focus with the
+   shared magenta edge and keeps their pill, so a ring here would be a second
+   indicator on a reshaped corner. The exclusion sits inside :where() so the rule
+   keeps its specificity and the themer's own pill still wins on source order. */
+.atlas-panel :focus-visible, .bar :focus-visible:where(:not(.surface-action)), .hud :focus-visible,
 .inspector :focus-visible {
   outline: 2px solid var(--fg-1); outline-offset: 2px; border-radius: var(--radius-sm);
 }
