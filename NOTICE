@@ -4,8 +4,8 @@ Copyright 2026 Andrew S Klug // ASK
 The ASK meta-brand public landing site — a reference implementation of the
 ASK design family.
 
-This product vendors foundations, one pattern, three visual rules, and the
-canonical browser-icon set from design-system-ASK
+This product vendors foundations, one pattern, five visual rules with one
+optional helper, and the canonical browser-icon set from design-system-ASK
 (github.com/apexSolarKiss/design-system-ASK):
   - colors_and_type.css        — canonical tokens (Tier 1 + Tier 2)
   - fonts/                      — Inter + JetBrains Mono variable webfonts (OFL; see fonts/*-OFL.txt)
@@ -41,6 +41,24 @@ canonical browser-icon set from design-system-ASK
                                  deliberately sets NO foreground: the
                                  contextual text colour remains this site's to
                                  choose, supplied by the consuming region
+  - surface-document.css       — the shared document register, vendored as a
+                                 pinned byte-identical copy and not modified
+                                 here. Presentation only: text roles, the space
+                                 between them, the hierarchy rail, quotation
+                                 and structured text. The CFW conclusions page at
+                                 apex-solar-kiss/consciousness-free-will/
+                                 consumes it
+  - surface-treatments.css     — the shared surface treatments, vendored as a
+                                 pinned byte-identical copy and not modified
+                                 here. Presentation only; the CFW conclusions
+                                 page consumes its surface axes, attention rail
+                                 and label
+  - surface-document-overflow.js
+                               — the document register's optional overflow-cue
+                                 helper, vendored as a pinned byte-identical
+                                 copy and not modified here. It reports whether
+                                 a preformatted block is wider than its box; it
+                                 changes no text
   - favicon.svg, favicon-32.png,
     favicon.ico,
     apple-touch-icon.png         — the canonical ASK browser-icon set, vendored

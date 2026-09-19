@@ -37,7 +37,17 @@
   <link rel="stylesheet" href="/colors_and_type.css">
   <link rel="stylesheet" href="/surface-action.css">
   <link rel="stylesheet" href="/surface-shell.css">
-  <link rel="stylesheet" href="/apex-solar-kiss/consciousness-free-will/cfw-release.css">
+  <!-- The conclusions take their presentation from three more root-vendored visual
+       rules: the panel rule and the surface treatments for the held-question
+       rulings' surface and the attention rail, and the document register for every
+       heading, paragraph, label, quotation and structured block. They load in the
+       owner's order, before this page's own layer, which keeps the page's layout,
+       count figures, search and section error line. The map's layer,
+       cfw-release.css, is not loaded here. -->
+  <link rel="stylesheet" href="/surface-panel.css">
+  <link rel="stylesheet" href="/surface-document.css">
+  <link rel="stylesheet" href="/surface-treatments.css">
+  <link rel="stylesheet" href="/apex-solar-kiss/consciousness-free-will/cfw-conclusions.css">
 </head>
 <body>
   <div class="surface">
@@ -63,75 +73,89 @@
     <hr class="surface-rule">
 
     <main class="surface-payload">
-      <div class="cfw-conclusions">
+      <div class="cfw-conclusions doc-flow">
 
-        <p class="orient-status">
-          <span class="tag">release 1.2</span>
-          <span class="tag">structured survey</span>
-          <span class="tag">ASK conclusion</span>
-          <span class="tag">ASK prospective axis</span>
-          <span class="tag">no question wholly answered</span>
-          <span class="tag">family generation v11</span>
-        </p>
+        <div class="doc-group">
+          <p class="orient-status">
+            <span class="tag doc-label">release 1.2</span>
+            <span class="tag doc-label">structured survey</span>
+            <span class="tag doc-label">ASK conclusion</span>
+            <span class="tag doc-label">ASK prospective axis</span>
+            <span class="tag doc-label">no question wholly answered</span>
+            <span class="tag doc-label">family generation v11</span>
+          </p>
 
-        <!-- The SECOND action into the map, at the head of the payload. The map is
-             the other half of this artifact and a reader arriving here should not
-             have to reach the end of the conclusions to find the way in. The note
-             is deliberately NOT repeated: it explains what the map is, which is
-             worth saying once, at the exit. -->
-        <div class="orient-enter orient-enter--top">
-          <a class="chip surface-action" href="/apex-solar-kiss/consciousness-free-will/map/">explore the map &gt;&gt;</a>
+          <!-- The SECOND action into the map, at the head of the payload. The map is
+               the other half of this artifact and a reader arriving here should not
+               have to reach the end of the conclusions to find the way in. The note
+               is deliberately NOT repeated: it explains what the map is, which is
+               worth saying once, at the exit. -->
+          <div class="orient-enter orient-enter--top doc-actions">
+            <a class="chip surface-action" href="/apex-solar-kiss/consciousness-free-will/map/">explore the map &gt;&gt;</a>
+          </div>
         </div>
 
-        <div class="orient-prose">
-          <p>A survey of what the obtained literature does and does not settle about
+        <div class="orient-prose doc-prose">
+          <p class="doc-lede">A survey of what the obtained literature does and does not settle about
           consciousness and free will, and where those questions touch ASK's own
           source-of-intent architecture. It is <b>a structured survey, not method
           doctrine</b>. Where ASK has ruled, the ruling is labelled as ASK's. Where ASK
           did not rule, the question stays open and is shown as open.</p>
 
-          <p>The page carries the six held-question dispositions, followed by two
+          <p class="doc-lede">The page carries the six held-question dispositions, followed by two
           distinct ASK sections. The <b>ASK conclusion</b> is ASK's completed
           interpretation of the research. The <b>ASK prospective axis</b> is a
           question-space the research opened and did not survey; it is not a finding, and
           it settles nothing.</p>
         </div>
 
-        <h2 class="orient-h">what the research actually concluded</h2>
-        <p class="orient-note">Six held questions. None is wholly answered: three carry
-        conditional rulings; three are re-held in sharper form, one with a partial
-        ruling.</p>
-        <ol class="rulings" id="rulings"></ol>
+        <div class="doc-titled">
+          <h2 class="orient-h doc-section-title">what the research actually concluded</h2>
+          <p class="orient-note doc-body">Six held questions. None is wholly answered: three carry
+          conditional rulings; three are re-held in sharper form, one with a partial
+          ruling.</p>
+          <ol class="rulings doc-group" id="rulings"></ol>
+        </div>
 
         <!-- generic fallback only. cfw-release.js replaces this with the payload's own
              ask_conclusion.title, which is the section's real name. The full title is
              deliberately NOT written here: one source, and this is not it. -->
-        <h2 class="orient-h" id="askc-title">ASK conclusion</h2>
-        <div class="askc" id="askc" role="region" aria-labelledby="askc-title"></div>
+        <div class="doc-titled">
+          <h2 class="orient-h doc-section-title" id="askc-title">ASK conclusion</h2>
+          <div class="askc doc-section" id="askc" role="region" aria-labelledby="askc-title"></div>
+        </div>
 
         <!-- generic fallback only. cfw-release.js replaces this with the payload's own
              ask_next_axis.title, which is the section's real name. The full title is
              deliberately NOT written here: one source, and this is not it. The two
              sections render independently: neither can suppress the other. -->
-        <h2 class="orient-h" id="nextaxis-title">ASK prospective axis</h2>
-        <div class="askc" id="nextaxis" role="region" aria-labelledby="nextaxis-title"></div>
-
-        <h2 class="orient-h">what is in it</h2>
-        <ul class="counts" id="counts"></ul>
-
-        <h2 class="orient-h">look something up</h2>
-        <p class="orient-note">Search the objects and the evidence owners by name or by
-        exact identifier.</p>
-        <div class="orient-search">
-          <input id="oq" type="search" autocomplete="off" spellcheck="false"
-                 placeholder="e.g. bounded discretion, CFW-Q-003, Dworkin"
-                 aria-label="search objects and evidence owners">
+        <div class="doc-titled">
+          <h2 class="orient-h doc-section-title" id="nextaxis-title">ASK prospective axis</h2>
+          <div class="askc doc-section" id="nextaxis" role="region" aria-labelledby="nextaxis-title"></div>
         </div>
-        <div class="orient-results" id="ores" role="region" aria-live="polite"></div>
 
-        <div class="orient-enter">
-          <a class="chip surface-action" href="/apex-solar-kiss/consciousness-free-will/map/">explore the map &gt;&gt;</a>
-          <p class="orient-note">The full map is an interactive canvas: pan, zoom, filter
+        <div class="doc-titled">
+          <h2 class="orient-h doc-section-title">what is in it</h2>
+          <ul class="counts doc-body" id="counts"></ul>
+        </div>
+
+        <div class="doc-titled">
+          <h2 class="orient-h doc-section-title">look something up</h2>
+          <p class="orient-note doc-body">Search the objects and the evidence owners by name or by
+          exact identifier.</p>
+          <div class="orient-search">
+            <input id="oq" type="search" autocomplete="off" spellcheck="false"
+                   placeholder="e.g. bounded discretion, CFW-Q-003, Dworkin"
+                   aria-label="search objects and evidence owners">
+          </div>
+          <div class="orient-results" id="ores" role="region" aria-live="polite"></div>
+        </div>
+
+        <div class="orient-enter doc-group">
+          <div class="doc-actions">
+            <a class="chip surface-action" href="/apex-solar-kiss/consciousness-free-will/map/">explore the map &gt;&gt;</a>
+          </div>
+          <p class="orient-note doc-body">The full map is an interactive canvas: pan, zoom, filter
           and inspect. It is built for a wide screen.</p>
         </div>
 
@@ -160,6 +184,10 @@
        and no second copy of the payload. -->
   <script src="/apex-solar-kiss/consciousness-free-will/atlas-data.public.js"></script>
   <script src="/apex-solar-kiss/consciousness-free-will/cfw-release.js"></script>
+  <!-- The document register's optional overflow cue: a structured or preformatted
+       block wider than its box says which way it scrolls. Without it a block still
+       scrolls, and shows no cue. -->
+  <script src="/surface-document-overflow.js"></script>
   <script src="/surface-shell.js"></script>
   </body>
 </html>

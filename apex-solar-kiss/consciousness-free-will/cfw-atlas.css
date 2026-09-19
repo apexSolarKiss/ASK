@@ -357,10 +357,23 @@ body.atlas-open .atlas-panel { display: block; }
 /* Bar compact actions are excluded: surface-action.css paints their focus with the
    shared magenta edge and keeps their pill, so a ring here would be a second
    indicator on a reshaped corner. The exclusion sits inside :where() so the rule
-   keeps its specificity and the themer's own pill still wins on source order. */
+   keeps its specificity and the themer's own pill still wins on source order.
+   The inspector's source links are excluded the same way: surface-text-link.css
+   draws their focus on their own underline, and a ring would be a second
+   indicator, broken at every line cut of a wrapped URL. */
 .atlas-panel :focus-visible, .bar :focus-visible:where(:not(.surface-action)), .hud :focus-visible,
-.inspector :focus-visible {
+.inspector :focus-visible:where(:not(.surface-text-link)) {
   outline: 2px solid var(--fg-1); outline-offset: 2px; border-radius: var(--radius-sm);
 }
+/* The inspector panel is made focusable (tabindex -1) and focused by script
+   when a record opens from the map's search results or on arrival from the
+   conclusions page (openRecord in cfw-release.js), so a reader lands in it; a
+   record chosen on the canvas does not move focus there, and once focusable the
+   panel can also take focus from a click inside it. Whenever the panel itself
+   matches :focus-visible, the map's own ring marks it, drawn inside the panel in
+   place of the browser's. A focused descendant draws its own indicator instead
+   — a source link its underline, any other control the ring above — so the two
+   never show at once. */
+.inspector:focus-visible { outline: 2px solid var(--fg-1); outline-offset: -2px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
            overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }

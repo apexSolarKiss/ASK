@@ -3,22 +3,22 @@
  * THE ROUTE IS TWO PAGES. The conclusions are an ORDINARY SHELL PAGE at the
  * route root and consume surface-shell like every other subpage; the MAP, one
  * level deeper, is the retained fixed full-viewport application and remains the
- * shell exception. Both load this file, so it carries the map layer, the
- * conclusions layer, and the responsive contract for both.
+ * shell exception. This file is the MAP's layer. The conclusions page carries its
+ * own layout in cfw-conclusions.css, on the vendored document register, and does
+ * not load this file.
  *
  * The former orientation overlay's three footer destinations were this route's
- * only consumers of the root-vendored surface-text-link.css; the shell footer
- * now carries those destinations as compact actions. With the overlay retired
- * neither page has a `.surface-text-link` element left, so NEITHER PAGE LINKS
- * THE MODULE any more. The root-vendored file itself stays where it is — other
- * subpages consume it.
+ * consumers of the root-vendored surface-text-link.css; the shell footer now
+ * carries those destinations as compact actions. The MAP links the module for
+ * one population, the inspector's source links, which compose it (below). The
+ * conclusions page does not link it.
  *
  * The engine's own stylesheet (cfw-atlas.css) came from the approved internal
  * package; the engine and that stylesheet are maintained in this repo and are no
  * longer byte-identical to it. This file edits neither. It adds only what the
- * public release needs: the ASK wordmark in the bar, the conclusions layer, and
- * the responsive contract. It defines NO token: every color, size and spacing
- * value below resolves to a design-system-ASK custom property.
+ * public release needs: the ASK wordmark in the bar and the responsive contract.
+ * It defines NO token: every color, size and spacing value below resolves to a
+ * design-system-ASK custom property.
  *
  * RESPONSIVE CONTRACT
  *   wide    >= 1024   full interactive map + atlas; the conclusions are a link
@@ -50,134 +50,6 @@ html[data-theme="dark"]  .rel-mark .rel-mark-light { display: none; }
 html[data-theme="dark"]  .rel-mark .rel-mark-dark  { display: block; }
 html[data-theme="light"] .rel-mark .rel-mark-light { display: block; }
 html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
-
-/* ---- conclusions: the payload inside the vendored shell -----------------
-   The conclusions are no longer a fixed overlay; they are the route root's own
-   page, laid out inside `<main class="surface-payload">`. The shell declares no
-   payload layout by contract, so the reading measure is this route's to set —
-   and it is the SAME 68ch the orientation carried, so the split changes where
-   the conclusions live without changing how they read.
-
-   No padding and no auto margin here: `.surface` already owns the page's edge
-   inset and its own centring, and a second set would inset the payload twice.
-   Everything below — .orient-status, .orient-prose, .orient-h, .rulings,
-   .counts, .orient-search, .orient-results, .askc* — is shared with the former
-   overlay and is unchanged by the split. These are the surviving CONTENT roles,
-   and they keep the historical `orient-` prefix deliberately: renaming a
-   working selector to tidy a prefix is churn, not a repair. The LAYER those
-   roles used to sit in carried its own chrome; that chrome is gone, along with
-   the machinery in cfw-release.js that drove it. */
-.cfw-conclusions { max-width: 68ch; }
-
-.orient-status { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 var(--space-5); }
-.orient-status .tag {
-  font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: var(--fw-light);
-  letter-spacing: var(--tracking-normal); text-transform: uppercase;
-  color: var(--fg-2); border: 1px solid var(--line-2);
-  border-radius: var(--radius-pill); padding: 2px var(--space-3);
-}
-.orient-prose p, .orient-note { color: var(--fg-2); line-height: var(--lh-body); }
-.orient-prose p { margin: 0 0 var(--space-4); color: var(--fg-1); }
-.orient-note { font-size: var(--fs-small); margin: 0 0 var(--space-4); }
-.orient-h {
-  font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: var(--fw-light);
-  letter-spacing: var(--tracking-wide); text-transform: uppercase;
-  color: var(--fg-2); margin: var(--space-6) 0 var(--space-3);
-}
-
-/* ---- the six rulings ---------------------------------------------------- */
-.rulings { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); }
-.rulings li { border: 1px solid var(--line-2); border-radius: var(--radius-2); padding: var(--space-4); }
-.rulings .rq {
-  font-family: var(--font-mono); font-size: var(--fs-caption);
-  color: var(--fg-3); letter-spacing: var(--tracking-normal);
-}
-.rulings .rtitle {
-  display: block; margin: var(--space-2) 0; color: var(--fg-1);
-  font-size: var(--fs-body); line-height: var(--lh-heading);
-}
-.rulings .rdisp {
-  display: inline-block; font-family: var(--font-mono); font-size: var(--fs-caption);
-  text-transform: uppercase; letter-spacing: var(--tracking-normal);
-  color: var(--fg-2); border: 1px solid var(--line-2);
-  border-radius: var(--radius-pill); padding: 1px var(--space-3); margin-bottom: var(--space-3);
-}
-.rulings dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: var(--space-2) var(--space-3); }
-.rulings dt {
-  font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase;
-  letter-spacing: var(--tracking-normal); color: var(--fg-3); white-space: nowrap;
-}
-.rulings dd { margin: 0; color: var(--fg-2); font-size: var(--fs-small); line-height: var(--lh-body); }
-.rulings .ask-note { margin-top: var(--space-3); font-size: var(--fs-caption); color: var(--fg-3); }
-
-/* ---- counts ------------------------------------------------------------- */
-.counts { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
-.counts li { display: flex; gap: var(--space-3); align-items: baseline; }
-.counts .n {
-  font-family: var(--font-mono); font-size: var(--fs-body); color: var(--fg-1);
-  min-width: 5ch; text-align: right;
-}
-.counts .w { color: var(--fg-2); font-size: var(--fs-small); }
-
-/* ---- search ------------------------------------------------------------- */
-.orient-search input {
-  width: 100%; box-sizing: border-box;
-  font-family: var(--font-mono); font-size: var(--fs-small); color: var(--fg-1);
-  background: transparent; border: 1px solid var(--line-2);
-  border-radius: var(--radius-2); padding: var(--space-3);
-}
-.orient-search input:focus-visible { outline: 2px solid var(--fg-2); outline-offset: 2px; }
-/* Browser-native search clear control // retain its behavior, replace the platform
-   paint with ASK-owned tokens. The mark is drawn from two token-coloured diagonals,
-   so this surface owns its pixels instead of inheriting the platform default. */
-.orient-search input[type="search"]::-webkit-search-cancel-button {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 12px;
-  height: 12px;
-  margin-inline-start: var(--space-2);
-  cursor: pointer;
-  opacity: 0.68;
-  background:
-    linear-gradient(
-      45deg,
-      transparent 46%,
-      var(--fg-2) 46%,
-      var(--fg-2) 54%,
-      transparent 54%
-    ),
-    linear-gradient(
-      -45deg,
-      transparent 46%,
-      var(--fg-2) 46%,
-      var(--fg-2) 54%,
-      transparent 54%
-    );
-  background-repeat: no-repeat;
-}
-.orient-search input[type="search"]::-webkit-search-cancel-button:hover {
-  opacity: 1;
-}
-.orient-results { margin-top: var(--space-3); display: flex; flex-direction: column; gap: var(--space-2); }
-.orient-results .ores-r {
-  border: 1px solid var(--line-2); border-radius: var(--radius-2);
-  padding: var(--space-3); font-size: var(--fs-small); color: var(--fg-2);
-}
-.orient-results .ores-id {
-  font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-3);
-  display: block; margin-bottom: 2px;
-}
-.orient-results .ores-meta { display: block; margin-top: 4px; color: var(--fg-3); font-size: var(--fs-caption); }
-.orient-results .ores-none { color: var(--fg-3); font-size: var(--fs-small); }
-
-/* ---- the action into the map -------------------------------------------- */
-.orient-enter { margin-top: var(--space-6); }
-.orient-enter .orient-note { margin-top: var(--space-3); }
-/* The top instance carries no note, so it needs the separation the note would
-   have given it. One declaration: the inherited top margin already collapses
-   against the status row above, and this restores the same rhythm below, so
-   both actions sit in an identical space-6 gutter. */
-.orient-enter--top { margin-bottom: var(--space-6); }
 
 /* The three application-bar controls as one composition group. On a wide screen
    this must be invisible: the bar already sets an 18px gap between its own
@@ -272,8 +144,6 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
      narrowest widths. The contract sets `white-space: normal` precisely so a long
      label wraps rather than forcing overflow — do not add nowrap here. */
   .bar .bar-actions .bar-conclusions { width: 100%; min-width: 0; }
-  .rulings dl { grid-template-columns: 1fr; gap: var(--space-1) 0; }
-  .rulings dt { margin-top: var(--space-2); }
 
   /* the map's inspector: a sheet across the top while expanded, a pill at the top
      right while collapsed; inset past the canvas corner ticks */
@@ -317,13 +187,14 @@ body.filtering .bar .atlas-trigger:hover,
 body.filtering .bar .atlas-trigger:focus-visible { border-color: var(--ask-emphasis-magenta); }
 
 /* ---- source links in the inspector --------------------------------------
-   The inspector now renders locators as either a "source link" or a "citation",
-   and both sit in the same monospace row. Underline carries that difference
-   without introducing a colour token the design system does not define.
-   Focus is already handled by `.inspector :focus-visible` in cfw-atlas.css. */
-.inspector a.loc { color: var(--fg-1); text-decoration: underline;
-                   text-underline-offset: 2px; text-decoration-thickness: 1px; }
-.inspector a.loc:hover { color: var(--fg-high-contrast); }
+   The inspector renders locators as either a "source link" or a "citation", in
+   the same monospace row. A source link composes the shared text-link grammar
+   (class="loc surface-text-link", surface-text-link.css): the partial magenta
+   underline at rest, the full magenta underline on hover and the module's own
+   focus underline. The carrier sets no text color, so the link keeps its own
+   --fg-1 foreground here, above the row's secondary one; nothing else is
+   restated. cfw-atlas.css excludes these links from the inspector's focus ring. */
+.inspector a.loc.surface-text-link { color: var(--fg-1); }
 
 /* ---- accessibility structure --------------------------------------------
    The bar title is the document's single h1 and the subtitle a paragraph, so
@@ -343,15 +214,6 @@ body.filtering .bar .atlas-trigger:focus-visible { border-color: var(--ask-empha
   padding: var(--space-2) var(--space-3); text-decoration: none;
 }
 .skip:focus { transform: none; outline: 2px solid var(--fg-1); outline-offset: 2px; }
-
-/* Search results are controls: they open the record. On the map that is the
-   inspector in this document; on the conclusions page it is the map, named. */
-.orient-results button.ores-r {
-  display: block; width: 100%; text-align: left; font: inherit; color: inherit;
-  background: none; border: 0; cursor: pointer;
-}
-.orient-results button.ores-r:hover .ores-title { color: var(--fg-high-contrast); }
-.orient-results button.ores-r:focus-visible { outline: 2px solid var(--fg-1); outline-offset: 2px; }
 
 /* ---- theme selector -----------------------------------------------------
    Conformed to the design-system style guide's theme-selector grammar: a quiet
@@ -379,32 +241,3 @@ body.filtering .bar .atlas-trigger:focus-visible { border-color: var(--ask-empha
 .bar .themer:hover { opacity: 0.92; background: var(--surface-glass); }
 .bar .themer:active { transform: scale(0.97); }
 .bar .themer .themer-g { font-size: 1.05em; line-height: 1; }
-
-/* ---- ASK conclusion ------------------------------------------------------
-   Deliberately NOT styled like .rulings. A ruling is a survey disposition in a
-   bordered card; this is ASK's own prose and must not be read as one. */
-.askc { display: flex; flex-direction: column; gap: var(--space-4); }
-.askc-intro { margin: 0; color: var(--fg-3); font-size: var(--fs-small); font-style: italic; }
-.askc-pull, .askc-q {
-  margin: 0; padding-left: var(--space-4); border-left: 2px solid var(--line-2);
-  color: var(--fg-1); font-size: var(--fs-body); line-height: var(--lh-body);
-}
-.askc-sec { display: flex; flex-direction: column; gap: var(--space-3); }
-.askc-h {
-  margin: var(--space-4) 0 0; font-family: var(--font-mono); font-size: var(--fs-caption);
-  text-transform: lowercase; letter-spacing: var(--tracking-normal); color: var(--fg-3);
-}
-.askc-p { margin: 0; color: var(--fg-2); font-size: var(--fs-small); line-height: var(--lh-body); }
-.askc-ul { margin: 0; padding-left: var(--space-4); color: var(--fg-2); font-size: var(--fs-small); }
-.askc-ul li { margin-bottom: var(--space-2); line-height: var(--lh-body); }
-.askc-pre {
-  margin: 0; padding: var(--space-3); overflow-x: auto;
-  border: 1px solid var(--line-2); border-radius: var(--radius-2);
-  font-family: var(--font-mono); font-size: var(--fs-caption);
-  line-height: var(--lh-body); color: var(--fg-2); white-space: pre;
-}
-.askc-compress .askc-pull { color: var(--fg-1); }
-.askc-error {
-  margin: 0; padding: var(--space-3); color: var(--fg-2); font-size: var(--fs-small);
-  line-height: var(--lh-body); border: 1px solid var(--line-2); border-radius: var(--radius-2);
-}
