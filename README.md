@@ -75,9 +75,10 @@ adaptation described below. The text-link rule is **opt-in by class** — only a
 element carrying `.surface-text-link` takes it — and it sets no foreground at
 all: the contextual text colour stays consumer-owned, supplied by whichever
 region the link sits in. Six unboxed prose destinations across five subpages
-consume it; every shaped control, mark, image link, breadcrumb and footer action
-is excluded by design, and neither CFW page consumes it at all now that the
-orientation footer is gone.
+consume it. The CFW map additionally consumes it for one separate population,
+the inspector's source links, whose `--fg-1` foreground the map's own layer
+supplies; the CFW conclusions page does not load it. Every shaped control, mark,
+image link, breadcrumb and footer action is excluded by design.
 
 **The CFW conclusions page adopts the document register.** `surface-document.css`
 (the shared document register: text roles, the space between them, the hierarchy

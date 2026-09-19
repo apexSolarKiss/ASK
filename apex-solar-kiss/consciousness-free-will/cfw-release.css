@@ -8,11 +8,10 @@
  * not load this file.
  *
  * The former orientation overlay's three footer destinations were this route's
- * only consumers of the root-vendored surface-text-link.css; the shell footer
- * now carries those destinations as compact actions. With the overlay retired
- * neither page has a `.surface-text-link` element left, so NEITHER PAGE LINKS
- * THE MODULE any more. The root-vendored file itself stays where it is — other
- * subpages consume it.
+ * consumers of the root-vendored surface-text-link.css; the shell footer now
+ * carries those destinations as compact actions. The MAP links the module for
+ * one population, the inspector's source links, which compose it (below). The
+ * conclusions page does not link it.
  *
  * The engine's own stylesheet (cfw-atlas.css) came from the approved internal
  * package; the engine and that stylesheet are maintained in this repo and are no
@@ -188,13 +187,14 @@ body.filtering .bar .atlas-trigger:hover,
 body.filtering .bar .atlas-trigger:focus-visible { border-color: var(--ask-emphasis-magenta); }
 
 /* ---- source links in the inspector --------------------------------------
-   The inspector now renders locators as either a "source link" or a "citation",
-   and both sit in the same monospace row. Underline carries that difference
-   without introducing a colour token the design system does not define.
-   Focus is already handled by `.inspector :focus-visible` in cfw-atlas.css. */
-.inspector a.loc { color: var(--fg-1); text-decoration: underline;
-                   text-underline-offset: 2px; text-decoration-thickness: 1px; }
-.inspector a.loc:hover { color: var(--fg-high-contrast); }
+   The inspector renders locators as either a "source link" or a "citation", in
+   the same monospace row. A source link composes the shared text-link grammar
+   (class="loc surface-text-link", surface-text-link.css): the partial magenta
+   underline at rest, the full magenta underline on hover and the module's own
+   focus underline. The carrier sets no text color, so the link keeps its own
+   --fg-1 foreground here, above the row's secondary one; nothing else is
+   restated. cfw-atlas.css excludes these links from the inspector's focus ring. */
+.inspector a.loc.surface-text-link { color: var(--fg-1); }
 
 /* ---- accessibility structure --------------------------------------------
    The bar title is the document's single h1 and the subtitle a paragraph, so

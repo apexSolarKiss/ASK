@@ -151,13 +151,19 @@
      with its words and holds a blank line. The family is then read from the
      payload itself, independently of the table: a labeled diagram is a code
      block holding a run of two or more blank lines (the space between two
-     groups). Every labeled diagram the payload holds must be named, their
-     number must be COMPACT_FAMILY's, and the named entries that are not
-     labeled diagrams — the simulation siblings — must number its siblings. Any
-     mismatch fails the section with its error line, so a payload edit can
-     never silently restore a loose diagram or leave a new labeled diagram
-     loose. The siblings are named by the table, not read from the payload: a
-     new diagram with single blank lines only is not detected. */
+     groups). Every labeled diagram the payload holds must be named, and their
+     number must be COMPACT_FAMILY's. The simulation siblings are read from the
+     payload the same way: a sibling is a code block that is not a labeled
+     diagram, holds a blank line and closes a statement with a line that is
+     exactly ">>" — at the left edge, with nothing else on it. That is the shape
+     of the three variants in conclusion 6, and of no other block in either
+     payload. Every sibling the payload holds must be named, their number must
+     be COMPACT_FAMILY's siblings, and every named entry must be a labeled
+     diagram or a sibling. Any mismatch fails the section with its error line,
+     so a payload edit can never silently restore a loose diagram or leave a new
+     labeled diagram or a new simulation variant loose. The family ends where
+     its shape ends: a block whose closer is indented or carries anything else
+     on its line, or that has none, is outside it. */
   var QUOTE_ROLE = {
     "ask-conclusion-2": { 1: ["display", "How do I know "],
                           4: ["display", "How can I know that "],
@@ -269,7 +275,10 @@
         for (var i = 1; i < b.lines.length; i++) if (b.lines[i] === "" && b.lines[i - 1] === "") return true;
         return false;
       }
-      var siblings = 0;
+      function sibling(b) {
+        return !!b && b.type === "code" && Array.isArray(b.lines) && !labeled(b) &&
+          b.lines.indexOf(">>") >= 0 && b.lines.indexOf("") >= 0;
+      }
       Object.keys(table).forEach(function (sid) {
         var run = runs[sid];
         if (!Array.isArray(run)) acFail("COMPACT names " + sid + ", which is not in the payload");
@@ -278,20 +287,21 @@
           if (!b || b.type !== "code" || !Array.isArray(b.lines)) acFail("COMPACT " + sid + "[" + j + "] is not a code block");
           if (!acOpens(b, table[sid][j])) acFail("COMPACT " + sid + "[" + j + "] no longer opens with its words");
           if (b.lines.indexOf("") < 0) acFail("COMPACT " + sid + "[" + j + "] holds no blank line");
-          if (!labeled(b)) siblings++;
+          if (!labeled(b) && !sibling(b)) acFail("COMPACT " + sid + "[" + j + "] is neither a labeled diagram nor a simulation sibling");
         });
       });
-      var found = 0;
+      var found = 0, siblings = 0;
       Object.keys(runs).forEach(function (sid) {
         if (!Array.isArray(runs[sid])) return;
         runs[sid].forEach(function (b, j) {
-          if (!labeled(b)) return;
-          found++;
-          if (!(table[sid] && Object.prototype.hasOwnProperty.call(table[sid], String(j)))) acFail("the payload holds a labeled diagram COMPACT does not name: " + sid + "[" + j + "]");
+          var kind = labeled(b) ? "labeled" : sibling(b) ? "sibling" : "";
+          if (!kind) return;
+          if (kind === "labeled") found++; else siblings++;
+          if (!(table[sid] && Object.prototype.hasOwnProperty.call(table[sid], String(j)))) acFail("the payload holds a " + kind + " diagram COMPACT does not name: " + sid + "[" + j + "]");
         });
       });
       if (found !== family.labeled) acFail("the payload holds " + found + " labeled diagrams where " + family.labeled + " are expected");
-      if (siblings !== family.siblings) acFail("COMPACT names " + siblings + " sibling diagrams where " + family.siblings + " are expected");
+      if (siblings !== family.siblings) acFail("the payload holds " + siblings + " sibling diagrams where " + family.siblings + " are expected");
     }
 
     /* STRUCTURED TEXT. A code block whose indentation is structure is drawn on the
@@ -480,7 +490,7 @@
       var d = el("button", "ores-r");
       d.type = "button";
       d.setAttribute("data-open", r.o.id);
-      var title = el("span", "ores-title doc-body");
+      var title = el("span", "ores-title doc-entry-title");
       text(title, r.o.label || r.o.work || r.o.id);
       d.appendChild(text(el("span", "ores-id doc-meta"), r.o.id + "  ·  " + r.o.class));
       d.appendChild(title);

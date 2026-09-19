@@ -56,7 +56,7 @@
   width: 100%; box-sizing: border-box;
   font-family: var(--font-mono); font-size: var(--fs-small); color: var(--fg-1);
   background: transparent; border: 1px solid var(--line-2);
-  border-radius: var(--radius-2); padding: var(--space-3);
+  border-radius: var(--radius-sm); padding: var(--space-3);
 }
 .orient-search input:focus-visible { outline: 2px solid var(--fg-2); outline-offset: 2px; }
 /* Browser-native search clear control // retain its behavior, replace the platform
@@ -92,19 +92,22 @@
 }
 .orient-results { display: flex; flex-direction: column; gap: var(--space-2); }
 .orient-results .ores-r {
-  border: 1px solid var(--line-2); border-radius: var(--radius-2);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm);
   padding: var(--space-3); font-size: var(--fs-small); color: var(--fg-2);
 }
 .orient-results .ores-id, .orient-results .ores-title { display: block; }
 .orient-results .ores-id { margin-bottom: 2px; }
 .orient-results .ores-meta { display: block; margin-top: 4px; }
 
-/* Search results are controls: they open the record on the map, named. */
+/* Search results are controls: they open the record on the map, named. A
+   result keeps its 1px --line-2 edge at rest. Hover turns that edge magenta and
+   leaves every text foreground as its role sets it; keyboard focus draws its own
+   outline, so hover never stands in for focus. */
 .orient-results button.ores-r {
   display: block; width: 100%; text-align: left; font: inherit; color: inherit;
-  background: none; border: 0; cursor: pointer;
+  background: none; cursor: pointer;
 }
-.orient-results button.ores-r:hover .ores-title { color: var(--fg-high-contrast); }
+.orient-results button.ores-r:hover { border-color: var(--ask-emphasis-magenta); }
 .orient-results button.ores-r:focus-visible { outline: 2px solid var(--fg-1); outline-offset: 2px; }
 
 /* ---- ASK conclusion ------------------------------------------------------
@@ -114,7 +117,7 @@
 .askc-ul { margin: 0; padding-left: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
 .askc-error {
   margin: 0; padding: var(--space-3); color: var(--fg-2); font-size: var(--fs-small);
-  line-height: var(--lh-body); border: 1px solid var(--line-2); border-radius: var(--radius-2);
+  line-height: var(--lh-body); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
 }
 
 /* ---- small screen ------------------------------------------------------- */

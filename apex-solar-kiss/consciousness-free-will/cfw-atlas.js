@@ -940,7 +940,7 @@
       for (var i = 0; i < parts.length; i++) {
         var t = parts[i], L = /^https?:\/\//i.test(t) ? linkURL(t) : null;
         if (L) { links++;
-          out += '<a class="loc" href="' + esc(L.url) + '" target="_blank" rel="noopener noreferrer">' +
+          out += '<a class="loc surface-text-link" href="' + esc(L.url) + '" target="_blank" rel="noopener noreferrer">' +
                  esc(L.url) + '</a>' + esc(L.tail); }
         else out += esc(t);
       }
