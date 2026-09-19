@@ -41,7 +41,11 @@
 .counts { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
 .counts li { display: flex; gap: var(--space-3); align-items: baseline; }
 /* The figure column. The document register has no numeral role; this keeps the
-   route's own. */
+   route's own, declared as the "CFW count numeral" profile in role-profiles.json.
+   The register's conformance check accepts the six figures as that declared
+   exception (C10) instead of failing them as off-family text inside the counts
+   line (C8); it does not measure their metrics. The figure takes the counts
+   line's weight and leading. */
 .counts .n {
   font-family: var(--font-mono); font-size: var(--fs-body); color: var(--fg-1);
   min-width: 5ch; text-align: right;

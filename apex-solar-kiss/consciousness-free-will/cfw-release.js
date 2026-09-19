@@ -126,15 +126,38 @@
      "display" is a SHORT quoted statement whose speaker the prose already names,
      and "quote" is the plain quotation anatomy for a longer one. The second is
      document prose: "prose". A quote block with no assignment keeps the plain
-     quotation anatomy.
+     quotation anatomy. Both quotation roles render one anatomy — body-sized text
+     behind the passage rail; the design system retired the larger display
+     variant — so "display" and "quote" differ only in what they record.
      ATTENTION. The magenta attention rail is assigned to the asymmetry passage:
      its lead-in and its diagram, as one unit.
      COMPRESSION_ACCENT. The magenta attention rail is assigned to the ASK
      conclusion's compression. No accent is assigned to the prospective axis, so
      its compression takes the label and no rail.
+     COMPACT. Every blank source line in the named diagrams is not rendered: in
+     these diagrams the blanks — after a label, before the ">>" that closes a
+     statement, between two groups — split one diagram into fragments. The
+     payload is unchanged. The set is chosen by STRUCTURAL FAMILY, not by which
+     diagrams a review happened to mark: every labeled diagram whose groups are
+     a label, a blank, its lines and two blanks before the next label (twelve, in
+     both payloads), and the three sibling simulation diagrams of conclusion 6.
 
-     Each entry is [role, opening words]; it applies only while its section id,
-     block index and opening words all still match. */
+     Each QUOTE_ROLE entry is [role, opening words] and applies only while its
+     section id, block index and opening words all still match; the
+     conclusion's distinctions run, which has no section id, is keyed
+     "ask_conclusion-distinctions". COMPACT is keyed by payload, then section,
+     then block index, to the block's opening words, and it FAILS CLOSED: before
+     anything renders, each entry must name a code block at its index that opens
+     with its words and holds a blank line. The family is then read from the
+     payload itself, independently of the table: a labeled diagram is a code
+     block holding a run of two or more blank lines (the space between two
+     groups). Every labeled diagram the payload holds must be named, their
+     number must be COMPACT_FAMILY's, and the named entries that are not
+     labeled diagrams — the simulation siblings — must number its siblings. Any
+     mismatch fails the section with its error line, so a payload edit can
+     never silently restore a loose diagram or leave a new labeled diagram
+     loose. The siblings are named by the table, not read from the payload: a
+     new diagram with single blank lines only is not detected. */
   var QUOTE_ROLE = {
     "ask-conclusion-2": { 1: ["display", "How do I know "],
                           4: ["display", "How can I know that "],
@@ -151,6 +174,28 @@
     "ask-conclusion-2": { from: 10, to: 11, opens: "The asymmetry is:", closes: "INSIDE THE OCCURRENCE", accent: "magenta" }
   };
   var COMPRESSION_ACCENT = { ask_conclusion: "magenta" };
+  var COMPACT = {
+    ask_conclusion: {
+      "ask_conclusion-distinctions": { 3: "CONSTITUTIVE QUESTION" },
+      "ask-conclusion-1": { 2: "FUNCTIONAL THINKING" },
+      "ask-conclusion-2": { 11: "INSIDE THE OCCURRENCE" },
+      "ask-conclusion-3": { 1: "SUBJECT S" },
+      "ask-conclusion-4": { 1: "CARTESIAN CERTAINTY" },
+      "ask-conclusion-5": { 3: "ANOTHER HUMAN" },
+      "ask-conclusion-6": { 2: "a rendered world is fed to an external conscious observer",
+                            5: "a simulated environment mediates interactions",
+                            7: "agents exist as causally organized processes" },
+      "ask-conclusion-8": { 2: "within a conscious occurrence" }
+    },
+    ask_next_axis: {
+      "ask-next-axis-1": { 2: "PRESENCE" },
+      "ask-next-axis-3": { 3: "SUSPENSION" },
+      "ask-next-axis-5": { 4: "SUPPOSE BOTH ARE NUMERICALLY THE PREDECESSOR" },
+      "ask-next-axis-7": { 5: "PROTECTION AGAINST SUFFERING" },
+      "ask-next-axis-8": { 1: "ACTIVE PATIENT" }
+    }
+  };
+  var COMPACT_FAMILY = { ask_conclusion: { labeled: 7, siblings: 3 }, ask_next_axis: { labeled: 5, siblings: 0 } };
 
   /* ---- ASK structured-text sections ------------------------------------
      ONE renderer, two payload objects. Both the ASK conclusion and the ASK
@@ -212,13 +257,51 @@
       return typeof words === "string" && acOpening(b).indexOf(words) === 0;
     }
 
+    /* COMPACT is checked whole before anything renders; see its note above. */
+    function acCompactCheck(AC) {
+      var table = COMPACT[key] || {};
+      var family = COMPACT_FAMILY[key] || { labeled: 0, siblings: 0 };
+      var runs = {};
+      runs[key + "-distinctions"] = AC.distinctions;
+      if (Array.isArray(AC.sections)) AC.sections.forEach(function (s) { if (s && s.id) runs[s.id] = s.blocks; });
+      function labeled(b) {
+        if (!b || b.type !== "code" || !Array.isArray(b.lines)) return false;
+        for (var i = 1; i < b.lines.length; i++) if (b.lines[i] === "" && b.lines[i - 1] === "") return true;
+        return false;
+      }
+      var siblings = 0;
+      Object.keys(table).forEach(function (sid) {
+        var run = runs[sid];
+        if (!Array.isArray(run)) acFail("COMPACT names " + sid + ", which is not in the payload");
+        Object.keys(table[sid]).forEach(function (j) {
+          var b = run[j];
+          if (!b || b.type !== "code" || !Array.isArray(b.lines)) acFail("COMPACT " + sid + "[" + j + "] is not a code block");
+          if (!acOpens(b, table[sid][j])) acFail("COMPACT " + sid + "[" + j + "] no longer opens with its words");
+          if (b.lines.indexOf("") < 0) acFail("COMPACT " + sid + "[" + j + "] holds no blank line");
+          if (!labeled(b)) siblings++;
+        });
+      });
+      var found = 0;
+      Object.keys(runs).forEach(function (sid) {
+        if (!Array.isArray(runs[sid])) return;
+        runs[sid].forEach(function (b, j) {
+          if (!labeled(b)) return;
+          found++;
+          if (!(table[sid] && Object.prototype.hasOwnProperty.call(table[sid], String(j)))) acFail("the payload holds a labeled diagram COMPACT does not name: " + sid + "[" + j + "]");
+        });
+      });
+      if (found !== family.labeled) acFail("the payload holds " + found + " labeled diagrams where " + family.labeled + " are expected");
+      if (siblings !== family.siblings) acFail("COMPACT names " + siblings + " sibling diagrams where " + family.siblings + " are expected");
+    }
+
     /* STRUCTURED TEXT. A code block whose indentation is structure is drawn on the
        hierarchy rail: its lines sit in parts, and the lines beneath a line sit in a
        rail, one rail per two-space level, nested in source order. The two spaces a
        level carries are drawn by the rail rather than typed; blank lines between
        two lines at one level stay typed inside their part; blank lines before a
        new part or rail are recorded as data-lead-lines. So every source line keeps
-       its line slot, and the source sequence can be rebuilt from the markup exactly.
+       its line slot, and the source sequence can be rebuilt from the markup exactly
+       — except in a COMPACT diagram, whose blank lines are not rendered.
        A block with no indented line, or whose lines this cannot represent exactly —
        an odd indent, a level skipped, a line that is only spaces or starts with
        another space character, more than three blank lines before a part, blank
@@ -262,19 +345,20 @@
       return root;
     }
 
-    function acBlock(b, role) {
+    function acBlock(b, role, compact) {
       if (!b || typeof b.type !== "string") acFail("malformed block");
       if (b.type === "paragraph") return acSpans(el("p", "askc-p doc-body"), b.spans);
       if (b.type === "quote") {
         /* Text ASK writes in its own voice is document prose, not quotation. */
         if (role === "prose") return acSpans(el("p", "askc-p doc-body"), b.spans);
-        var bq = el("blockquote", "askc-q doc-quote" + (role === "display" ? " doc-quote--display" : ""));
+        var bq = el("blockquote", "askc-q doc-quote");
         acSpans(bq.appendChild(el("p")), b.spans);
         return bq;
       }
       if (b.type === "code") {
         if (!Array.isArray(b.lines)) acFail("code block without lines");
-        return acStructured(b.lines) || text(el("pre", "askc-pre doc-pre"), b.lines.join("\n"));
+        var lines = compact ? b.lines.filter(function (l) { return l !== ""; }) : b.lines;
+        return acStructured(lines) || text(el("pre", "askc-pre doc-pre"), lines.join("\n"));
       }
       if (b.type === "list") {
         if (!Array.isArray(b.items)) acFail("list block without items");
@@ -287,6 +371,7 @@
     function acAppend(target, blocks, sectionId) {
       if (!Array.isArray(blocks)) acFail("block run is not an array");
       var roles = (sectionId && QUOTE_ROLE[sectionId]) || {};
+      var compact = (sectionId && (COMPACT[key] || {})[sectionId]) || {};
       var att = (sectionId && ATTENTION[sectionId]) || null;
       if (att && !(acOpens(blocks[att.from], att.opens) && acOpens(blocks[att.to], att.closes))) att = null;
       var into = target;
@@ -295,7 +380,7 @@
           into = target.appendChild(el("div", "askc-attention doc-group surface-emphasis-rail surface-emphasis--" + att.accent));
         }
         var entry = roles[j];
-        into.appendChild(acBlock(b, entry && acOpens(b, entry[1]) ? entry[0] : null));
+        into.appendChild(acBlock(b, entry && acOpens(b, entry[1]) ? entry[0] : null, Object.prototype.hasOwnProperty.call(compact, j)));
         if (att && j === att.to) into = target;
       });
     }
@@ -305,9 +390,10 @@
     try {
       if (!AC) acFail("payload object absent");
       if (typeof AC.title !== "string" || !AC.title) acFail("missing title");
+      acCompactCheck(AC);
       acSpans(frag.appendChild(el("p", "askc-intro doc-lede")), AC.introduction);
       acSpans(frag.appendChild(el("blockquote", "askc-pull doc-quote")).appendChild(el("p")), AC.pull_quote);
-      acAppend(frag, AC.distinctions, null);
+      acAppend(frag, AC.distinctions, key + "-distinctions");
 
       if (!Array.isArray(AC.sections) || AC.sections.length === 0) acFail("no sections");
       AC.sections.forEach(function (s, i) {
