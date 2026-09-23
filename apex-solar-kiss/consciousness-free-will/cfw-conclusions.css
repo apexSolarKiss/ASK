@@ -8,12 +8,14 @@
  * PRESENTATION COMES FROM THE VENDORED RULES. Every heading, paragraph, label,
  * quotation and preformatted block takes a role from surface-document.css, and
  * the space between roles comes from its compositions; a held-question ruling's
- * surface comes from surface-panel.css and surface-treatments.css, as does the
- * attention rail. index.html and cfw-release.js apply those classes beside the
- * historical `orient-` and `askc-` hooks, and the page loads those files before
- * this one. This file keeps what those rules leave to a consumer: the reading
- * measure, the rows and grids the page lays its content out in, the count
- * figures, the search and the section error line. It defines NO token.
+ * surface and each compression's summary panel come from surface-panel.css and
+ * surface-treatments.css, as do the authorial callout and attention rails.
+ * index.html and cfw-release.js apply those classes beside the historical
+ * `orient-` and `askc-` hooks, and the page loads those files before this one.
+ * This file keeps what those rules leave to a consumer: the reading measure,
+ * the rows and grids the page lays its content out in, the count figures, the
+ * search, the section error line and the space the compositions do not set
+ * after a list and before each compression panel. It defines NO token.
  *
  * LOAD ORDER   colors_and_type.css -> surface-action.css -> surface-shell.css
  *              -> surface-panel.css -> surface-document.css
@@ -115,6 +117,13 @@
    own surface; this is ASK's own prose, in ordinary flow, and must not be read as
    one. A list keeps its markers inside the measure. */
 .askc-ul { margin: 0; padding-left: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
+/* A list is its own group, not the lead-in to the passage after it: a set-apart
+   passage directly after a list takes the buffer the vendored register gives a
+   passage directly after a passage. */
+.askc-ul + :is(.doc-quote, .doc-pre, .surface-emphasis-rail) { margin-top: var(--space-5); }
+/* The compression closes its section's argument, so its panel stands further
+   from the passage it follows than one section stands from the next. */
+.askc-compress { margin-top: var(--space-6); }
 .askc-error {
   margin: 0; padding: var(--space-3); color: var(--fg-2); font-size: var(--fs-small);
   line-height: var(--lh-body); border: 1px solid var(--line-2); border-radius: var(--radius-sm);

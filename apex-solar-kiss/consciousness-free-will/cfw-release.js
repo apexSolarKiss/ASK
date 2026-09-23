@@ -119,21 +119,26 @@
   /* PRESENTATION ASSIGNMENTS, keyed to specific payload blocks. They choose a
      treatment and never a string or an order.
 
-     QUOTE_ROLE. The payload types a block "quote" both when it carries a
-     quotation — a question put, or words a speaker says — and when it carries text
-     ASK writes in its own voice: a thesis, a compression, a proposal, or the
-     prospective axis's own question. Quotation anatomy stays with the first:
-     "display" is a SHORT quoted statement whose speaker the prose already names,
-     and "quote" is the plain quotation anatomy for a longer one. The second is
-     document prose: "prose". A quote block with no assignment keeps the plain
-     quotation anatomy. Both quotation roles render one anatomy — body-sized text
-     behind the passage rail; the design system retired the larger display
-     variant — so "display" and "quote" differ only in what they record.
+     PASSAGE_ROLE. The payload types a block "quote" whenever the source set a
+     passage apart, and every such passage keeps a boundary: none falls back to
+     plain prose. Its role is WHOSE VOICE the passage is in, an editorial
+     assignment recorded here and never inferred from the payload type, the
+     element, boldness or a pair of quotation marks. "voice" is represented
+     voice — words the prose presents as someone else's — and renders as a
+     quotation (.doc-quote, the violet rail). "callout" is the document's own
+     thesis, posed question or contrast, in ASK's voice, and renders as a
+     paragraph of document body on the magenta emphasis rail
+     (.surface-emphasis-rail): it keeps its prose semantics and is not a
+     blockquote. PULL_ROLE assigns each section's opening statement the same
+     way; both openings are ASK's own theses. PASSAGE_POPULATION records how
+     many of each role, and how many attention passages, each payload holds.
      ATTENTION. The magenta attention rail is assigned to the asymmetry passage:
      its lead-in and its diagram, as one unit.
-     COMPRESSION_ACCENT. The magenta attention rail is assigned to the ASK
-     conclusion's compression. No accent is assigned to the prospective axis, so
-     its compression takes the label and no rail.
+     THE COMPRESSION of each section is a section synthesis: one flat summary
+     panel — the panel material, free corners, flush elevation, document
+     grouping — with a chip whose border alone takes the magenta accent, and the
+     compression on document body. The two compressions take the same
+     composition; their wording, and so their different status, is the payload's.
      COMPACT. Every blank source line in the named diagrams is not rendered: in
      these diagrams the blanks — after a label, before the ">>" that closes a
      statement, between two groups — split one diagram into fragments. The
@@ -142,10 +147,26 @@
      a label, a blank, its lines and two blanks before the next label (twelve, in
      both payloads), and the three sibling simulation diagrams of conclusion 6.
 
-     Each QUOTE_ROLE entry is [role, opening words] and applies only while its
-     section id, block index and opening words all still match; the
-     conclusion's distinctions run, which has no section id, is keyed
-     "ask_conclusion-distinctions". COMPACT is keyed by payload, then section,
+     PASSAGE_ROLE and ATTENTION are keyed by payload, then section; PULL_ROLE
+     and PASSAGE_POPULATION by payload alone. All four FAIL CLOSED, as COMPACT
+     does: before anything renders, every section they name must be in the
+     payload; every PASSAGE_ROLE entry must name a quote block at its index that
+     opens with its words, the block before it must open with its lead-in (or,
+     where the entry names none, the passage must open its run); every quote
+     block the payload holds must be named; the number of each role must be
+     PASSAGE_POPULATION's; each opening statement must open with its PULL_ROLE
+     words; ATTENTION must name PASSAGE_POPULATION's number of attention
+     passages; and each one's two blocks must open and close with theirs. Any
+     mismatch fails the section with its error line, so a moved, demoted,
+     re-anchored or newly set-apart passage can never silently take another
+     passage's voice, fall back to plain prose, or lose its rail. The anchors
+     are the opening words: a change later in a passage's text keeps its
+     reviewed voice and is not detected here. The check proves the table still
+     covers the payload; it does not decide who is speaking — that decision is
+     the table's, and it is reviewed with it. Each entry is [role, opening
+     words, lead-in words or null]; the conclusion's distinctions run, which has
+     no section id, is keyed "ask_conclusion-distinctions".
+     COMPACT is keyed by payload, then section,
      then block index, to the block's opening words, and it FAILS CLOSED: before
      anything renders, each entry must name a code block at its index that opens
      with its words and holds a blank line. The family is then read from the
@@ -164,22 +185,35 @@
      labeled diagram or a new simulation variant loose. The family ends where
      its shape ends: a block whose closer is indented or carries anything else
      on its line, or that has none, is outside it. */
-  var QUOTE_ROLE = {
-    "ask-conclusion-2": { 1: ["display", "How do I know "],
-                          4: ["display", "How can I know that "],
-                          7: ["display", "I am conscious."] },
-    "ask-conclusion-3": { 4: ["prose", "Across the subject boundary, proof becomes evidence."] },
-    "ask-conclusion-6": { 14: ["prose", "\"It is simulated, therefore it cannot be conscious\""] },
-    "ask-conclusion-8": { 0: ["prose", "Consciousness is self-authenticating to the subject"] },
-    "ask-conclusion-9": { 4: ["display", "Have we proved that this system is conscious?"],
-                          6: ["quote", "Has the evidence become strong enough"] },
-    "ask-next-axis-7":  { 9: ["prose", "Copyability does not negate rights."] },
-    "ask-next-axis-9":  { 1: ["prose", "What is the morally + legally relevant unit of identity"] }
+  var PASSAGE_ROLE = {
+    ask_conclusion: {
+      "ask-conclusion-2": { 1: ["callout", "How do I know ", "The interesting question is not:"],
+                            4: ["callout", "How can I know that ", "The harder question is:"],
+                            7: ["voice", "I am conscious.", "When another person or system says:"] },
+      "ask-conclusion-3": { 4: ["callout", "Across the subject boundary, proof becomes evidence.", "The cleanest compression is:"] },
+      "ask-conclusion-6": { 14: ["callout", "\"It is simulated, therefore it cannot be conscious\"", "Therefore:"] },
+      "ask-conclusion-8": { 0: ["callout", "Consciousness is self-authenticating to the subject", null] },
+      "ask-conclusion-9": { 4: ["callout", "Have we proved that this system is conscious?", "For artificial systems, the decisive issue may never be:"],
+                            6: ["callout", "Has the evidence become strong enough", "It may instead be:"] }
+    },
+    ask_next_axis: {
+      "ask-next-axis-7": { 9: ["callout", "Copyability does not negate rights.", "The proposal, stated once:"] },
+      "ask-next-axis-9": { 1: ["callout", "What is the morally + legally relevant unit of identity", "The conclusion ends by asking who has authority"] }
+    }
+  };
+  var PULL_ROLE = {
+    ask_conclusion: ["callout", "Consciousness may be directly known with certainty only from the first-person position."],
+    ask_next_axis:  ["callout", "The ASK conclusion asks whether anyone is home."]
+  };
+  var PASSAGE_POPULATION = {
+    ask_conclusion: { voice: 1, callout: 7, attention: 1 },
+    ask_next_axis:  { voice: 0, callout: 2, attention: 0 }
   };
   var ATTENTION = {
-    "ask-conclusion-2": { from: 10, to: 11, opens: "The asymmetry is:", closes: "INSIDE THE OCCURRENCE", accent: "magenta" }
+    ask_conclusion: {
+      "ask-conclusion-2": { from: 10, to: 11, opens: "The asymmetry is:", closes: "INSIDE THE OCCURRENCE", accent: "magenta" }
+    }
   };
-  var COMPRESSION_ACCENT = { ask_conclusion: "magenta" };
   var COMPACT = {
     ask_conclusion: {
       "ask_conclusion-distinctions": { 3: "CONSTITUTIVE QUESTION" },
@@ -251,8 +285,8 @@
       return target;
     }
     /* Blocks a presentation assignment below names, found by section id, block
-       index AND opening words. All three must still match; otherwise the block
-       takes its type's default treatment rather than another block's. */
+       index AND opening words. All three must still match; the checks below fail
+       the section rather than give a block another block's treatment. */
     function acOpening(b) {
       if (!b) return "";
       if (Array.isArray(b.spans)) return b.spans.map(function (s) { return s && typeof s.v === "string" ? s.v : ""; }).join("");
@@ -302,6 +336,50 @@
       });
       if (found !== family.labeled) acFail("the payload holds " + found + " labeled diagrams where " + family.labeled + " are expected");
       if (siblings !== family.siblings) acFail("the payload holds " + siblings + " sibling diagrams where " + family.siblings + " are expected");
+    }
+
+    /* PASSAGE_ROLE, PULL_ROLE and ATTENTION are checked whole before anything
+       renders; see their note above. */
+    function acPassageCheck(AC) {
+      var table = PASSAGE_ROLE[key] || {}, attention = ATTENTION[key] || {};
+      var count = { voice: 0, callout: 0 };
+      var want = PASSAGE_POPULATION[key] || { voice: 0, callout: 0, attention: 0 };
+      var runs = {};
+      runs[key + "-distinctions"] = AC.distinctions;
+      if (Array.isArray(AC.sections)) AC.sections.forEach(function (s) { if (s && s.id) runs[s.id] = s.blocks; });
+      Object.keys(table).forEach(function (sid) {
+        if (!Array.isArray(runs[sid])) acFail("PASSAGE_ROLE names " + sid + ", which is not in the payload");
+        Object.keys(table[sid]).forEach(function (j) {
+          var e = table[sid][j], b = runs[sid][j], i = Number(j);
+          if (!b || b.type !== "quote") acFail("PASSAGE_ROLE " + sid + "[" + j + "] is not a quote block");
+          if (!acOpens(b, e[1])) acFail("PASSAGE_ROLE " + sid + "[" + j + "] no longer opens with its words");
+          if (e[2] === null ? i !== 0 : !acOpens(runs[sid][i - 1], e[2]))
+            acFail("PASSAGE_ROLE " + sid + "[" + j + "]'s lead-in no longer opens with its words");
+          if (e[0] !== "voice" && e[0] !== "callout") acFail("PASSAGE_ROLE " + sid + "[" + j + "] names no known role");
+          count[e[0]]++;
+        });
+      });
+      Object.keys(runs).forEach(function (sid) {
+        if (!Array.isArray(runs[sid])) return;
+        runs[sid].forEach(function (b, j) {
+          if (b && b.type === "quote" && !(table[sid] && Object.prototype.hasOwnProperty.call(table[sid], String(j))))
+            acFail("the payload holds a set-apart passage PASSAGE_ROLE does not name: " + sid + "[" + j + "]");
+        });
+      });
+      if (count.voice !== want.voice || count.callout !== want.callout)
+        acFail("PASSAGE_ROLE names " + count.voice + " voice and " + count.callout + " callout passages where " +
+          want.voice + " and " + want.callout + " are expected");
+      var pull = PULL_ROLE[key];
+      if (!pull || (pull[0] !== "voice" && pull[0] !== "callout")) acFail("the opening statement has no role");
+      if (!acOpens({ spans: AC.pull_quote }, pull[1])) acFail("the opening statement no longer opens with its words");
+      if (Object.keys(attention).length !== want.attention)
+        acFail("ATTENTION names " + Object.keys(attention).length + " passages where " + want.attention + " are expected");
+      Object.keys(attention).forEach(function (sid) {
+        var a = attention[sid];
+        if (!Array.isArray(runs[sid])) acFail("ATTENTION names " + sid + ", which is not in the payload");
+        if (!acOpens(runs[sid][a.from], a.opens) || !acOpens(runs[sid][a.to], a.closes))
+          acFail("ATTENTION " + sid + " no longer opens and closes with its words");
+      });
     }
 
     /* STRUCTURED TEXT. A code block whose indentation is structure is drawn on the
@@ -358,13 +436,7 @@
     function acBlock(b, role, compact) {
       if (!b || typeof b.type !== "string") acFail("malformed block");
       if (b.type === "paragraph") return acSpans(el("p", "askc-p doc-body"), b.spans);
-      if (b.type === "quote") {
-        /* Text ASK writes in its own voice is document prose, not quotation. */
-        if (role === "prose") return acSpans(el("p", "askc-p doc-body"), b.spans);
-        var bq = el("blockquote", "askc-q doc-quote");
-        acSpans(bq.appendChild(el("p")), b.spans);
-        return bq;
-      }
+      if (b.type === "quote") return acPassage(b.spans, role, "askc-q", "askc-p");
       if (b.type === "code") {
         if (!Array.isArray(b.lines)) acFail("code block without lines");
         var lines = compact ? b.lines.filter(function (l) { return l !== ""; }) : b.lines;
@@ -378,12 +450,24 @@
       }
       acFail('unknown block type "' + b.type + '"');
     }
+    /* A set-apart passage, by its assigned voice. "callout" is ASK's own voice:
+       a paragraph of document body on the magenta emphasis rail. "voice" is
+       represented voice: a quotation on the violet rail. There is no default. */
+    function acPassage(spans, role, quoteHook, calloutHook) {
+      if (role === "callout") return acSpans(el("p", calloutHook + " doc-body surface-emphasis-rail surface-emphasis--magenta"), spans);
+      if (role === "voice") {
+        var bq = el("blockquote", quoteHook + " doc-quote");
+        acSpans(bq.appendChild(el("p")), spans);
+        return bq;
+      }
+      acFail("a set-apart passage has no assigned voice");
+    }
     function acAppend(target, blocks, sectionId) {
       if (!Array.isArray(blocks)) acFail("block run is not an array");
-      var roles = (sectionId && QUOTE_ROLE[sectionId]) || {};
+      var roles = (sectionId && (PASSAGE_ROLE[key] || {})[sectionId]) || {};
       var compact = (sectionId && (COMPACT[key] || {})[sectionId]) || {};
-      var att = (sectionId && ATTENTION[sectionId]) || null;
-      if (att && !(acOpens(blocks[att.from], att.opens) && acOpens(blocks[att.to], att.closes))) att = null;
+      var att = (sectionId && (ATTENTION[key] || {})[sectionId]) || null;
+      if (att && !(acOpens(blocks[att.from], att.opens) && acOpens(blocks[att.to], att.closes))) acFail("ATTENTION " + sectionId + " no longer matches");
       var into = target;
       blocks.forEach(function (b, j) {
         if (att && j === att.from) {
@@ -401,8 +485,9 @@
       if (!AC) acFail("payload object absent");
       if (typeof AC.title !== "string" || !AC.title) acFail("missing title");
       acCompactCheck(AC);
+      acPassageCheck(AC);
       acSpans(frag.appendChild(el("p", "askc-intro doc-lede")), AC.introduction);
-      acSpans(frag.appendChild(el("blockquote", "askc-pull doc-quote")).appendChild(el("p")), AC.pull_quote);
+      frag.appendChild(acPassage(AC.pull_quote, PULL_ROLE[key][0], "askc-pull", "askc-pull"));
       acAppend(frag, AC.distinctions, key + "-distinctions");
 
       if (!Array.isArray(AC.sections) || AC.sections.length === 0) acFail("no sections");
@@ -416,13 +501,12 @@
         frag.appendChild(sec);
       });
 
-      /* The compression is a passage in ordinary flow, not a quotation and not a
-         heading: "compression" names what kind of passage it is, so it is a label.
-         Where an accent is assigned, the passage takes the attention rail in it. */
-      var accent = COMPRESSION_ACCENT[key];
-      var cmp = el("section", "askc-sec askc-compress doc-section" +
-        (accent ? " surface-emphasis-rail surface-emphasis--" + accent : ""));
-      cmp.appendChild(text(el("p", "askc-label surface-emphasis-chip"), "compression"));
+      /* The compression is the section's synthesis: one flat summary panel, the
+         same composition for both sections, not a quotation, not a heading and
+         not a rail. "compression" names what kind of passage it is, so it is a
+         label: the chip, whose border alone takes the magenta accent. */
+      var cmp = el("section", "askc-sec askc-compress surface-separate surface-material-panel surface-attach-free surface-elevation-flush doc-group");
+      cmp.appendChild(text(el("p", "askc-label surface-emphasis-chip surface-emphasis--magenta"), "compression"));
       acSpans(cmp.appendChild(el("p", "askc-p doc-body")), AC.compression);
       frag.appendChild(cmp);
 
