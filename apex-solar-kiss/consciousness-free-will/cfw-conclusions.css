@@ -8,8 +8,8 @@
  * PRESENTATION COMES FROM THE VENDORED RULES. Every heading, paragraph, label,
  * quotation and preformatted block takes a role from surface-document.css, and
  * the space between roles comes from its compositions; a held-question ruling's
- * surface and the summary panels of section 8's conclusion and each compression
- * come from surface-panel.css and surface-treatments.css, as do the authorial
+ * surface and the panels of each part's framing opening, section 8's conclusion
+ * and each compression come from surface-panel.css and surface-treatments.css, as do the authorial
  * callout and attention rails.
  * index.html and cfw-release.js apply those classes beside the historical
  * `orient-` and `askc-` hooks, and the page loads those files before this one.

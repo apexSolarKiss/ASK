@@ -120,28 +120,44 @@
      treatment and never a string or an order.
 
      PASSAGE_ROLE. The payload types a block "quote" whenever the source set a
-     passage apart, and every such passage keeps a boundary: none falls back to
-     plain prose. Its role is WHOSE VOICE the passage is in, an editorial
+     passage apart, and every such passage keeps a boundary: none falls back
+     to plain prose. Its role is WHOSE VOICE the passage is in, an editorial
      assignment recorded here and never inferred from the payload type, the
      element, boldness or a pair of quotation marks. "voice" is represented
      voice — words the prose presents as someone else's — and renders as a
      quotation (.doc-quote, the violet rail). "callout" is the document's own
-     thesis, posed question or contrast, in ASK's voice, and renders as a
-     paragraph of document body on the magenta emphasis rail
-     (.surface-emphasis-rail): it keeps its prose semantics and is not a
-     blockquote. "synthesis" is the document's own conclusion of the sections
-     before it — the statement section 8, "The conclusion", opens with — and
-     renders as the same section synthesis each compression takes (below), its
-     chip naming it "conclusion". No other set-apart passage plays that role:
-     the compression of one step ("The cleanest compression is:"), the
-     conclusion of one analysis (the simulation contrast), a posed question
-     (conclusion 9's, and the next axis's closing one), an opening thesis and
-     the next axis's proposal each state one part of the argument, not what
-     the sections before it come to, and stay callouts; each part's
-     compression is its closing synthesis. PULL_ROLE assigns each
-     section's opening statement the same way; both openings are ASK's own
-     theses. PASSAGE_POPULATION records how many of each role, and how many
-     attention passages, each payload holds.
+     thesis, posed question or contrast at one point in a section, in ASK's
+     voice, and renders as a paragraph of document body on the magenta
+     emphasis rail (.surface-emphasis-rail): it keeps its prose semantics and
+     is not a blockquote. (A part's opening statement, which frames the whole
+     part, is "framing", below.) "synthesis" is the document's own conclusion
+     of the sections before it — the statement section 8, "The conclusion",
+     opens with — and renders as the same panel each compression takes
+     (below), its chip naming it "conclusion". No other set-apart passage in a
+     section plays that role: the compression of one step ("The cleanest
+     compression is:"), the conclusion of one analysis (the simulation
+     contrast), a posed question (conclusion 9's, and the next axis's closing
+     one) and the next axis's proposal each state one part of the argument,
+     not what the sections before it come to, and stay callouts; each part's
+     compression is its closing synthesis. PULL_ROLE assigns the opening
+     statement of each part — the ASK conclusion and the ASK prospective axis.
+     Both are "framing": the statement that frames a whole part, set out
+     before the sections that argue or ask it — the conclusion's thesis and
+     the next axis's question-space. A framing opening takes the same panel as
+     a synthesis, its chip naming its own role ("thesis", "question-space"):
+     the panel sets the passage apart as its part's frame, and the chip keeps
+     the two roles distinct. A framing opening is not a synthesis — it frames
+     the sections after it rather than concluding the sections before it — and
+     the panel does not raise its status: the chip and the part's own wording
+     carry that. No passage inside a section is framing. "framing" is this
+     page's role, not an entry of the vendored register: its catalog
+     (surface-document.css) lists a thesis and a posed question as
+     authorial-callout material and defines this panel for a section
+     synthesis. The page gives its two part openings the panel for a named
+     difference in context — each frames a whole part, not one point in a
+     section — and the chip names that role. PASSAGE_POPULATION records how
+     many of each role, the framing openings included, and how many attention
+     passages, each payload holds.
      ATTENTION. The magenta attention rail is assigned to the asymmetry passage:
      its lead-in and its diagram, as one unit.
      THE COMPRESSION of each section is a section synthesis: one flat summary
@@ -149,23 +165,24 @@
      grouping — with a chip whose border alone takes the magenta accent, and the
      compression on document body. The two compressions take the same
      composition; their wording, and so their different status, is the payload's.
-     COMPACT. Every blank source line in the named diagrams is not rendered: in
-     these diagrams the blanks — after a label, before the ">>" that closes a
-     statement, between two groups — split one diagram into fragments. The
-     payload is unchanged. The set is chosen by STRUCTURAL FAMILY, not by which
-     diagrams a review happened to mark: every labeled diagram whose groups are
-     a label, a blank, its lines and two blanks before the next label (twelve, in
-     both payloads), the three sibling simulation diagrams of conclusion 6, and
-     every lead-labeled diagram — a label, one blank, then only indented lines
-     (FORK, MERGE, SUSPEND + RESTORE and ROLLBACK in the next axis), whose one
-     blank reads as a gap after its label rather than as structure.
-     GROUP_RHYTHM keeps one blank line between two groups of a labeled diagram
-     of more than five groups, drawn as the register's blank-line slot, and
-     still drops the blank after each label: compacted whole, that many groups
-     read as one slab. The rule is structural, like the families above; today
-     it holds one diagram, the candidate-rights allocation of next axis 7 (ten
-     label-and-holder pairs). Every labeled diagram of five groups or fewer
-     keeps full compaction.
+     COMPACT. The named diagrams render tight within a group and separated
+     between groups. A single blank source line — after a label, before the
+     ">>" that closes a statement, between two lines of one group — is not
+     rendered: it splits one group into fragments. A run of two or more, the
+     space between two groups, is rendered as one blank line, the register's
+     blank-line slot: each group is its label and its lines, one line apart
+     from the next, the shape of the diagrams whose source already has it
+     (conclusion 6's substrate question). The payload is unchanged. The set
+     is chosen by STRUCTURAL FAMILY, not by which diagrams a review happened
+     to mark: every labeled diagram whose groups are a label, a blank, its
+     lines and two blanks before the next label (twelve, in both payloads,
+     of two to ten groups), the three sibling simulation diagrams of
+     conclusion 6, and every lead-labeled diagram — a label, one blank, then
+     only indented lines (FORK, MERGE, SUSPEND + RESTORE and ROLLBACK in the
+     next axis), whose one blank reads as a gap after its label rather than
+     as structure. The siblings and the lead-labeled diagrams hold no space
+     between groups, so they render with no blank line. The rule is the same
+     for every diagram, whatever its number of groups.
 
      PASSAGE_ROLE and ATTENTION are keyed by payload, then section; PULL_ROLE
      and PASSAGE_POPULATION by payload alone. All four FAIL CLOSED, as COMPACT
@@ -175,18 +192,21 @@
      where the entry names none, the passage must open its run); every quote
      block the payload holds must be named; the number of each role must be
      PASSAGE_POPULATION's; each opening statement must open with its PULL_ROLE
-     words, and names voice or callout (the opening statement is never a
-     synthesis); ATTENTION must name PASSAGE_POPULATION's number of attention
-     passages; and each one's two blocks must open and close with theirs. Any
-     mismatch fails the section with its error line, so a moved, demoted,
-     re-anchored or newly set-apart passage can never silently take another
-     passage's voice, fall back to plain prose, or lose its rail. The anchors
-     are the opening words: a change later in a passage's text keeps its
-     reviewed voice and is not detected here. The check proves the table still
-     covers the payload; it does not decide who is speaking — that decision is
-     the table's, and it is reviewed with it. Each entry is [role, opening
-     words, lead-in words or null]; the conclusion's distinctions run, which has
-     no section id, is keyed "ask_conclusion-distinctions".
+     words, and names voice, callout or framing — a framing opening with its
+     chip — and never a synthesis; the number of framing openings must be
+     PASSAGE_POPULATION's; ATTENTION must name PASSAGE_POPULATION's number of
+     attention passages; and each one's two blocks must open and close with
+     theirs. Any mismatch fails the section with its error line, so a moved,
+     demoted, re-anchored or newly set-apart passage can never silently take
+     another passage's voice, fall back to plain prose, or lose its rail or
+     its panel. The anchors are the opening words: a change later in a
+     passage's text keeps its reviewed voice and is not detected here. The
+     check proves the table still covers the payload; it does not decide who
+     is speaking — that decision is the table's, and it is reviewed with it.
+     Each entry is [role, opening words, lead-in words or null]; the
+     conclusion's distinctions run, which has no section id, is keyed
+     "ask_conclusion-distinctions". A PULL_ROLE entry is [role, opening
+     words], and a framing opening's adds its chip.
      COMPACT is keyed by payload, then section,
      then block index, to the block's opening words, and it FAILS CLOSED: before
      anything renders, each entry must name a code block at its index that opens
@@ -205,15 +225,15 @@
      unindented, whose second line is blank, and whose every later line is
      indented and not blank. Every one the payload holds must be named, and
      their number must be COMPACT_FAMILY's lead. Every named entry must be a
-     labeled diagram, a sibling or a lead-labeled diagram. GROUP_RHYTHM fails
-     closed the same way: every labeled diagram of more than five groups the
-     payload holds must be named, their number must be COMPACT_FAMILY's rhythm,
-     and each entry must be a COMPACT entry of such a diagram at its index,
-     with the same opening words. Any mismatch fails the
-     section with its error line, so a payload edit can never silently restore
-     a loose diagram or leave a new labeled diagram, a new simulation variant or
-     a new lead-labeled diagram loose, or a diagram of more than five groups
-     without its rhythm. The sibling family ends where its shape ends: a block
+     labeled diagram, a sibling or a lead-labeled diagram. Every labeled
+     diagram must also keep its shape: each group opens with an unindented
+     label, one blank and an indented line, and every space between groups is
+     exactly two blank lines, after a line and before the next group's label.
+     Any mismatch fails the section with its error line, so a payload edit can
+     never silently restore a loose diagram, open a gap after a label or
+     inside a group (which would render as a space between groups), or leave a
+     new labeled diagram, a new simulation variant or a new lead-labeled
+     diagram loose. The sibling family ends where its shape ends: a block
      whose closer is indented or carries anything else on its line, or that has
      none, is outside it. */
   var PASSAGE_ROLE = {
@@ -233,12 +253,12 @@
     }
   };
   var PULL_ROLE = {
-    ask_conclusion: ["callout", "Consciousness may be directly known with certainty only from the first-person position."],
-    ask_next_axis:  ["callout", "The ASK conclusion asks whether anyone is home."]
+    ask_conclusion: ["framing", "Consciousness may be directly known with certainty only from the first-person position.", "thesis"],
+    ask_next_axis:  ["framing", "The ASK conclusion asks whether anyone is home.", "question-space"]
   };
   var PASSAGE_POPULATION = {
-    ask_conclusion: { voice: 1, callout: 6, synthesis: 1, attention: 1 },
-    ask_next_axis:  { voice: 0, callout: 2, synthesis: 0, attention: 0 }
+    ask_conclusion: { voice: 1, callout: 6, synthesis: 1, framing: 1, attention: 1 },
+    ask_next_axis:  { voice: 0, callout: 2, synthesis: 0, framing: 1, attention: 0 }
   };
   var ATTENTION = {
     ask_conclusion: {
@@ -268,11 +288,7 @@
       "ask-next-axis-8": { 1: "ACTIVE PATIENT" }
     }
   };
-  var COMPACT_FAMILY = { ask_conclusion: { labeled: 7, siblings: 3, lead: 0, rhythm: 0 }, ask_next_axis: { labeled: 5, siblings: 0, lead: 4, rhythm: 1 } };
-  var GROUP_RHYTHM_MIN = 6;   /* groups: "more than five" */
-  var GROUP_RHYTHM = {
-    ask_next_axis: { "ask-next-axis-7": { 5: "PROTECTION AGAINST SUFFERING" } }
-  };
+  var COMPACT_FAMILY = { ask_conclusion: { labeled: 7, siblings: 3, lead: 0 }, ask_next_axis: { labeled: 5, siblings: 0, lead: 4 } };
 
   /* ---- ASK structured-text sections ------------------------------------
      ONE renderer, two payload objects. Both the ASK conclusion and the ASK
@@ -337,8 +353,7 @@
     /* COMPACT is checked whole before anything renders; see its note above. */
     function acCompactCheck(AC) {
       var table = COMPACT[key] || {};
-      var family = COMPACT_FAMILY[key] || { labeled: 0, siblings: 0, lead: 0, rhythm: 0 };
-      var rhythm = GROUP_RHYTHM[key] || {};
+      var family = COMPACT_FAMILY[key] || { labeled: 0, siblings: 0, lead: 0 };
       var runs = {};
       runs[key + "-distinctions"] = AC.distinctions;
       if (Array.isArray(AC.sections)) AC.sections.forEach(function (s) { if (s && s.id) runs[s.id] = s.blocks; });
@@ -351,11 +366,18 @@
         return !!b && b.type === "code" && Array.isArray(b.lines) && !labeled(b) &&
           b.lines.indexOf(">>") >= 0 && b.lines.indexOf("") >= 0;
       }
-      /* groups of a labeled diagram: one more than its runs of two or more blank lines */
-      function groups(b) {
-        var n = 1;
-        for (var i = 1; i < b.lines.length; i++) if (b.lines[i] === "" && b.lines[i - 1] === "" && (i < 2 || b.lines[i - 2] !== "")) n++;
-        return n;
+      /* the shape a labeled diagram keeps: each group an unindented label, one blank and an indented line;
+         every run of two or more blanks exactly two, after a line and before the next group's label */
+      function shaped(b) {
+        var L = b.lines, starts = [0], i = 0;
+        while (i < L.length) {
+          if (L[i] !== "") { i++; continue; }
+          var n = 0;
+          while (i + n < L.length && L[i + n] === "") n++;
+          if (n >= 2) { if (n !== 2 || i === 0 || i + n >= L.length) return false; starts.push(i + n); }
+          i += n;
+        }
+        return starts.every(function (s) { return /^\S/.test(L[s]) && L[s + 1] === "" && /^  \S/.test(L[s + 2] || ""); });
       }
       function leadLabeled(b) {
         if (!b || b.type !== "code" || !Array.isArray(b.lines) || labeled(b) || b.lines.length < 3) return false;
@@ -383,30 +405,12 @@
           if (!kind) return;
           if (kind === "labeled") found++; else if (kind === "sibling") siblings++; else leads++;
           if (!(table[sid] && Object.prototype.hasOwnProperty.call(table[sid], String(j)))) acFail("the payload holds a " + kind + " diagram COMPACT does not name: " + sid + "[" + j + "]");
+          if (kind === "labeled" && !shaped(b)) acFail("COMPACT " + sid + "[" + j + "] is a labeled diagram out of shape: a gap after a label or inside a group");
         });
       });
       if (found !== family.labeled) acFail("the payload holds " + found + " labeled diagrams where " + family.labeled + " are expected");
       if (siblings !== family.siblings) acFail("the payload holds " + siblings + " sibling diagrams where " + family.siblings + " are expected");
       if (leads !== family.lead) acFail("the payload holds " + leads + " lead-labeled diagrams where " + family.lead + " are expected");
-      Object.keys(rhythm).forEach(function (sid) {
-        if (!Array.isArray(runs[sid])) acFail("GROUP_RHYTHM names " + sid + ", which is not in the payload");
-        Object.keys(rhythm[sid]).forEach(function (j) {
-          var b = runs[sid][j];
-          if (!(table[sid] && table[sid][j] === rhythm[sid][j]) || !labeled(b) || groups(b) < GROUP_RHYTHM_MIN || !acOpens(b, rhythm[sid][j]))
-            acFail("GROUP_RHYTHM " + sid + "[" + j + "] is not a COMPACT labeled diagram of more than five groups opening with its words");
-        });
-      });
-      var dense = 0;
-      Object.keys(runs).forEach(function (sid) {
-        if (!Array.isArray(runs[sid])) return;
-        runs[sid].forEach(function (b, j) {
-          if (!labeled(b) || groups(b) < GROUP_RHYTHM_MIN) return;
-          dense++;
-          if (!(rhythm[sid] && Object.prototype.hasOwnProperty.call(rhythm[sid], String(j))))
-            acFail("the payload holds a labeled diagram of " + groups(b) + " groups GROUP_RHYTHM does not name: " + sid + "[" + j + "]");
-        });
-      });
-      if (dense !== family.rhythm) acFail("the payload holds " + dense + " labeled diagrams of more than five groups where " + family.rhythm + " are expected");
     }
 
     /* PASSAGE_ROLE, PULL_ROLE and ATTENTION are checked whole before anything
@@ -414,7 +418,7 @@
     function acPassageCheck(AC) {
       var table = PASSAGE_ROLE[key] || {}, attention = ATTENTION[key] || {};
       var count = { voice: 0, callout: 0, synthesis: 0 };
-      var want = PASSAGE_POPULATION[key] || { voice: 0, callout: 0, synthesis: 0, attention: 0 };
+      var want = PASSAGE_POPULATION[key] || { voice: 0, callout: 0, synthesis: 0, framing: 0, attention: 0 };
       var runs = {};
       runs[key + "-distinctions"] = AC.distinctions;
       if (Array.isArray(AC.sections)) AC.sections.forEach(function (s) { if (s && s.id) runs[s.id] = s.blocks; });
@@ -441,7 +445,11 @@
         acFail("PASSAGE_ROLE names " + count.voice + " voice, " + count.callout + " callout and " + count.synthesis +
           " synthesis passages where " + want.voice + ", " + want.callout + " and " + (want.synthesis || 0) + " are expected");
       var pull = PULL_ROLE[key];
-      if (!pull || (pull[0] !== "voice" && pull[0] !== "callout")) acFail("the opening statement has no role");
+      if (!pull || (pull[0] !== "voice" && pull[0] !== "callout" && pull[0] !== "framing")) acFail("the opening statement has no role");
+      if (pull[0] === "framing" ? !(typeof pull[2] === "string" && pull[2]) : pull.length > 2)
+        acFail(pull[0] === "framing" ? "the framing opening names no chip" : "the opening statement names a chip but is not framing");
+      if ((pull[0] === "framing" ? 1 : 0) !== (want.framing || 0))
+        acFail("PULL_ROLE names " + (pull[0] === "framing" ? 1 : 0) + " framing opening where " + (want.framing || 0) + " is expected");
       if (!acOpens({ spans: AC.pull_quote }, pull[1])) acFail("the opening statement no longer opens with its words");
       if (Object.keys(attention).length !== want.attention)
         acFail("ATTENTION names " + Object.keys(attention).length + " passages where " + want.attention + " are expected");
@@ -460,8 +468,8 @@
        two lines at one level stay typed inside their part; blank lines before a
        new part or rail are recorded as data-lead-lines. So every source line keeps
        its line slot, and the source sequence can be rebuilt from the markup exactly
-       — except in a COMPACT diagram, whose blank lines are dropped, or kept as
-       one between two groups under GROUP_RHYTHM.
+       — except in a COMPACT diagram, whose blank lines inside a group are
+       dropped and whose space between two groups is kept as one.
        A block with no indented line, or whose lines this cannot represent exactly —
        an odd indent, a level skipped, a line that is only spaces or starts with
        another space character, more than three blank lines before a part, blank
@@ -505,38 +513,40 @@
       return root;
     }
 
-    /* COMPACT drops every blank source line of a named diagram. Where
-       GROUP_RHYTHM names it, a run of two or more blanks between two groups
-       stays as one blank line — the register's blank-line slot — and every
-       other blank is still dropped. */
-    function acCompact(lines, rhythm) {
+    /* COMPACT keeps a named diagram tight within a group and separated between
+       groups: a single blank source line is dropped, and a run of two or more
+       — the space between two groups — stays as one blank line, the
+       register's blank-line slot. */
+    function acCompact(lines) {
       var out = [], run = 0;
       lines.forEach(function (l) {
         if (l === "") { run++; return; }
-        if (rhythm && run >= 2 && out.length) out.push("");
+        if (run >= 2 && out.length) out.push("");
         run = 0; out.push(l);
       });
       return out;
     }
-    /* A SECTION SYNTHESIS: one flat summary panel — the panel material, free
-       corners, flush elevation, document grouping — with a chip naming it,
+    /* A PANEL: one flat panel — the panel material, free corners, flush
+       elevation, document grouping — with a chip naming the passage's role,
        whose border alone takes the magenta accent, and the text on document
-       body. Every synthesis on the page takes this one composition: the
-       conclusion of section 8 and both compressions. */
-    function acSynthesis(tag, hook, label, spans) {
-      var syn = el(tag, hook + " surface-separate surface-material-panel surface-attach-free surface-elevation-flush doc-group");
-      syn.appendChild(text(el("p", "askc-label surface-emphasis-chip surface-emphasis--magenta"), label));
-      acSpans(syn.appendChild(el("p", "askc-p doc-body")), spans);
-      return syn;
+       body. Two roles take this one composition, and the chip keeps them
+       apart: a section synthesis (section 8's conclusion, both compressions)
+       and a framing opening (the conclusion's thesis, the next axis's
+       question-space). The panel names no role itself; its caller does. */
+    function acPanel(tag, hook, chip, spans) {
+      var panel = el(tag, hook + " surface-separate surface-material-panel surface-attach-free surface-elevation-flush doc-group");
+      panel.appendChild(text(el("p", "askc-label surface-emphasis-chip surface-emphasis--magenta"), chip));
+      acSpans(panel.appendChild(el("p", "askc-p doc-body")), spans);
+      return panel;
     }
 
-    function acBlock(b, role, compact, rhythm) {
+    function acBlock(b, role, compact) {
       if (!b || typeof b.type !== "string") acFail("malformed block");
       if (b.type === "paragraph") return acSpans(el("p", "askc-p doc-body"), b.spans);
       if (b.type === "quote") return acPassage(b.spans, role, "askc-q", "askc-p");
       if (b.type === "code") {
         if (!Array.isArray(b.lines)) acFail("code block without lines");
-        var lines = compact ? acCompact(b.lines, rhythm) : b.lines;
+        var lines = compact ? acCompact(b.lines) : b.lines;
         return acStructured(lines) || text(el("pre", "askc-pre doc-pre"), lines.join("\n"));
       }
       if (b.type === "list") {
@@ -550,11 +560,14 @@
     /* A set-apart passage, by its assigned voice. "callout" is ASK's own voice:
        a paragraph of document body on the magenta emphasis rail. "voice" is
        represented voice: a quotation on the violet rail. "synthesis" is the
-       document's own conclusion: the section synthesis each compression takes
-       (below), its chip naming it. There is no default. */
-    function acPassage(spans, role, quoteHook, calloutHook) {
+       document's own conclusion: the panel each compression takes (below),
+       its chip naming it. "framing" is a part's opening statement: the same
+       panel, its chip naming its own role, which only PULL_ROLE assigns.
+       There is no default. */
+    function acPassage(spans, role, quoteHook, calloutHook, chip) {
       if (role === "callout") return acSpans(el("p", calloutHook + " doc-body surface-emphasis-rail surface-emphasis--magenta"), spans);
-      if (role === "synthesis") return acSynthesis("div", "askc-synthesis", "conclusion", spans);
+      if (role === "synthesis") return acPanel("div", "askc-synthesis", "conclusion", spans);
+      if (role === "framing") return acPanel("div", quoteHook + " askc-framing", chip, spans);
       if (role === "voice") {
         var bq = el("blockquote", quoteHook + " doc-quote");
         acSpans(bq.appendChild(el("p")), spans);
@@ -566,7 +579,6 @@
       if (!Array.isArray(blocks)) acFail("block run is not an array");
       var roles = (sectionId && (PASSAGE_ROLE[key] || {})[sectionId]) || {};
       var compact = (sectionId && (COMPACT[key] || {})[sectionId]) || {};
-      var rhythm = (sectionId && (GROUP_RHYTHM[key] || {})[sectionId]) || {};
       var att = (sectionId && (ATTENTION[key] || {})[sectionId]) || null;
       if (att && !(acOpens(blocks[att.from], att.opens) && acOpens(blocks[att.to], att.closes))) acFail("ATTENTION " + sectionId + " no longer matches");
       var into = target;
@@ -575,8 +587,7 @@
           into = target.appendChild(el("div", "askc-attention doc-group surface-emphasis-rail surface-emphasis--" + att.accent));
         }
         var entry = roles[j];
-        into.appendChild(acBlock(b, entry && acOpens(b, entry[1]) ? entry[0] : null, Object.prototype.hasOwnProperty.call(compact, j),
-          Object.prototype.hasOwnProperty.call(rhythm, j)));
+        into.appendChild(acBlock(b, entry && acOpens(b, entry[1]) ? entry[0] : null, Object.prototype.hasOwnProperty.call(compact, j)));
         if (att && j === att.to) into = target;
       });
     }
@@ -589,7 +600,7 @@
       acCompactCheck(AC);
       acPassageCheck(AC);
       acSpans(frag.appendChild(el("p", "askc-intro doc-lede")), AC.introduction);
-      frag.appendChild(acPassage(AC.pull_quote, PULL_ROLE[key][0], "askc-pull", "askc-pull"));
+      frag.appendChild(acPassage(AC.pull_quote, PULL_ROLE[key][0], "askc-pull", "askc-pull", PULL_ROLE[key][2]));
       acAppend(frag, AC.distinctions, key + "-distinctions");
 
       if (!Array.isArray(AC.sections) || AC.sections.length === 0) acFail("no sections");
@@ -607,7 +618,7 @@
          same composition for both sections, not a quotation, not a heading and
          not a rail. "compression" names what kind of passage it is, so it is a
          label: the chip, whose border alone takes the magenta accent. */
-      frag.appendChild(acSynthesis("section", "askc-sec askc-compress", "compression", AC.compression));
+      frag.appendChild(acPanel("section", "askc-sec askc-compress", "compression", AC.compression));
 
       /* Everything validated. Only now does the real name replace the fallback. */
       var h2 = document.getElementById(titleId);
