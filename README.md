@@ -84,12 +84,13 @@ image link, breadcrumb and footer action is excluded by design.
 `surface-document.css` (the shared document register: text roles, the space
 between them, the hierarchy rail, quotation and structured text),
 `surface-treatments.css` (the shared surface treatments, of which the page uses
-the surface axes for its held-question rulings and its two compression panels,
+the surface axes for its held-question rulings and its three summary panels —
+the conclusion of its section 8 and its two compressions —
 the emphasis rail for its authorial callouts and attention passage, and the
 emphasis label) and `surface-document-overflow.js` (the register's optional
 overflow cue) are vendored the same way — pinned, byte-identical, never
 hand-edited here. The conclusions page consumes all three, and the panel rule
-for its held-question rulings and compression panels; its own layer,
+for its held-question rulings and summary panels; its own layer,
 `cfw-conclusions.css`, keeps only the reading measure, rows and grids, count
 figures, search, section error line and the space the register's compositions do
 not set after a list and before each compression panel. The map keeps its own
@@ -134,7 +135,7 @@ One durable **child sub-surface** (not a fourth tier card): **studioLeoV** at `/
 index.html            the homepage (inline logo-ASK wordmark; three tier panels; footer) — the explicit shell exception
 site.css              ASK payload layout + shell instance adaptations, on top of the tokens (no new tokens)
 surface-shell.css     vendored from design-system-ASK — the surface-shell PATTERN, pinned + byte-identical; every non-home content page consumes it
-surface-panel.css     vendored from design-system-ASK — the live-content-panel VISUAL RULE, pinned + byte-identical; the homepage tier panels consume it (presentation only — ASK keeps its own markup, semantics, and support foreground), as do the asymptotic-system-key page's external cards and the CFW conclusions page, for its held-question rulings and compression panels
+surface-panel.css     vendored from design-system-ASK — the live-content-panel VISUAL RULE, pinned + byte-identical; the homepage tier panels consume it (presentation only — ASK keeps its own markup, semantics, and support foreground), as do the asymptotic-system-key page's external cards and the CFW conclusions page, for its held-question rulings and summary panels (the conclusion of its section 8 and its two compressions)
 surface-shell.js      vendored from design-system-ASK — the shell's optional NAVIGATION RUNTIME, pinned + byte-identical; opt-in per page through template.surface-nav-source
 surface-text-link.css vendored from design-system-ASK — the unboxed-textual-link VISUAL RULE, pinned + byte-identical; opt-in by class; the homepage does not consume it
 surface-action.css    vendored from design-system-ASK — the compact-action VISUAL RULE, pinned + byte-identical; every page's compact controls consume it (the owner owns the base surface, foreground, border, geometry and interaction; ASK keeps the element semantics, destination, copy, row and placement)
