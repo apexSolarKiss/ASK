@@ -75,9 +75,27 @@ adaptation described below. The text-link rule is **opt-in by class** — only a
 element carrying `.surface-text-link` takes it — and it sets no foreground at
 all: the contextual text colour stays consumer-owned, supplied by whichever
 region the link sits in. Six unboxed prose destinations across five subpages
-consume it; every shaped control, mark, image link, breadcrumb and footer action
-is excluded by design, and neither CFW page consumes it at all now that the
-orientation footer is gone.
+consume it. The CFW map additionally consumes it for one separate population,
+the inspector's source links, whose `--fg-1` foreground the map's own layer
+supplies; the CFW conclusions page does not load it. Every shaped control, mark,
+image link, breadcrumb and footer action is excluded by design.
+
+**The CFW conclusions page adopts the document register.**
+`surface-document.css` (the shared document register: text roles, the space
+between them, the hierarchy rail, quotation and structured text),
+`surface-treatments.css` (the shared surface treatments, of which the page uses
+the surface axes for its held-question rulings and its five panels — the
+framing openings of the ASK conclusion and the ASK prospective axis, the
+conclusion of its section 8 and its two compressions —
+the emphasis rail for its authorial callouts and attention passage, and the
+emphasis label) and `surface-document-overflow.js` (the register's optional
+overflow cue) are vendored the same way — pinned, byte-identical, never
+hand-edited here. The conclusions page consumes all three, and the panel rule
+for its held-question rulings and its panels; its own layer,
+`cfw-conclusions.css`, keeps only the reading measure, rows and grids, count
+figures, search, section error line and the space the register's compositions do
+not set after a list and before each compression panel. The map keeps its own
+layer, `cfw-release.css`, and consumes none of the three.
 
 **The browser-icon set is inherited too.** `favicon.svg`, `favicon-32.png`,
 `favicon.ico` and `apple-touch-icon.png` are vendored from `design-system-ASK`,
@@ -118,10 +136,13 @@ One durable **child sub-surface** (not a fourth tier card): **studioLeoV** at `/
 index.html            the homepage (inline logo-ASK wordmark; three tier panels; footer) — the explicit shell exception
 site.css              ASK payload layout + shell instance adaptations, on top of the tokens (no new tokens)
 surface-shell.css     vendored from design-system-ASK — the surface-shell PATTERN, pinned + byte-identical; every non-home content page consumes it
-surface-panel.css     vendored from design-system-ASK — the live-content-panel VISUAL RULE, pinned + byte-identical; the homepage tier panels consume it (presentation only — ASK keeps its own markup, semantics, and support foreground)
+surface-panel.css     vendored from design-system-ASK — the live-content-panel VISUAL RULE, pinned + byte-identical; the homepage tier panels consume it (presentation only — ASK keeps its own markup, semantics, and support foreground), as do the asymptotic-system-key page's external cards and the CFW conclusions page, for its held-question rulings and its panels (the framing openings of the ASK conclusion and the ASK prospective axis, the conclusion of its section 8 and its two compressions)
 surface-shell.js      vendored from design-system-ASK — the shell's optional NAVIGATION RUNTIME, pinned + byte-identical; opt-in per page through template.surface-nav-source
 surface-text-link.css vendored from design-system-ASK — the unboxed-textual-link VISUAL RULE, pinned + byte-identical; opt-in by class; the homepage does not consume it
 surface-action.css    vendored from design-system-ASK — the compact-action VISUAL RULE, pinned + byte-identical; every page's compact controls consume it (the owner owns the base surface, foreground, border, geometry and interaction; ASK keeps the element semantics, destination, copy, row and placement)
+surface-document.css  vendored from design-system-ASK — the document-register VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes it
+surface-treatments.css  vendored from design-system-ASK — the surface-treatments VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes its surface axes, emphasis rail and label
+surface-document-overflow.js  vendored from design-system-ASK — the document register's optional overflow-cue helper, pinned + byte-identical; the CFW conclusions page loads it
 colors_and_type.css   vendored from design-system-ASK (canonical tokens)
 fonts/                vendored Inter + JetBrains Mono (OFL)
 assets/logo-ASK.*     vendored wordmark (svg primary; white + lavender-ASK png pairings)

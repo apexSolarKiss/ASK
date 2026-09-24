@@ -1,0 +1,9 @@
+[
+  {
+    "name": "CFW count numeral",
+    "selector": "#counts .n",
+    "owner": "ASK / CFW (consciousness-free-will conclusions page)",
+    "reason": "a display figure: each of the six release counts is set as a mono numeral inside the counts line, on the Body size, so the figures read as data rather than prose",
+    "expected_count": 6
+  }
+]

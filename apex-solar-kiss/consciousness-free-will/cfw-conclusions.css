@@ -1,0 +1,137 @@
+/* cfw-conclusions.css — the conclusions page's own layer.
+ *
+ * THE ROUTE IS TWO PAGES, AND TWO LAYERS. The conclusions at the route root are
+ * an ordinary shell page; the map one level deeper is the full-viewport
+ * application, and its layer is cfw-release.css. This file is loaded by the
+ * conclusions page alone, and the conclusions page does not load cfw-release.css.
+ *
+ * PRESENTATION COMES FROM THE VENDORED RULES. Every heading, paragraph, label,
+ * quotation and preformatted block takes a role from surface-document.css, and
+ * the space between roles comes from its compositions; a held-question ruling's
+ * surface and the panels of each part's framing opening, section 8's conclusion
+ * and each compression come from surface-panel.css and surface-treatments.css, as do the authorial
+ * callout and attention rails.
+ * index.html and cfw-release.js apply those classes beside the historical
+ * `orient-` and `askc-` hooks, and the page loads those files before this one.
+ * This file keeps what those rules leave to a consumer: the reading measure,
+ * the rows and grids the page lays its content out in, the count figures, the
+ * search, the section error line and the space the compositions do not set
+ * after a list and before each compression panel. It defines NO token.
+ *
+ * LOAD ORDER   colors_and_type.css -> surface-action.css -> surface-shell.css
+ *              -> surface-panel.css -> surface-document.css
+ *              -> surface-treatments.css -> this file
+ */
+
+/* ---- the reading measure ---------------------------------------------- */
+/* The shell declares no payload layout by contract, so the measure is this
+   route's to set. No padding and no auto margin: .surface already owns the
+   page's edge inset and its centering. */
+.cfw-conclusions { max-width: 68ch; }
+
+/* The status row. The words take the operative-label role; with no outline
+   around a status that is not a control, the column gap keeps adjacent statuses
+   as far apart as their outlines and padding used to hold them. */
+.orient-status { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin: 0; }
+
+/* ---- the six rulings ---------------------------------------------------- */
+.rulings { list-style: none; margin: 0; padding: 0; }
+/* Each field name sits on the baseline of its value's first line. */
+.rulings dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: var(--space-2) var(--space-3); align-items: baseline; }
+.rulings dt { white-space: nowrap; }
+
+/* ---- counts ------------------------------------------------------------- */
+.counts { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.counts li { display: flex; gap: var(--space-3); align-items: baseline; }
+/* The figure column. The document register has no numeral role; this keeps the
+   route's own, declared as the "CFW count numeral" profile in role-profiles.json.
+   The register's conformance check accepts the six figures as that declared
+   exception (C10) instead of failing them as off-family text inside the counts
+   line (C8); it does not measure their metrics. The figure takes the counts
+   line's weight and leading. */
+.counts .n {
+  font-family: var(--font-mono); font-size: var(--fs-body); color: var(--fg-1);
+  min-width: 5ch; text-align: right;
+}
+
+/* ---- search ------------------------------------------------------------- */
+.orient-search input {
+  width: 100%; box-sizing: border-box;
+  font-family: var(--font-mono); font-size: var(--fs-small); color: var(--fg-1);
+  background: transparent; border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm); padding: var(--space-3);
+}
+.orient-search input:focus-visible { outline: 2px solid var(--fg-2); outline-offset: 2px; }
+/* Browser-native search clear control // retain its behavior, replace the platform
+   paint with ASK-owned tokens. The mark is drawn from two token-colored diagonals,
+   so this surface owns its pixels instead of inheriting the platform default. */
+.orient-search input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  margin-inline-start: var(--space-2);
+  cursor: pointer;
+  opacity: 0.68;
+  background:
+    linear-gradient(
+      45deg,
+      transparent 46%,
+      var(--fg-2) 46%,
+      var(--fg-2) 54%,
+      transparent 54%
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 46%,
+      var(--fg-2) 46%,
+      var(--fg-2) 54%,
+      transparent 54%
+    );
+  background-repeat: no-repeat;
+}
+.orient-search input[type="search"]::-webkit-search-cancel-button:hover {
+  opacity: 1;
+}
+.orient-results { display: flex; flex-direction: column; gap: var(--space-2); }
+.orient-results .ores-r {
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  padding: var(--space-3); font-size: var(--fs-small); color: var(--fg-2);
+}
+.orient-results .ores-id, .orient-results .ores-title { display: block; }
+.orient-results .ores-id { margin-bottom: 2px; }
+.orient-results .ores-meta { display: block; margin-top: 4px; }
+
+/* Search results are controls: they open the record on the map, named. A
+   result keeps its 1px --line-2 edge at rest. Hover turns that edge magenta and
+   leaves every text foreground as its role sets it; keyboard focus draws its own
+   outline, so hover never stands in for focus. */
+.orient-results button.ores-r {
+  display: block; width: 100%; text-align: left; font: inherit; color: inherit;
+  background: none; cursor: pointer;
+}
+.orient-results button.ores-r:hover { border-color: var(--ask-emphasis-magenta); }
+.orient-results button.ores-r:focus-visible { outline: 2px solid var(--fg-1); outline-offset: 2px; }
+
+/* ---- ASK conclusion ------------------------------------------------------
+   Deliberately NOT styled like .rulings. A ruling is a survey disposition on its
+   own surface; this is ASK's own prose, in ordinary flow, and must not be read as
+   one. A list keeps its markers inside the measure. */
+.askc-ul { margin: 0; padding-left: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
+/* A list is its own group, not the lead-in to the passage after it: a set-apart
+   passage directly after a list takes the buffer the vendored register gives a
+   passage directly after a passage. */
+.askc-ul + :is(.doc-quote, .doc-pre, .surface-emphasis-rail) { margin-top: var(--space-5); }
+/* The compression closes its section's argument, so its panel stands further
+   from the passage it follows than one section stands from the next. */
+.askc-compress { margin-top: var(--space-6); }
+.askc-error {
+  margin: 0; padding: var(--space-3); color: var(--fg-2); font-size: var(--fs-small);
+  line-height: var(--lh-body); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+}
+
+/* ---- small screen ------------------------------------------------------- */
+@media (max-width: 767px) {
+  .rulings dl { grid-template-columns: 1fr; gap: var(--space-1) 0; }
+  .rulings dt { margin-top: var(--space-2); }
+}
