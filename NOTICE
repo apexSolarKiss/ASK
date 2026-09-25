@@ -116,3 +116,7 @@ See the LICENSE file for the full license text.
 
 The Inter and JetBrains Mono fonts are licensed under the SIL Open Font
 License 1.1; see fonts/Inter-OFL.txt and fonts/JetBrainsMono-OFL.txt.
+
+The glyphsASK artwork images in assets/asymptotic/glyphsask/ are original
+artworks by Andrew S Klug // ASK (2024), published here for display. They are
+not licensed under the Apache License, Version 2.0; all rights reserved.
