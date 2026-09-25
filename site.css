@@ -523,6 +523,19 @@ html:has(> body > .shell) { overflow-x: clip; }
 }
 .p5-frame figcaption { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-3); }
 
+/* ---------- Asymptotic: glyphsASK panel ---------- */
+/* Complete square compositions, never cropped or corner-masked: two columns where the payload
+   holds them, one column on narrow screens. Each image links to its larger view. */
+#glyphsask .gal-title { margin: var(--space-5) 0 var(--space-3); }
+.glyph-works { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); margin-top: var(--space-6); }
+.glyph-frame { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.glyph-frame a { display: block; }
+.glyph-frame img { display: block; width: 100%; height: auto; border: 1px solid var(--line-1); }
+.glyph-frame figcaption { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-3); }
+@media (max-width: 640px) { .glyph-works { grid-template-columns: 1fr; } }
+/* The desktop shell pins the mark + fade band at the top; land the #glyphsask anchor below it. */
+:root[data-surface-nav-mode="desktop"] #glyphsask { scroll-margin-top: calc(var(--surface-nav-top-depth) + var(--surface-nav-gap)); }
+
 /* ---------- Asymptotic: YouTube facades ---------- */
 .yt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-3); }
 .yt-facade {
