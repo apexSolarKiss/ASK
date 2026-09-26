@@ -149,13 +149,15 @@
      the two roles distinct. A framing opening is not a synthesis — it frames
      the sections after it rather than concluding the sections before it — and
      the panel does not raise its status: the chip and the part's own wording
-     carry that. No passage inside a section is framing. "framing" is this
-     page's role, not an entry of the vendored register: its catalog
-     (surface-document.css) lists a thesis and a posed question as
-     authorial-callout material and defines this panel for a section
-     synthesis. The page gives its two part openings the panel for a named
-     difference in context — each frames a whole part, not one point in a
-     section — and the chip names that role. PASSAGE_POPULATION records how
+     carry that. No passage inside a section is framing. "framing" is the
+     vendored register's section framing: its catalog (surface-document.css)
+     owns the role and its composition — a section synthesis's panel,
+     unchanged, whose classes the panel rule and the surface treatments own,
+     with the chip naming the framing — and keeps a thesis, question or
+     contrast set apart inside the argument an authorial callout. This page
+     owns which passages take the role — PULL_ROLE gives it the two part
+     openings, each of which frames a whole part, not one point in a section
+     — and the chip's word. PASSAGE_POPULATION records how
      many of each role, the framing openings included, and how many attention
      passages, each payload holds.
      ATTENTION. The magenta attention rail is assigned to the asymmetry passage:
@@ -169,10 +171,12 @@
      between groups. A single blank source line — after a label, before the
      ">>" that closes a statement, between two lines of one group — is not
      rendered: it splits one group into fragments. A run of two or more, the
-     space between two groups, is rendered as one blank line, the register's
-     blank-line slot: each group is its label and its lines, one line apart
-     from the next, the shape of the diagrams whose source already has it
-     (conclusion 6's substrate question). The payload is unchanged. The set
+     space between two groups, marks a boundary: each group is declared as the
+     register's peer group (.doc-pre-group), its label and its lines, and the
+     register sets one line between successive groups, the shape of the
+     diagrams whose source already has it (conclusion 6's substrate
+     question, whose groups GROUPED declares the same way). The payload is
+     unchanged. The set
      is chosen by STRUCTURAL FAMILY, not by which diagrams a review happened
      to mark: every labeled diagram whose groups are a label, a blank, its
      lines and two blanks before the next label (twelve, in both payloads,
@@ -289,6 +293,10 @@
     }
   };
   var COMPACT_FAMILY = { ask_conclusion: { labeled: 7, siblings: 3, lead: 0 }, ask_next_axis: { labeled: 5, siblings: 0, lead: 4 } };
+  /* GROUPED names each diagram outside COMPACT whose source already sets its peer
+     groups one blank line apart, keyed by payload, then section, then block index,
+     to [opening words, number of groups]. See PEER GROUPS, below. */
+  var GROUPED = { ask_conclusion: { "ask-conclusion-6": { 11: ["substrate-bound", 3] } }, ask_next_axis: {} };
 
   /* ---- ASK structured-text sections ------------------------------------
      ONE renderer, two payload objects. Both the ASK conclusion and the ASK
@@ -411,6 +419,40 @@
       if (found !== family.labeled) acFail("the payload holds " + found + " labeled diagrams where " + family.labeled + " are expected");
       if (siblings !== family.siblings) acFail("the payload holds " + siblings + " sibling diagrams where " + family.siblings + " are expected");
       if (leads !== family.lead) acFail("the payload holds " + leads + " lead-labeled diagrams where " + family.lead + " are expected");
+      /* GROUPED: each entry names a code block outside COMPACT that opens with its words and
+         keeps the one-apart shape with its number of groups; every block of that shape the
+         payload holds outside COMPACT must be named. The shape: an unindented label first;
+         every blank line single, after an indented line and before an unindented label
+         with an indented line beneath it; no blank line last. */
+      var grouped = GROUPED[key] || {};
+      function oneApart(b) {
+        if (!b || b.type !== "code" || !Array.isArray(b.lines) || b.lines.indexOf("") < 0) return 0;
+        var L = b.lines, n = 1;
+        if (typeof L[0] !== "string" || !/^\S/.test(L[0]) || L[L.length - 1] === "") return 0;
+        for (var i = 1; i < L.length; i++) {
+          if (L[i] !== "") continue;
+          if (!/^  \S/.test(L[i - 1]) || !/^\S/.test(L[i + 1] || "") || !/^  \S/.test(L[i + 2] || "")) return 0;
+          n++;
+        }
+        return n;
+      }
+      Object.keys(grouped).forEach(function (sid) {
+        if (!Array.isArray(runs[sid])) acFail("GROUPED names " + sid + ", which is not in the payload");
+        Object.keys(grouped[sid]).forEach(function (j) {
+          var b = runs[sid][j], want = grouped[sid][j];
+          if (table[sid] && Object.prototype.hasOwnProperty.call(table[sid], j)) acFail("GROUPED " + sid + "[" + j + "] is also named by COMPACT");
+          if (!acOpens(b, want[0])) acFail("GROUPED " + sid + "[" + j + "] no longer opens with its words");
+          if (oneApart(b) !== want[1]) acFail("GROUPED " + sid + "[" + j + "] is not " + want[1] + " groups one blank line apart");
+        });
+      });
+      Object.keys(runs).forEach(function (sid) {
+        if (!Array.isArray(runs[sid])) return;
+        runs[sid].forEach(function (b, j) {
+          if (oneApart(b) && !(table[sid] && Object.prototype.hasOwnProperty.call(table[sid], String(j))) &&
+              !(grouped[sid] && Object.prototype.hasOwnProperty.call(grouped[sid], String(j))))
+            acFail("the payload holds a grouped diagram GROUPED does not name: " + sid + "[" + j + "]");
+        });
+      });
     }
 
     /* PASSAGE_ROLE, PULL_ROLE and ATTENTION are checked whole before anything
@@ -469,13 +511,14 @@
        new part or rail are recorded as data-lead-lines. So every source line keeps
        its line slot, and the source sequence can be rebuilt from the markup exactly
        — except in a COMPACT diagram, whose blank lines inside a group are
-       dropped and whose space between two groups is kept as one.
+       dropped and whose space between two groups becomes a declared group
+       boundary (PEER GROUPS, below).
        A block with no indented line, or whose lines this cannot represent exactly —
        an odd indent, a level skipped, a line that is only spaces or starts with
        another space character, more than three blank lines before a part, blank
        lines at the end — is written as ONE preformatted text node, as before. It is
        never failed for its shape. */
-    function acStructured(lines) {
+    function acStructured(lines, groups, where) {
       var root = el("div", "askc-pre doc-pre doc-pre--structured");
       var stack = [root], depth = 0, open = null, blank = 0, indented = false;
       function lead(node, n) { if (n) node.setAttribute("data-lead-lines", String(n)); }
@@ -510,13 +553,39 @@
         blank = 0;
       }
       if (blank || !indented) return null;
-      return root;
+      return groups ? acGroups(root, groups, where) : root;
+    }
+
+    /* PEER GROUPS. A grouped diagram declares each of its groups as the register's
+       peer group, a .doc-pre-group: the group opens on its unindented label and holds
+       what follows it until the next label, and the register sets exactly one line
+       between successive groups. The grouped diagrams are the labeled COMPACT diagrams
+       and the diagrams GROUPED names. The one blank line between two groups — the one
+       COMPACT keeps, or the one the source already has — is the boundary read here,
+       so it becomes the group boundary and is not recorded again. The number of groups
+       must be the one expected: a labeled diagram's runs of two blank lines plus one,
+       or GROUPED's number. A grouped diagram whose groups cannot be declared exactly,
+       or that cannot be drawn as structured text, fails its section. The check runs as
+       the block is built, inside the same detached fragment, so nothing reaches the
+       page unless all of it does. */
+    function acGroups(root, want, where) {
+      var out = el("div", root.className), group = null, n = 0;
+      Array.prototype.slice.call(root.childNodes).forEach(function (k, i) {
+        var lead = k.getAttribute("data-lead-lines"), label = k.classList.contains("doc-pre-part");
+        if (i === 0 ? (!label || lead) : (lead && (lead !== "1" || !label)))
+          acFail("PEER GROUPS " + where + ": a boundary does not fall before a label");
+        if (i === 0 || lead) { group = out.appendChild(el("div", "doc-pre-group")); n++; k.removeAttribute("data-lead-lines"); }
+        group.appendChild(k);
+      });
+      if (n !== want || out.querySelector("[data-lead-lines]"))
+        acFail("PEER GROUPS " + where + ": " + n + " groups where " + want + " are expected");
+      return out;
     }
 
     /* COMPACT keeps a named diagram tight within a group and separated between
        groups: a single blank source line is dropped, and a run of two or more
-       — the space between two groups — stays as one blank line, the
-       register's blank-line slot. */
+       — the space between two groups — stays as one blank line, which
+       acGroups reads as the boundary between two declared groups. */
     function acCompact(lines) {
       var out = [], run = 0;
       lines.forEach(function (l) {
@@ -540,14 +609,21 @@
       return panel;
     }
 
-    function acBlock(b, role, compact) {
+    function acBlock(b, role, compact, named, where) {
       if (!b || typeof b.type !== "string") acFail("malformed block");
       if (b.type === "paragraph") return acSpans(el("p", "askc-p doc-body"), b.spans);
       if (b.type === "quote") return acPassage(b.spans, role, "askc-q", "askc-p");
       if (b.type === "code") {
         if (!Array.isArray(b.lines)) acFail("code block without lines");
         var lines = compact ? acCompact(b.lines) : b.lines;
-        return acStructured(lines) || text(el("pre", "askc-pre doc-pre"), lines.join("\n"));
+        var groups = 0;
+        if (named) groups = named[1];
+        else if (compact) b.lines.forEach(function (l, i) {
+          if (l === "" && b.lines[i - 1] === "" && b.lines[i - 2] !== "") groups += groups ? 1 : 2;
+        });
+        var drawn = acStructured(lines, groups, where);
+        if (groups && !drawn) acFail("PEER GROUPS " + where + ": the grouped diagram cannot be drawn as structured text");
+        return drawn || text(el("pre", "askc-pre doc-pre"), lines.join("\n"));
       }
       if (b.type === "list") {
         if (!Array.isArray(b.items)) acFail("list block without items");
@@ -579,6 +655,7 @@
       if (!Array.isArray(blocks)) acFail("block run is not an array");
       var roles = (sectionId && (PASSAGE_ROLE[key] || {})[sectionId]) || {};
       var compact = (sectionId && (COMPACT[key] || {})[sectionId]) || {};
+      var grouped = (sectionId && (GROUPED[key] || {})[sectionId]) || {};
       var att = (sectionId && (ATTENTION[key] || {})[sectionId]) || null;
       if (att && !(acOpens(blocks[att.from], att.opens) && acOpens(blocks[att.to], att.closes))) acFail("ATTENTION " + sectionId + " no longer matches");
       var into = target;
@@ -587,7 +664,8 @@
           into = target.appendChild(el("div", "askc-attention doc-group surface-emphasis-rail surface-emphasis--" + att.accent));
         }
         var entry = roles[j];
-        into.appendChild(acBlock(b, entry && acOpens(b, entry[1]) ? entry[0] : null, Object.prototype.hasOwnProperty.call(compact, j)));
+        into.appendChild(acBlock(b, entry && acOpens(b, entry[1]) ? entry[0] : null, Object.prototype.hasOwnProperty.call(compact, j),
+          Object.prototype.hasOwnProperty.call(grouped, j) ? grouped[j] : null, sectionId + "[" + j + "]"));
         if (att && j === att.to) into = target;
       });
     }
