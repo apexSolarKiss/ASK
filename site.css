@@ -240,9 +240,9 @@ html:has(> body > .shell) { overflow-x: clip; }
    treatment. The vendored module gives panel-level interaction only to
    `a.surface-panel`, which this is not, so no hover or transition arrives with
    it. The gallery card `.gal-card-trigger` is genuinely actionable and owns its
-   own transition. `.ext-card` is split: the asymptotic page's cards are
-   `a.surface-panel` and take the module's interaction, while studioLeoV's are
-   not yet and still own theirs locally.
+   own transition. Every `.ext-card` — the asymptotic page's six and
+   studioLeoV's ten — is an `a.surface-panel` and takes the module's
+   interaction.
 
    Only the local limb survives below. The column arrangement, the 12px stack,
    and every paint declaration resolve from the vendored module; the min-height
@@ -390,6 +390,11 @@ html:has(> body > .shell) { overflow-x: clip; }
 }
 
 /* ---------- Selected production portfolio (galleries) ---------- */
+/* `.section-h` no longer marks a content heading. The seven section headings it
+   used to set as uppercase mono labels take the document register's
+   section-title role (`.doc-section-title`) in the markup. What remains is the
+   trigger label of the local `.signal` disclosures that have not adopted the
+   delivered disclosure: the lineage page's six panels. */
 .section-h {
   font-family: var(--font-mono);
   font-size: var(--fs-caption);
@@ -535,10 +540,24 @@ html:has(> body > .shell) { overflow-x: clip; }
 @media (max-width: 640px) { .glyph-works { grid-template-columns: 1fr; } }
 /* #glyphsask (lowercase) stays as an alias at the panel's top edge, because published links use it. */
 #glyphsASK { position: relative; }
-#glyphsASK > .anchor-alias { position: absolute; top: -1px; left: 0; }
+#glyphsASK > .anchor-alias { position: absolute; top: 0; left: 0; }
 /* The desktop shell pins the mark + fade band at the top; land either anchor below it. */
 :root[data-surface-nav-mode="desktop"] #glyphsASK,
 :root[data-surface-nav-mode="desktop"] #glyphsask { scroll-margin-top: calc(var(--surface-nav-top-depth) + var(--surface-nav-gap)); }
+
+/* ---------- Asymptotic: Like Art action ----------
+   Like Art's disclosure is the section's one enclosure. The Facebook link
+   follows it, outside the enclosure and aligned right, so it stays visible
+   when the disclosure is closed.
+
+   PLACEMENT ONLY. The control carries `.surface-action`, so its type, padding,
+   radius, surface, border, foreground and interaction all resolve from the
+   vendored module. The old local `white-space: nowrap` is gone with them: the
+   contract declares `normal` deliberately, so a long label wraps inside the
+   control instead of pushing past the section edge. What stays here is where
+   the section puts it. */
+.like-art { display: flex; flex-direction: column; gap: var(--space-4); }
+.overlay-link { align-self: flex-end; }
 
 /* ---------- Asymptotic: YouTube facades ---------- */
 .yt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-3); }
@@ -558,36 +577,30 @@ html:has(> body > .shell) { overflow-x: clip; }
 .yt-facade:hover .yt-play { background: rgba(0,0,0,.32); }
 .yt-iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: var(--radius-lg); display: block; }
 
-/* ---------- Asymptotic: external (Lightroom) cards ---------- */
-/* The asymptotic page's six cards now carry `.surface-panel`, so the vendored
-   module supplies their glass, border, radius, padding and interaction, and the
-   local re-derivation of those is gone — the same retirement the `.card` rule
-   took above. Only the local limb survives here: the grid, the 110px floor that
-   keeps cards of unequal label length on one baseline, the space-between
-   distribution that pins the meta line to the bottom, the tighter space-2 stack,
-   and the overflow/wrapping rules further down that keep a long unbroken name
-   inside its card.
-
-   studioLeoV's ten cards use the same class and have NOT been migrated, so the
-   re-derivation survives for them alone, scoped by :not(.surface-panel). That
-   selector is the seam: when those cards adopt the panel too, both blocks below
-   simply go away. */
+/* ---------- External (Lightroom) cards: asymptotic + studioLeoV ---------- */
+/* Every card carries `.surface-panel`, and its name `.surface-panel-title`, so
+   the vendored module supplies the glass, border, radius, padding, interaction
+   and the title role, and the local re-derivation of those is gone — the same
+   retirement the `.card` rule took above. studioLeoV's ten cards were the last
+   un-migrated set; with them on the panel, the `:not(.surface-panel)` seam, the
+   name's own size, weight and tracking, and the restated flex column are retired
+   too. Only the local limb survives here: the grid, the 110px floor that keeps
+   cards of unequal label length on one baseline, the space-between distribution
+   that pins the meta line to the bottom, the tighter space-2 stack, the meta
+   line, and the overflow guard and wrapping rules further down. Names break at
+   their spaces and authored <wbr> hints; an unbroken name wider than its card is
+   clipped by the guard rather than wrapped. */
 .ext-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-4); grid-auto-rows: 1fr; }
 .ext-card {
-  display: flex; flex-direction: column; gap: var(--space-2); min-height: 110px; justify-content: space-between;
+  gap: var(--space-2); min-height: 110px; justify-content: space-between;
 }
-.ext-card:not(.surface-panel) {
-  padding: var(--space-5); border: 1px solid var(--line-1); border-radius: var(--radius-lg);
-  background: var(--surface-glass); border-bottom-color: var(--line-1);
-  transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out);
-}
-.ext-card:not(.surface-panel):hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--line-2); }
-.ext-card-name { font-size: var(--fs-h3); font-weight: var(--fw-light); letter-spacing: var(--tracking-tight); }
 .ext-card-meta { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-3); }
 
 .section-note { margin: var(--space-5) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
 
-/* ---------- Panels (Signal + Noise, Like Art) ---------- */
+/* ---------- Local disclosure panels (the lineage page) ----------
+   The asymptotic system key page's six disclosures take the delivered
+   disclosure (surface-treatments.css) instead. */
 .panel {
   display: flex; flex-direction: column; gap: var(--space-4);
   background: var(--surface-glass); border: 1px solid var(--line-1);
@@ -596,20 +609,6 @@ html:has(> body > .shell) { overflow-x: clip; }
 .signal > summary { cursor: pointer; list-style: none; margin: 0; }
 .signal > summary::-webkit-details-marker { display: none; }
 .signal[open] > summary { color: var(--fg-1); margin-bottom: var(--space-4); }
-/* Like Art panel: chevron sits top-right like every other panel (no reserved
-   gap); the Facebook link is an in-flow compact action at the bottom-right of
-   the panel.
-
-   PLACEMENT ONLY. The control carries `.surface-action`, so its type, padding,
-   radius, surface, border, foreground and interaction all resolve from the
-   vendored module. The old local `white-space: nowrap` is gone with them: the
-   contract declares `normal` deliberately, so a long label wraps inside the
-   control instead of pushing past the panel edge. What stays here is where the
-   panel puts it. */
-.overlay-link {
-  align-self: flex-end;
-  margin-top: var(--space-2);
-}
 
 /* fix: long camelCase Lightroom names must wrap within the card */
 .ext-card-name { overflow-wrap: anywhere; word-break: break-word; min-width: 0; }
@@ -644,7 +643,7 @@ html:has(> body > .shell) { overflow-x: clip; }
     var(--surface-glass);
 }
 
-/* ---------- Signal + Noise collapse chevron ---------- */
+/* ---------- Local disclosure chevron (the lineage page) ---------- */
 .signal-summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
 .signal-summary .chev { transition: transform var(--dur-2) var(--ease-out); }
 .signal:not([open]) .signal-summary .chev { transform: rotate(-90deg); }
