@@ -74,7 +74,7 @@ owns its base foreground, with only the bounded `gal-link` on-image paint
 adaptation described below. The text-link rule is **opt-in by class** — only an
 element carrying `.surface-text-link` takes it — and it sets no foreground at
 all: the contextual text colour stays consumer-owned, supplied by whichever
-region the link sits in. Six unboxed prose destinations across five subpages
+region the link sits in. Five unboxed prose destinations across five subpages
 consume it. The CFW map additionally consumes it for one separate population,
 the inspector's source links, whose `--fg-1` foreground the map's own layer
 supplies; the CFW conclusions page does not load it. Every shaped control, mark,
