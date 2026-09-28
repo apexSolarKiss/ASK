@@ -19,14 +19,16 @@
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://a-s-k.studio/og-image.png">
   <meta name="twitter:title" content="design // apex solar kiss">
   <meta name="twitter:description" content="apex solar kiss >> design // the visual architecture behind ASK-family surfaces, and selected design work">
-  <!-- Vendored design-system-ASK foundations, then the vendored surface-action
-       visual rule, then the vendored surface-shell pattern, then ASK-local payload
-       layout. Order matters: site.css layers instance adaptations over the vendored
-       files, never redefines their ownership. -->
+  <!-- Vendored design-system-ASK foundations, then the vendored surface-action and
+       surface-text-link visual rules, then the vendored surface-shell pattern and the
+       document register (its section-title role for the two headings below), then
+       ASK-local payload layout. Order matters: site.css layers instance adaptations
+       over the vendored files, never redefines their ownership. -->
   <link rel="stylesheet" href="/colors_and_type.css">
   <link rel="stylesheet" href="/surface-action.css">
   <link rel="stylesheet" href="/surface-text-link.css">
   <link rel="stylesheet" href="/surface-shell.css">
+  <link rel="stylesheet" href="/surface-document.css">
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
@@ -56,7 +58,7 @@
       <section class="portfolio" aria-label="design">
 
         <section class="gal-project" aria-label="design system">
-          <h2 class="section-h">design system</h2>
+          <h2 class="doc-section-title">design system</h2>
 
           <div class="gal-head">
             <h3 class="gal-title">design-system-ASK</h3>
@@ -75,7 +77,7 @@
 
         <section class="gal-project" aria-label="selected design work">
           <div class="gal-head">
-            <h2 class="section-h">selected design work</h2>
+            <h2 class="doc-section-title">selected design work</h2>
             <div class="gal-actions">
               <a class="chip surface-action" href="https://a-s-k.notion.site/1e51e384420e800c8466f113e50fe617?v=1e51e384420e8099a452000c69c44bc7" target="_blank" rel="noopener">design portfolio &gt;&gt;</a>
             </div>
