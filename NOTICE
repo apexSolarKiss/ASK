@@ -29,7 +29,10 @@ optional helper, and the canonical browser-icon set from design-system-ASK
                                  foreground, border, geometry and interaction;
                                  the consuming surface keeps the element
                                  semantics, destination, copy, row and
-                                 placement
+                                 placement. Its attention edge is also taken
+                                 by class on the gallery cards, video facades,
+                                 p5 launch cards and gallery dialog controls,
+                                 for hover and keyboard focus only
   - surface-text-link.css      — the shared unboxed-textual-link contract,
                                  vendored as a pinned byte-identical copy and
                                  not modified here. It is OPT-IN BY CLASS: only
