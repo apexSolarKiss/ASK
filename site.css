@@ -616,7 +616,8 @@ html:has(> body > .shell) { overflow-x: clip; }
 /* equal-height cards: grid-auto-rows:1fr + default stretch (no height:100%, which
    collapsed/overlapped inside the flex panel) — uniform in both panel + studioLeoV */
 
-/* ---------- p5 launch cards (live preview; click opens fullscreen new tab) ---------- */
+/* ---------- p5 launch cards (live preview) ----------
+   A click opens the category page, or the sketch fullscreen in a new tab. */
 .p5-launch {
   display: block; position: relative; aspect-ratio: 4 / 3;
   border: 1px solid var(--line-1); border-radius: var(--radius-lg); overflow: hidden;
