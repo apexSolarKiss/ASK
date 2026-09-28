@@ -226,7 +226,10 @@
       var f=document.createElement('iframe');
       f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0';
       f.title='video'; f.allow='autoplay; encrypted-media; fullscreen; picture-in-picture'; f.allowFullscreen=true; f.className='yt-iframe';
+      /* The facade is removed, so the focus it held moves to the player that replaces it. */
+      var had=document.activeElement===b;
       b.replaceWith(f);
+      if(had) f.focus({preventScroll:true});
     });
   })();
   </script>
