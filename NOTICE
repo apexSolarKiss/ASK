@@ -75,6 +75,9 @@ browser-icon set from design-system-ASK
                                  disclosure, for six of its sections, and the
                                  CFW mind map its controlled disclosure
                                  trigger, for the inspector's collapse control
+                                 and the About and Legend triggers used where
+                                 the canvas cannot hold its caption and legend
+                                 open
   - surface-document-overflow.js
                                — the document register's optional overflow-cue
                                  helper, vendored as a pinned byte-identical
@@ -125,10 +128,11 @@ apex-solar-kiss/consciousness-free-will/map/ is a fixed full-viewport
 interactive application, not a scrolling document, and does not consume the
 shell. It carries ASK Tier 3 in its application bar and follows the
 design-system interactive-diagram family grammar. Its inspector's collapse
-control takes the disclosure grammar of surface-treatments.css, loaded after
-surface-panel.css as that rule requires; the map applies no panel class, adopts
-neither the document register nor its overflow helper, and keeps its own
-inspector surface, placement and behavior. The exception is specific to
+control, and the About and Legend triggers used where the canvas cannot hold its
+caption and legend open, take the disclosure grammar of surface-treatments.css,
+loaded after surface-panel.css as that rule requires; the map applies no panel
+class, adopts neither the document register nor its overflow helper, and keeps
+its own inspector surface, placement and behavior. The exception is specific to
 that page: the CFW conclusions at apex-solar-kiss/consciousness-free-will/ are
 an ordinary shell page and consume the shell and its navigation runtime, as
 every other non-home content page continues to do.

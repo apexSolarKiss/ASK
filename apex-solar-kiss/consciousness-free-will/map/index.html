@@ -97,19 +97,17 @@
       <div class="insp-bar"><button class="insp-toggle surface-disclosure-trigger" id="insptoggle" type="button" aria-controls="inspbody" aria-expanded="true" aria-label="collapse the inspector" title="collapse the inspector"><span class="surface-disclosure-label insp-label">inspector</span><span class="surface-disclosure-indicator" aria-hidden="true">&#9660;</span></button></div>
       <div id="inspbody"></div>
     </div>
-    <div class="glass legend" id="legend" role="note" aria-label="map legend — colour, line and shape encoding"></div>
-
-    <div class="glass hud">
-      <button id="zout" type="button" title="zoom out" aria-label="zoom out">&minus;</button>
-      <span class="pct" id="pct" aria-label="zoom level">100%</span>
-      <button id="zin" type="button" title="zoom in" aria-label="zoom in">+</button>
-      <button id="zfit" type="button" title="fit" aria-label="fit">&#10530;</button>
-      <span class="lod" id="lod" aria-label="level of detail">regions</span>
-      <span class="fsep"></span>
-      <span class="fstate" id="filterstate" role="status" aria-label="filter state">no filter</span>
+    <!-- About and Legend. On a canvas that holds them they are open panels, placed
+         with the HUD in one bottom composition; on one that does not, they close
+         behind these two triggers and open one at a time above the bottom controls
+         (cfw-release.js). The same two panels in every state: the caption is the
+         authored text below and the legend the engine's, and neither contains the
+         triggers. -->
+    <div class="cfw-info-triggers" id="cfwinfo" role="group" aria-label="map information" data-cfw-edge="none">
+      <button class="cfw-info-trigger surface-disclosure-trigger" type="button" aria-controls="cfwcaption" aria-expanded="true"><span class="surface-disclosure-label">About</span><span class="surface-disclosure-indicator" aria-hidden="true">&#9660;</span></button>
+      <button class="cfw-info-trigger surface-disclosure-trigger" type="button" aria-controls="legend" aria-expanded="true"><span class="surface-disclosure-label">Legend</span><span class="surface-disclosure-indicator" aria-hidden="true">&#9660;</span></button>
     </div>
-
-    <div class="glass cfw-caption">
+    <div class="glass cfw-caption" id="cfwcaption" data-cfw-edge="bottom">
       The mind map is the reading surface; the typed relation atlas is the machinery
       underneath it.<br>
       <b>What the geometry does not claim.</b> Radial distance encodes projection level
@@ -121,6 +119,18 @@
       identifiers; all 548 primary objects stay on the map. A filter is explicit, bounds
       the map to a section, and reports its census. The 479 evidence owners open from
       <b>atlas</b> by exact identifier and never enter the graph.
+    </div>
+
+    <div class="glass legend" id="legend" role="note" aria-label="map legend — color, line and shape encoding" data-cfw-edge="right"></div>
+
+    <div class="glass hud">
+      <button id="zout" type="button" title="zoom out" aria-label="zoom out">&minus;</button>
+      <span class="pct" id="pct" aria-label="zoom level">100%</span>
+      <button id="zin" type="button" title="zoom in" aria-label="zoom in">+</button>
+      <button id="zfit" type="button" title="fit" aria-label="fit">&#10530;</button>
+      <span class="lod" id="lod" aria-label="level of detail">regions</span>
+      <span class="fsep"></span>
+      <span class="fstate" id="filterstate" role="status" aria-label="filter state">no filter</span>
     </div>
 
     <div class="corner-tick tl" aria-hidden="true"></div><div class="corner-tick tr" aria-hidden="true"></div>
