@@ -139,7 +139,7 @@ surface-shell.css     vendored from design-system-ASK — the surface-shell PATT
 surface-panel.css     vendored from design-system-ASK — the live-content-panel VISUAL RULE, pinned + byte-identical; the homepage tier panels consume it (presentation only — ASK keeps its own markup, semantics, and support foreground), as do the asymptotic-system-key and studioLeoV pages' external cards, the asymptotic-system-key page's six disclosures for their panel material and free corners, and the CFW conclusions page, for its held-question rulings and its panels (the framing openings of the ASK conclusion and the ASK prospective axis, the conclusion of its section 8 and its two compressions)
 surface-shell.js      vendored from design-system-ASK — the shell's optional NAVIGATION RUNTIME, pinned + byte-identical; opt-in per page through template.surface-nav-source
 surface-text-link.css vendored from design-system-ASK — the unboxed-textual-link VISUAL RULE, pinned + byte-identical; opt-in by class; the homepage does not consume it
-surface-action.css    vendored from design-system-ASK — the compact-action VISUAL RULE, pinned + byte-identical; every page's compact controls consume it (the owner owns the base surface, foreground, border, geometry and interaction; ASK keeps the element semantics, destination, copy, row and placement)
+surface-action.css    vendored from design-system-ASK — the compact-action VISUAL RULE, pinned + byte-identical; every page's compact controls consume it (the owner owns the base surface, foreground, border, geometry and interaction; ASK keeps the element semantics, destination, copy, row and placement); the gallery cards, video facades, p5 launch cards and gallery dialog controls take only its attention edge, by class
 surface-document.css  vendored from design-system-ASK — the document-register VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes the full register, while the apex solar kiss, asymptotic system key and studioLeoV pages consume its document-body and authored-inline-emphasis treatment in their opening paragraphs; the apex solar kiss, design, ASKproduKtion and studioLeoV pages set their section headings in its section-title role, and the asymptotic system key page sets the Like Art founding statement as a quotation
 surface-treatments.css  vendored from design-system-ASK — the surface-treatments VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes its surface axes, emphasis rail and label, and the asymptotic system key page its disclosure, for six of its sections
 surface-document-overflow.js  vendored from design-system-ASK — the document register's optional overflow-cue helper, pinned + byte-identical; the CFW conclusions page loads it
@@ -194,6 +194,10 @@ across the two, and stating it precisely matters more than stating it briefly:
   `gal-link` carries an **on-image contextual-paint adaptation** — a scrim, a
   brighter translucent border, and a white foreground — layered over that
   canonical base so the control stays legible above a photograph.
+  Separately, the gallery cards, the video facades, the p5 launch cards and
+  the gallery dialog's close, previous and next controls opt into the rule's
+  **attention edge** by class: the owner governs only their hover and
+  keyboard-focus edge, and ASK keeps their surface, geometry and behavior.
 
 That split is the point of those modules. So an inert panel carrying its own
 links and a panel that is itself a link can share one look without sharing a
