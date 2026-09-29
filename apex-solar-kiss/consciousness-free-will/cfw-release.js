@@ -12,7 +12,6 @@
 (function () {
   "use strict";
 
-  var TABLET = window.matchMedia("(min-width: 768px) and (max-width: 1023px)");
   var D = window.CFW_ATLAS;
 
   /* ---- theme: a three-state CURRENT-MODE selector ------------------------
@@ -810,28 +809,394 @@
     if (insp) { insp.setAttribute("tabindex", "-1"); insp.focus(); }
   }
 
-  /* ---- responsive contract ----------------------------------------------
-     TABLET ONLY. Between 768 and 1023 the legend and the caption are collapsed
-     by default and expanded again above that; `data-overlays` is the flag the
-     stylesheet reads. Nothing here is width-gated on the conclusions any more:
-     they are a separate route, so a narrow viewport reaches them by navigating
-     rather than by a mode, and there is no landing surface to open, retract or
-     track. */
-  function applyMode() {
-    document.body.setAttribute("data-overlays", TABLET.matches ? "0" : "1");
-  }
-  applyMode();
-  // matchMedia "change" is the semantically right signal, but it does not fire
-  // reliably under emulated viewport resizing, which would strand the page in
-  // whichever mode it loaded in. window.resize is the dependable backstop; both
-  // are wired, and applyMode is idempotent so double-firing is harmless.
-  if (TABLET.addEventListener) TABLET.addEventListener("change", applyMode);
-  else if (TABLET.addListener) TABLET.addListener(applyMode);
-  var modeTimer = null;
-  window.addEventListener("resize", function () {
-    if (modeTimer) clearTimeout(modeTimer);
-    modeTimer = setTimeout(applyMode, 60);
-  });
+  /* ---- lower chrome: one composition --------------------------------------
+     The caption (About), the legend, the HUD and its export row share the bottom
+     of the canvas. They used to be placed independently, so as the canvas narrowed
+     the caption ran under the HUD and the legend, and below 1024px both panels were
+     hidden with no control to bring them back. This controller gives them one
+     layout, decided from what the canvas can actually hold.
+
+     WIDE. Both panels are visible. The legend keeps its corner; the caption takes
+     the slot between the HUD (budgeted at its widest state, or wider where the HUD
+     measures wider) and the legend, as wide as the slot allows up to its own
+     measure, centered on the canvas where that fits. The page stays wide only while
+     that slot is at least CAPTION_MIN, the caption then takes at most a third of
+     the canvas height, and the legend clears the expanded inspector. A panel that
+     overflows scrolls, and is in the tab order so a keyboard can scroll it.
+
+     COMPACT, everywhere else. The panels close behind two controlled disclosure
+     triggers, About and Legend, in the shared grammar of surface-treatments.css.
+     The triggers sit beside the HUD when its band has room, and above the HUD and
+     its export row when it does not. At most one panel is open. It opens upward
+     from the bottom controls, into the space between them and the top of the
+     canvas (or the inspector, where the inspector is over that space), and scrolls
+     inside it; it is in the tab order so a keyboard can scroll it. Entering compact
+     closes both panels; while the lower chrome stays compact a resize keeps the
+     reader's choice (below). Escape in a trigger or an open panel closes it, and
+     focus that was in that panel or on its trigger stays on the trigger.
+
+     THE LATER ACTION OF THE READER'S WINS. The inspector, the atlas panel and an
+     open panel share the canvas, and what the reader does decides which gives way:
+       - opening a panel while the expanded inspector leaves it less than MIN_ROOM
+         (where it would have more without the inspector) collapses the inspector to
+         its pill; the record stays selected;
+       - expanding the inspector, a selection, or a step inside the inspector (an
+         evidence owner, "show all", "back to") that leaves an open panel short of
+         MIN_ROOM, or a selection that reveals its record under the panel, closes
+         the panel;
+       - opening a panel closes the atlas panel, and opening the atlas panel closes
+         an open panel, since both take the same corner.
+
+     A RESIZE IS NOT AN ACTION. While the lower chrome stays compact a resize never
+     discards the reader's choice of panel, and neither does the inspector expanding
+     or collapsing at the map's own compact default as a resize crosses it
+     (cfw-atlas.js counts each change of the inspector by its cause, so that change
+     is not taken for the reader's). A resize, or the HUD's band moving (its top, or
+     whether the triggers still fit beside it, which a zoom or a filter can change
+     where they only just fit), rebudgets the room by the rule a click uses:
+     where the expanded inspector now leaves the open panel less than MIN_ROOM, it
+     collapses to its pill, keeping the record, the section and the view, and focus
+     that was in its body moves to its toggle. The open panel keeps that room
+     whichever of the two the reader opened last. The inspector stays collapsed until
+     the reader expands it or opens a record, or the map's compact default expands
+     it again where the panel then has MIN_ROOM beside it. Where the collapsed pill
+     leaves a panel less than READ_MIN, the panel narrows beside it, down to
+     NARROW_MIN; narrower than that it keeps its width and the room below the pill.
+     A resize or a band move closes a panel only to set it aside: when it takes a
+     panel that had READ_MIN below it, or leaves any open panel below LINE_MIN; an
+     inspector that yielded in that same step is expanded again. The panel's trigger
+     then reads closed, and a later resize or band move that gives it READ_MIN again
+     (LINE_MIN, if it had less) reopens it. Using a trigger, Escape on one, expanding
+     or collapsing the inspector, selecting or clearing a record, a step inside the
+     inspector or opening the atlas panel forgets it. A panel the reader opens with
+     less than READ_MIN stays open, scrolling in what there is, while resizes leave
+     it at least LINE_MIN and until one gives it READ_MIN. A hover preview, with
+     nothing selected, can lengthen the expanded inspector and shorten a panel beside
+     it below READ_MIN, and on a short enough canvas to its padding, while the
+     pointer rests on a concept; nothing closes, and the room returns when the
+     pointer leaves.
+
+     THE FIT. Each panel declares the edge the map's fit reserves for it
+     (data-cfw-edge, read by cfw-atlas.js): in wide the legend is right chrome and
+     the caption bottom chrome; in compact the trigger row is bottom chrome and an
+     open panel is an overlay the reader opened to read, reserved by nothing, so
+     opening or closing one does not by itself move the map. Where opening one
+     collapses the inspector or closes the atlas panel, the map refits as those
+     controls' own toggles do. After any change to the arrangement the map refits,
+     only while the reader's view is at Fit. An explicit Fit closes an open panel
+     that covers the fitted drawing; it never clears the selection or the filter.
+
+     WHAT THIS IS NOT. No new content and no second copy of any: About is the
+     authored caption and Legend the engine's legend, in every state, so the PNG
+     page export reads them unchanged whatever is open. The triggers are neither
+     caption nor legend payload. No pan, zoom or fit arithmetic of its own. */
+  (function () {
+    var wrap = document.getElementById("canvaswrap");
+    var row = document.getElementById("cfwinfo");
+    var hud = wrap && wrap.querySelector(".hud");
+    var insp = document.getElementById("insp");
+    var inspBody = document.getElementById("inspbody");
+    if (!wrap || !row || !hud || !window.CFW_VIEW) return;
+    var V = window.CFW_VIEW;
+    var pairs = [];
+    Array.prototype.forEach.call(row.querySelectorAll("[aria-controls]"), function (t) {
+      var p = document.getElementById(t.getAttribute("aria-controls"));
+      if (p) pairs.push({ t: t, p: p });
+    });
+    if (pairs.length !== 2) return;
+    var cap = pairs[0].p, leg = pairs[1].p;
+
+    var EDGE = 18;           /* the chrome's inset from the canvas edges (cfw-atlas.css) */
+    var GUTTER = 18;         /* between the caption and its neighbors in the wide band */
+    var GAP = 8;             /* between stacked control rows, and between them and an open panel */
+    var SIDE = 12;           /* between the HUD and the triggers when they share its band */
+    var HUD_BUDGET = 360;    /* the HUD at its widest state (filter active): 354px measured */
+    var CAPTION_MAX = 560;   /* the caption's own measure (cfw-atlas.css) */
+    var CAPTION_MIN = 480;   /* narrower than this, the caption wraps too tall and short-lined for the band */
+    var LEGEND_W = 306;      /* the legend's own width (cfw-atlas.css) */
+    var OPEN_SHARE = 1 / 3;  /* wide: the caption may take at most this share of the canvas height */
+    var MIN_ROOM = 120;      /* compact: the least an open panel is given before the inspector yields */
+    var READ_MIN = 72;       /* compact: three lines of a panel's 11px text with its padding */
+    var LINE_MIN = 40;       /* compact: one line with its padding, the least a resize leaves an open panel */
+    var NARROW_MIN = 280;    /* compact: the narrowest a panel is made to clear the collapsed inspector */
+    var mode = null, sig = null;
+    var band = null;         /* the canvas and the HUD's band at the last update: a change is a resize */
+    var lastRoom = 0;        /* the open panel's room after the reader opened it or the last resize */
+    var aside = null;        /* a panel a resize set aside ... */
+    var asideNeed = READ_MIN; /* ... and the room a resize must give back to reopen it */
+
+    function rect(el) { return el.getBoundingClientRect(); }
+    function shown(el) { return !!el && el.getClientRects().length > 0; }
+    function hits(a, b) { return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top; }
+    function focusQuietly(el) { try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } }
+    function px(name, v) { wrap.style.setProperty(name, Math.round(v) + "px"); }
+    function atlasOpen() { return document.body.classList.contains("atlas-open"); }
+    function inspOpen() { return !document.body.classList.contains("insp-collapsed"); }
+    function openPair() {
+      for (var i = 0; i < pairs.length; i++) if (!pairs[i].p.hidden) return pairs[i];
+      return null;
+    }
+    function setOpen(pair, on) {
+      if (!on && pair.p.contains(document.activeElement)) focusQuietly(pair.t);
+      pair.t.setAttribute("aria-expanded", on ? "true" : "false");
+      if (on) pair.p.removeAttribute("hidden"); else pair.p.setAttribute("hidden", "");
+    }
+    /* the HUD and its export row, as one block */
+    function hudBlock() {
+      var h = rect(hud), r = { left: h.left, top: h.top, right: h.right, bottom: h.bottom };
+      var x = hud.querySelector(".hud-row-export");
+      if (shown(x)) { var e = rect(x); r.left = Math.min(r.left, e.left); r.top = Math.min(r.top, e.top);
+        r.right = Math.max(r.right, e.right); r.bottom = Math.max(r.bottom, e.bottom); }
+      return r;
+    }
+    /* whether the triggers fit in the HUD's band, beside it */
+    function besides(wr, hr) { return wr.right - EDGE - rect(row).width >= hr.right + SIDE; }
+    /* what the lower chrome's room depends on: the canvas, the HUD's top and whether the
+       triggers fit beside it (not the HUD's width as such, which a zoom or a filter
+       changes by a few characters; only where that moves the triggers is it a change) */
+    function bandOf() {
+      var wr = rect(wrap), hb = hudBlock();
+      return [wrap.clientWidth, wrap.clientHeight, Math.round(hb.top - wr.top), besides(wr, rect(hud))].join("|");
+    }
+
+    /* WIDE: place the caption in its slot and say whether the layout holds. */
+    function layWide() {
+      wrap.setAttribute("data-cfw-chrome", "wide");
+      pairs.forEach(function (x) { x.p.removeAttribute("hidden"); });
+      cap.setAttribute("data-cfw-edge", "bottom"); leg.setAttribute("data-cfw-edge", "right");
+      row.setAttribute("data-cfw-edge", "none");
+      var wr = rect(wrap), W = wrap.clientWidth, H = wrap.clientHeight;
+      var slotL = Math.max(EDGE + HUD_BUDGET, hudBlock().right - wr.left) + GUTTER;
+      var slotR = W - EDGE - LEGEND_W - GUTTER;
+      var slotW = slotR - slotL, w = Math.max(0, Math.min(CAPTION_MAX, slotW));
+      var left = Math.min(Math.max((W - w) / 2, slotL), slotR - w);
+      px("--cfw-caption-left", left); px("--cfw-caption-w", w);
+      if (slotW < CAPTION_MIN) return false;
+      if (rect(cap).height > H * OPEN_SHARE) return false;
+      /* the legend and the expanded inspector share the right edge; their heights are
+         bounded so that they never meet, and this checks that they do not */
+      if (shown(insp)) { var a = rect(insp), b = rect(leg);
+        if (a.bottom > b.top - GAP && a.left < b.right && a.right > b.left) return false; }
+      return true;
+    }
+
+    /* COMPACT: the trigger row in the HUD's band or above it, and each panel's region.
+       Returns the room of the open panel (or of `target`), and the room it would have
+       without the inspector. */
+    function place(target) {
+      var wr = rect(wrap), hb = hudBlock(), hr = rect(hud);
+      var beside = besides(wr, hr);
+      if (beside) {
+        px("--cfw-row-left", hr.right - wr.left + SIDE); px("--cfw-row-bottom", wr.bottom - hr.bottom);
+        px("--cfw-row-h", hr.height);
+      } else {
+        px("--cfw-row-left", EDGE); px("--cfw-row-bottom", wr.bottom - hb.top + GAP);
+        wrap.style.removeProperty("--cfw-row-h");
+      }
+      wrap.setAttribute("data-cfw-row", beside ? "beside" : "above");
+      var rr = rect(row), floor = Math.min(hb.top, rr.top);
+      px("--cfw-panel-bottom", wr.bottom - floor + GAP);
+      var o = target || openPair(), out = { room: 0, free: 0 };
+      pairs.forEach(function (x) {
+        var w = x.p === cap ? Math.min(CAPTION_MAX, wr.width - 2 * EDGE) : Math.min(LEGEND_W, wr.width - 2 * EDGE);
+        var free = Math.max(0, Math.floor(floor - GAP - (wr.top + EDGE))), room = free;
+        if (shown(insp)) { var ir = rect(insp);
+          if (ir.left < wr.left + EDGE + w && ir.right > wr.left + EDGE) {
+            room = Math.max(0, Math.floor(floor - GAP - Math.max(wr.top + EDGE, ir.bottom + GAP)));
+            /* where the collapsed inspector's pill would leave the panel less than
+               READ_MIN, the panel narrows to clear it, down to NARROW_MIN */
+            var nw = Math.floor(ir.left - GAP - (wr.left + EDGE));
+            if (room < READ_MIN && !inspOpen() && nw >= NARROW_MIN) { w = nw; room = free; } } }
+        px(x.p === cap ? "--cfw-caption-cw" : "--cfw-legend-cw", w);
+        if (x === o) out = { room: room, free: free };
+        x.p.style.setProperty("--cfw-panel-max", room + "px");
+      });
+      return out;
+    }
+    /* the inspector is what leaves the open panel short of MIN_ROOM */
+    function inspectorCrowds(r) { return r.room < MIN_ROOM && r.free > r.room; }
+    /* the room rule a click and a resize share: the expanded inspector yields, collapsing to its pill */
+    function budget() {
+      var r = place();
+      if (openPair() && inspOpen() && V.setInspectorOpen && inspectorCrowds(r)) {
+        V.setInspectorOpen(false, { refit: true, cause: "chrome" });
+        r = place(); r.yielded = true;
+      }
+      return r;
+    }
+    function unplace() {
+      ["--cfw-row-left", "--cfw-row-bottom", "--cfw-row-h", "--cfw-panel-bottom", "--cfw-caption-cw", "--cfw-legend-cw"]
+        .forEach(function (n) { wrap.style.removeProperty(n); });
+      pairs.forEach(function (x) { x.p.style.removeProperty("--cfw-panel-max"); });
+      wrap.removeAttribute("data-cfw-row");
+    }
+
+    /* everything the fit depends on; a change refits a map that is at Fit */
+    function signature() {
+      return [mode, wrap.getAttribute("data-cfw-row"), wrap.style.getPropertyValue("--cfw-row-bottom"),
+              wrap.style.getPropertyValue("--cfw-caption-left"), wrap.style.getPropertyValue("--cfw-caption-w"),
+              mode === "wide" ? Math.round(rect(cap).height) : 0, wrap.clientWidth, wrap.clientHeight].join("|");
+    }
+    function settle() {
+      var s = signature();
+      if (s !== sig) { sig = s; if (V.atFit()) V.fit(); }
+    }
+    function keepFocus(fa) {
+      if (!fa || fa === document.body || !document.contains(fa)) return;
+      /* focus in the inspector's body, which a collapse hides, moves to its toggle */
+      var t = document.getElementById("insptoggle");
+      if (inspBody && inspBody.contains(fa) && !shown(inspBody) && t && shown(t)) { focusQuietly(t); return; }
+      for (var i = 0; i < pairs.length; i++) {
+        var x = pairs[i];
+        if (x.t === fa && !shown(fa)) { focusQuietly(x.p); return; }
+        if (x.p.hidden && (x.p === fa || x.p.contains(fa))) { focusQuietly(x.t); return; }
+      }
+    }
+
+    /* `flip`: the map's own compact default changed with a resize (onAction, below) */
+    function update(flip) {
+      if (!(wrap.clientHeight > 0)) return;
+      var fa = document.activeElement, before = mode;
+      var b = bandOf(), resized = !!flip || b !== band;
+      band = b;
+      var was = pairs.map(function (x) { return !x.p.hidden; });
+      var o = before === "compact" ? openPair() : null, top = o ? o.p.scrollTop : 0;
+      unplace();
+      if (layWide()) {
+        /* in wide a panel is in the tab order only when it has something to scroll */
+        pairs.forEach(function (x) { setOpen(x, true);
+          x.p.setAttribute("tabindex", x.p.scrollHeight > x.p.clientHeight + 1 ? "0" : "-1"); });
+        mode = "wide"; aside = null; lastRoom = 0;
+      } else {
+        wrap.setAttribute("data-cfw-chrome", "compact");
+        cap.setAttribute("data-cfw-edge", "none"); leg.setAttribute("data-cfw-edge", "none");
+        row.setAttribute("data-cfw-edge", "bottom");
+        pairs.forEach(function (x, i) { x.p.setAttribute("tabindex", "0"); setOpen(x, before === "compact" && was[i]); });
+        mode = "compact";
+        var r = resized ? budget() : place(), op = openPair();
+        if (resized && op && r.room < Math.min(READ_MIN, op.p.scrollHeight) && (lastRoom >= READ_MIN || r.room < LINE_MIN)) {
+          asideNeed = lastRoom >= READ_MIN ? READ_MIN : LINE_MIN;
+          aside = op; setOpen(op, false);
+          /* a yield that bought the panel nothing is undone */
+          if (r.yielded) V.setInspectorOpen(true, { refit: true, cause: "chrome" });
+          r = place();
+        } else if (resized && !op && aside) {
+          /* reopen by the room a click would give it: an inspector that would yield counts as gone */
+          var q = place(aside), back = aside;
+          if ((inspOpen() && inspectorCrowds(q) ? q.free : q.room) >= asideNeed) {
+            aside = null; setOpen(back, true); r = budget();
+            if (r.room < asideNeed) {
+              aside = back; setOpen(back, false);
+              if (r.yielded) V.setInspectorOpen(true, { refit: true, cause: "chrome" });
+              r = place();
+            }
+          }
+        }
+        if (resized) lastRoom = openPair() ? r.room : 0;
+        if (o && !o.p.hidden) o.p.scrollTop = top;
+      }
+      keepFocus(fa);
+      settle();
+      seen = observed(); seenCauses = causes();
+    }
+    function toggle(pair) {
+      if (mode !== "compact") return;
+      var on = pair.p.hidden, fa = document.activeElement;
+      aside = null;
+      pairs.forEach(function (x) { setOpen(x, x === pair ? on : false); });
+      if (on && atlasOpen() && V.openPanel) V.openPanel(false);
+      var r = on ? budget() : place();
+      lastRoom = on ? r.room : 0;
+      keepFocus(fa);
+      settle();
+      seen = observed(); seenCauses = causes();
+    }
+    function close(focusTrigger) {
+      var o = mode === "compact" ? openPair() : null;
+      if (!o) return false;
+      setOpen(o, false);
+      if (focusTrigger) focusQuietly(o.t);
+      aside = null; lastRoom = 0;
+      place(); settle();
+      return true;
+    }
+
+    pairs.forEach(function (x) { x.t.addEventListener("click", function () { toggle(x); }); });
+    function onKey(ev) {
+      if (ev.key !== "Escape" || mode !== "compact") return;
+      var o = openPair();
+      if (!o) {
+        /* Escape on a trigger dismisses a panel a resize set aside, and nothing more */
+        if (aside && ev.currentTarget === row) { aside = null; ev.preventDefault(); ev.stopPropagation(); }
+        return;
+      }
+      var ours = o.p.contains(document.activeElement) || document.activeElement === o.t;
+      close(ours); ev.preventDefault(); ev.stopPropagation();
+    }
+    row.addEventListener("keydown", onKey);
+    pairs.forEach(function (x) { x.p.addEventListener("keydown", onKey); });
+
+    /* The reader's actions that close an open panel (THE LATER ACTION OF THE READER'S
+       WINS, above), judged when they happen, apart from the map's own change at its
+       compact default. */
+    function observed() { return { atlas: atlasOpen(), open: inspOpen(), locked: V.lockedId ? V.lockedId() : null }; }
+    function causes() { return V.inspectorCauses ? V.inspectorCauses() : null; }
+    var seen = observed(), seenCauses = causes();
+    function onAction(records) {
+      var now = observed(), was = seen, c = causes(), k = seenCauses || {};
+      seen = now; seenCauses = c;
+      var byReader = c ? c.reader !== k.reader : now.open !== was.open;
+      var byMap = !!c && c.compact !== k.compact;
+      var chose = !!now.locked && now.locked !== was.locked;
+      var stepped = !!now.locked && now.locked === was.locked && (records || []).some(function (m) {
+        return m.type === "childList" && m.target === inspBody; });
+      if (byMap && !byReader && !chose && now.atlas === was.atlas) { update(true); return; }
+      if (byReader || chose || stepped || (was.locked && !now.locked) || (now.atlas && !was.atlas)) aside = null;
+      var o = mode === "compact" ? openPair() : null;
+      if (!o) return;
+      if (now.atlas && !was.atlas) { close(false); return; }
+      if (chose) {
+        var sel = null;
+        try { sel = document.querySelector('#stage g.node[data-id="' + (window.CSS && CSS.escape ? CSS.escape(now.locked) : now.locked) + '"]'); } catch (e) { sel = null; }
+        if (sel && shown(sel)) { var r = rect(sel), c2 = { left: r.left + r.width / 2, right: r.left + r.width / 2 + 1, top: r.top + r.height / 2, bottom: r.top + r.height / 2 + 1 };
+          if (hits(c2, rect(o.p))) { close(false); return; } }
+      }
+      if (now.open && ((byReader && !was.open) || chose || stepped) && inspectorCrowds(place())) close(false);
+    }
+    if (window.MutationObserver) {
+      var mo = new MutationObserver(onAction);
+      mo.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+      /* every selection, and every step inside the inspector, rewrites its body */
+      if (inspBody) mo.observe(inspBody, { childList: true });
+      /* the export row joins the HUD after this runs; re-measure when it does */
+      new MutationObserver(schedule).observe(hud, { childList: true });
+    }
+
+    /* An explicit Fit closes an open panel that covers the drawing it just fitted. */
+    var zfit = document.getElementById("zfit");
+    if (zfit) zfit.addEventListener("click", function () {
+      var o = mode === "compact" ? openPair() : null;
+      var g = document.querySelector("#stage svg > g");
+      if (o && g && hits(rect(o.p), rect(g))) close(false);
+    });
+
+    var pending = false;
+    function schedule() {
+      if (pending) return;
+      pending = true;
+      (window.requestAnimationFrame || function (f) { return setTimeout(f, 16); })(function () { pending = false; update(); });
+    }
+    /* the window's resize runs before this frame's animation callbacks, so the page is
+       rebudgeted before it paints; the observers catch what changes size without it */
+    window.addEventListener("resize", schedule);
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(schedule);
+      ro.observe(wrap); ro.observe(hud); if (insp) ro.observe(insp);
+    }
+    window.addEventListener("load", schedule);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule).catch(function () {});
+    update();
+  })();
 
   /* ARRIVAL FROM THE CONCLUSIONS ROUTE. A result activated on the conclusions page
      navigates here naming the record. Nothing else writes the hash, and a hash that

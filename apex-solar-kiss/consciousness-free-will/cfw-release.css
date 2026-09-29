@@ -17,12 +17,17 @@
  * package; the engine and that stylesheet are maintained in this repo and are no
  * longer byte-identical to it. This file edits neither. It adds only what the
  * public release needs: the ASK wordmark in the bar and the responsive contract.
- * It defines NO token: every color, size and spacing value below resolves to a
- * design-system-ASK custom property.
+ * It defines no design token: its colors resolve to design-system-ASK custom
+ * properties, and the lower-chrome geometry it adds restates the engine's insets
+ * and widths or is measured at run time by cfw-release.js.
  *
  * RESPONSIVE CONTRACT
- *   wide    >= 1024   full interactive map + atlas; the conclusions are a link
- *   tablet  768-1023  full map; legend and caption collapsed by default
+ *   lower   every     About (the caption) and the legend share the bottom of the
+ *   chrome  width     canvas with the HUD in one composition (cfw-release.js):
+ *                     open beside the HUD where the canvas holds them, behind
+ *                     About and Legend triggers everywhere else, one at a time,
+ *                     opening above the bottom controls — never hidden without
+ *                     a way back
  *   small   <  768    the map keeps its two-row application bar and opens with
  *                     the inspector collapsed to a pill, as a touch screen at
  *                     most 520px tall also does; opening a record expands the
@@ -68,19 +73,18 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
    because unlike those two they are actionable rather than reportorial. The
    label case is authored, not transformed: `PNG page` is the control's name.
 
-   THE PAIR IS A SECOND ROW, PLACED OUT OF FLOW, and the reason is measured.
-   Inline, these two labels widen the HUD from 304px to 482px and run it under
-   the centred caption panel that shares its bottom edge — 60px at 1440, 140px
-   at 1280, 244px at 1024. Making the HUD a two-row flex container fixes the
-   width and not the harm: the HUD grows upward, the caption spans that band,
-   and the obscured caption area at 1024 goes 2,895.64 -> 4,869.94 px^2, a 68%
-   regression that a width-only check calls clean.
-
-   Out of flow, the HUD's own box stays 304x44 and its caption overlap is
-   exactly the baseline's; the export row is ~175px wide against a caption
-   starting at x=256, so it adds none of its own. It carries its own glass
-   because it is visually a second pill, not a detached strip. At 320px it is
-   still far inside the viewport, so no third row and no clipping. */
+   THE PAIR IS A SECOND ROW, PLACED OUT OF FLOW, and the reason was measured
+   when the caption was centered on the canvas whatever the HUD's width: inline,
+   these two labels widened the HUD from 304px to 482px and ran it under that
+   caption — 60px at 1440, 140px at 1280, 244px at 1024 — and a two-row HUD
+   fixed the width but not the harm (the obscured caption area at 1024 went
+   2,895.64 -> 4,869.94 px^2). The lower-chrome composition below now places the
+   caption only in a slot that begins past the HUD and this row, and closes it
+   behind a trigger where that slot is too narrow, so the caption no longer runs
+   under them at any width; the row stays out of flow, so it never changes the
+   HUD's own box. It carries its own glass because it is visually a second pill,
+   not a detached strip. At 320px it is still far inside the viewport, so no
+   third row and no clipping. */
 .hud .hud-row-export {
   position: absolute; left: -1px; bottom: calc(100% + 7px);
   display: flex; align-items: center; gap: 4px; flex-wrap: nowrap;
@@ -98,17 +102,60 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
 .hud .hud-export:hover { color: var(--fg-1); background: var(--surface-glass-2); }
 .hud .hud-export[disabled] { opacity: 0.55; cursor: default; }
 
-/* ---- tablet: overlays collapsed by default ------------------------------ */
-@media (max-width: 1023px) and (min-width: 768px) {
-  .cfw-caption { display: none; }
-  .legend { display: none; }
-  body[data-overlays="1"] .cfw-caption,
-  body[data-overlays="1"] .legend { display: block; }
+/* ---- lower chrome: one composition ---------------------------------------
+   About (the caption), the legend, the HUD and its export row share the bottom
+   of the canvas. cfw-release.js decides the arrangement from what the canvas
+   holds and writes it on the canvas as data-cfw-chrome and a few measured custom
+   properties; these rules draw it. Without the script the panels keep the
+   placement cfw-atlas.css gives them (the legend in its corner, the caption
+   centered at the bottom) and the triggers never show.
+
+   WIDE: the legend keeps its corner and the caption takes the slot between the
+   HUD, budgeted at its widest state, and the legend. */
+.canvas-wrap[data-cfw-chrome="wide"] .cfw-caption {
+  left: var(--cfw-caption-left); width: var(--cfw-caption-w);
+  max-width: none; transform: none;
 }
+/* COMPACT: the panels are closed behind two controlled disclosure triggers in the
+   shared grammar of surface-treatments.css — label, triangle, turn, hover and
+   focus are its own; the glass around each is this chrome's, restated because
+   the trigger resets a button's own chrome. The row sits beside the HUD (taking
+   its height) or above the HUD and its export row. */
+.cfw-info-triggers { display: none; }
+.canvas-wrap[data-cfw-chrome="compact"] .cfw-info-triggers {
+  position: absolute; display: flex; align-items: stretch; gap: var(--space-2);
+  left: var(--cfw-row-left, 18px); bottom: var(--cfw-row-bottom, 18px);
+  height: var(--cfw-row-h, auto);
+}
+.cfw-info-trigger {
+  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+  border: 1px solid var(--surface-glass-2);
+}
+.canvas-wrap[data-cfw-row="beside"] .cfw-info-trigger { padding-top: 0; padding-bottom: 0; }
+/* A closed panel is hidden; its trigger is the way back to it. */
+.canvas-wrap .cfw-caption[hidden], .canvas-wrap .legend[hidden] { display: none; }
+/* The one open panel opens upward from the bottom controls and scrolls inside the
+   space between them and the top of the canvas or the inspector; beside the
+   collapsed inspector's pill it may be narrower, down to a floor (cfw-release.js). */
+.canvas-wrap[data-cfw-chrome="compact"] .cfw-caption,
+.canvas-wrap[data-cfw-chrome="compact"] .legend {
+  left: 18px; right: auto; top: auto; transform: none;
+  bottom: var(--cfw-panel-bottom, 18px); max-width: none;
+  max-height: var(--cfw-panel-max, 50%);
+  overflow-y: auto; overscroll-behavior: contain;
+}
+.canvas-wrap[data-cfw-chrome="compact"] .cfw-caption { width: var(--cfw-caption-cw, 560px); }
+.canvas-wrap[data-cfw-chrome="compact"] .legend { width: var(--cfw-legend-cw, 306px); }
+/* A panel in the tab order takes the map's own focus ring, drawn inside it, as
+   the inspector panel does. */
+.canvas-wrap .cfw-caption:focus-visible,
+.canvas-wrap .legend:focus-visible { outline: 2px solid var(--fg-1); outline-offset: -2px; }
 
 /* ---- small screen: orientation is the landing surface ------------------- */
 @media (max-width: 767px) {
-  .cfw-caption, .legend { display: none; }
   .bar .stamp { display: none; }
   .bar .title-block .s { display: none; }
 

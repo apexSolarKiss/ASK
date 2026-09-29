@@ -1216,21 +1216,28 @@
     var hud = DOC.querySelector(".hud");
     if (!hud || DOC.getElementById("exportPng")) return false;
 
-    /* THE EXPORT PAIR IS A SECOND ROW, OUT OF FLOW, AND THAT IS A MEASURED
-       DECISION rather than a stylistic one.
+    /* THE EXPORT PAIR IS A SECOND ROW, OUT OF FLOW, AND THAT WAS A MEASURED
+       DECISION rather than a stylistic one. The measurement is historical: it was
+       taken when the caption was centered on the canvas whatever the HUD's width,
+       so the two could overlap.
 
-       Inline, these two labels widen the HUD from 304px to 482px and run it
-       under the centred caption panel that shares its bottom edge. Making the
-       HUD a two-row flex container fixes the WIDTH but not the HARM: the HUD
-       grows upward, the caption spans that whole band, and the obscured caption
-       area measured at 1024 goes from 2,895.64 px^2 to 4,869.94 px^2 — a 68%
-       regression that a width-only check reports as clean.
+       Inline, these two labels widened the HUD from 304px to 482px and ran it
+       under that caption. Making the HUD a two-row flex container fixed the WIDTH
+       but not the HARM: the HUD grew upward, the caption spanned that whole band,
+       and the obscured caption area measured at 1024 went from 2,895.64 px^2 to
+       4,869.94 px^2 — a 68% regression that a width-only check reported as clean.
 
-       Out of flow, the HUD's own box is untouched at 304x44, so its overlap with
-       the caption is exactly the baseline's, and the export row is ~175px wide
-       against a caption that starts at x=256 — so it adds no new overlap either.
-       Both halves are measured in VERIFICATION, because the second one is what
-       stops this being a trick played on the metric.
+       Out of flow, the HUD's own box stayed at 304x44, so its overlap with the
+       caption was exactly the baseline's, and the export row, ~175px wide against
+       a caption that started at x=256, added no new overlap either. Both halves
+       were measured in VERIFICATION, because the second one is what stopped this
+       being a trick played on the metric.
+
+       The lower-chrome composition in cfw-release.js now places the caption only
+       in a slot that begins past the HUD and this row, and closes it behind a
+       trigger where that slot is too narrow, so the caption no longer runs under
+       them at any width; the row stays out of flow, so it never changes the HUD's
+       own box.
 
        Nothing existing is moved, reordered or rewrapped: the HUD's children are
        left exactly as the release wrote them, and this appends one element. */

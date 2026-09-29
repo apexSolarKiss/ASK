@@ -624,10 +624,13 @@
 
     /* FIT. The shared helper places the whole active drawing inside the part of
        the canvas the reader can see and reports whether the placement `clear`s the
-       chrome. The side lane reserves the inspector and legend on the right, the
-       HUD, its export row and the caption below, and the atlas panel on the left
-       while it is open. Where the inspector opens collapsed (COMPACT) a vertical
-       band is computed too — the pill above; HUD, export row, legend and caption
+       chrome. The side lane reserves the inspector on the right, the HUD and its
+       export row below, and the atlas panel on the left while it is open; the
+       caption, the legend and their trigger row are reserved at the edge each
+       declares in data-cfw-edge, which cfw-release.js sets for the lower chrome's
+       current arrangement (an open compact panel declares none: it is an overlay).
+       Where the inspector opens collapsed (COMPACT) a vertical band is computed
+       too — the pill above; the HUD, its export row and every declared panel
        below — as the interactive-spine family does for a narrow canvas, and the
        larger placement that clears wins. The reservation covers the drawing's
        extent; a callout label can reach beyond that extent and pass under chrome.
@@ -645,12 +648,12 @@
     }
     function fitTo(b, whole) {
       var left = document.body.classList.contains("atlas-open") ? ".atlas-panel" : null;
-      var r = fitCandidate(b, { right: ".inspector, .legend", left: left, top: null,
-                                bottom: ".hud, .hud-row-export, .cfw-caption" });
+      var r = fitCandidate(b, { right: ".inspector, [data-cfw-edge=\"right\"]", left: left, top: null,
+                                bottom: ".hud, .hud-row-export, [data-cfw-edge=\"bottom\"]" });
       r.mode = "side";
       if (COMPACT.matches) {
         var band = fitCandidate(b, { top: ".inspector", left: left, right: null,
-                                     bottom: ".hud, .hud-row-export, .legend, .cfw-caption" });
+                                     bottom: ".hud, .hud-row-export, [data-cfw-edge=\"bottom\"], [data-cfw-edge=\"right\"]" });
         if (band.clear && (!r.clear || band.scale > r.scale)) { r = band; r.mode = "band"; }
       }
       view.k = r.scale; view.x = r.tx; view.y = r.ty;
@@ -847,16 +850,24 @@
        empty canvas or Escape collapses it again. The toggle works at every width
        and refits while the reader is at the fit. */
     function inspCollapsed() { return document.body.classList.contains("insp-collapsed"); }
+    /* Each change of the inspector is counted by its cause: the reader's by default,
+       "compact" for this page's own compact default, or the cause a caller names. The
+       lower chrome (cfw-release.js) reads the counts so that the change a resize makes
+       at the compact default is not taken for a reader's action. */
+    var inspCauses = { reader: 0, compact: 0 };
     function setInspectorOpen(on, opts) {
       opts = opts || {};
-      var changed = inspCollapsed() === !!on;
+      var changed = inspCollapsed() === !!on, cause = opts.cause || "reader";
+      if (changed) inspCauses[cause] = (inspCauses[cause] || 0) + 1;
       document.body.classList.toggle("insp-collapsed", !on);
       if (inspToggle) {
         var name = on ? "collapse the inspector" : "expand the inspector";
         inspToggle.setAttribute("aria-expanded", on ? "true" : "false");
         inspToggle.setAttribute("aria-label", name);
         inspToggle.setAttribute("title", name);
-        inspToggle.textContent = on ? "\u2212" : "+";
+        /* aria-expanded is the one state the trigger shows: surface-treatments.css turns its
+           indicator right when collapsed and down when expanded. The label and indicator
+           are markup, never rewritten here. */
       }
       if (changed && opts.refit && viewAtFit) { fit(); return; }
       if (on && !opts.refit && (changed || COMPACT.matches)) viewAtFit = false;
@@ -872,7 +883,7 @@
     if (inspToggle) inspToggle.addEventListener("click", function (ev) {
       ev.stopPropagation(); setInspectorOpen(inspCollapsed(), { refit: true });
     });
-    function onCompactChange() { setInspectorOpen(!COMPACT.matches, { refit: true }); }
+    function onCompactChange() { setInspectorOpen(!COMPACT.matches, { refit: true, cause: "compact" }); }
     if (COMPACT.addEventListener) COMPACT.addEventListener("change", onCompactChange);
     else if (COMPACT.addListener) COMPACT.addListener(onCompactChange);
 
@@ -1365,7 +1376,7 @@
     document.getElementById("zout").addEventListener("click", function () { zoom(1 / 1.3); });
     document.getElementById("zfit").addEventListener("click", fit);
 
-    if (COMPACT.matches) setInspectorOpen(false);
+    if (COMPACT.matches) setInspectorOpen(false, { cause: "compact" });
     inspect(null);
     computeVisible();
     paintVisibility();
@@ -1384,6 +1395,7 @@
       centreOn: centreOn, focusGroup: focusGroup,
       openPanel: openPanel,
       setInspectorOpen: setInspectorOpen,
+      inspectorCauses: function () { var o = {}; for (var k in inspCauses) o[k] = inspCauses[k]; return o; },
       atFit: function () { return viewAtFit; },
       lockedId: function () { return locked; },
       setFilter: function (dim, vals) {

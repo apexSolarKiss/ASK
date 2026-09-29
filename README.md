@@ -95,7 +95,24 @@ for its held-question rulings and its panels; its own layer,
 `cfw-conclusions.css`, keeps only the reading measure, rows and grids, count
 figures, search, section error line and the space the register's compositions do
 not set after a list and before each compression panel. The map keeps its own
-layer, `cfw-release.css`, and consumes none of the three.
+layers, `cfw-atlas.css` and `cfw-release.css`, and adopts neither the register
+nor its overflow cue. It takes one grammar from the treatments rule, the
+**controlled disclosure trigger**: a native button whose `aria-expanded` and
+`aria-controls` state the region it opens. The inspector's collapse control is
+one. On a canvas too small to keep the map's caption and legend open beside the
+HUD, those two panels close behind two more, About and Legend, which sit with
+the HUD and open one panel at a time above the bottom controls; a canvas that
+holds them shows both panels open, placed with the HUD so that none overlaps
+another. The presentation of each trigger's label and triangle indicator —
+pointing right when collapsed and down when expanded — and its hover and
+keyboard focus come from `surface-treatments.css`, the grammar of the asymptotic
+system key page's disclosures. The map's script keeps each `aria-expanded` true
+to its panel and never rewrites a visible label or indicator; on the inspector's
+control it sets only `aria-expanded`, the button's accessible name and its title.
+The map loads `surface-panel.css` before `surface-treatments.css`, the order the
+treatments rule requires, and applies no panel class. The inspector's surface,
+placement and behavior stay the map's own: it opens collapsed on a compact
+screen, and a selection expands it.
 
 **The browser-icon set is inherited too.** `favicon.svg`, `favicon-32.png`,
 `favicon.ico` and `apple-touch-icon.png` are vendored from `design-system-ASK`,
@@ -136,12 +153,12 @@ One durable **child sub-surface** (not a fourth tier card): **studioLeoV** at `/
 index.html            the homepage (inline logo-ASK wordmark; three tier panels; footer) — the explicit shell exception
 site.css              ASK payload layout + shell instance adaptations, on top of the tokens (no new tokens)
 surface-shell.css     vendored from design-system-ASK — the surface-shell PATTERN, pinned + byte-identical; every non-home content page consumes it
-surface-panel.css     vendored from design-system-ASK — the live-content-panel VISUAL RULE, pinned + byte-identical; the homepage tier panels consume it (presentation only — ASK keeps its own markup, semantics, and support foreground), as do the asymptotic-system-key and studioLeoV pages' external cards, the asymptotic-system-key page's six disclosures for their panel material and free corners, and the CFW conclusions page, for its held-question rulings and its panels (the framing openings of the ASK conclusion and the ASK prospective axis, the conclusion of its section 8 and its two compressions)
+surface-panel.css     vendored from design-system-ASK — the live-content-panel VISUAL RULE, pinned + byte-identical; the homepage tier panels consume it (presentation only — ASK keeps its own markup, semantics, and support foreground), as do the asymptotic-system-key and studioLeoV pages' external cards, the asymptotic-system-key page's six disclosures for their panel material and free corners, and the CFW conclusions page, for its held-question rulings and its panels (the framing openings of the ASK conclusion and the ASK prospective axis, the conclusion of its section 8 and its two compressions); the CFW map loads it ahead of surface-treatments.css, the order that rule requires, and applies none of its classes
 surface-shell.js      vendored from design-system-ASK — the shell's optional NAVIGATION RUNTIME, pinned + byte-identical; opt-in per page through template.surface-nav-source
 surface-text-link.css vendored from design-system-ASK — the unboxed-textual-link VISUAL RULE, pinned + byte-identical; opt-in by class; the homepage does not consume it
 surface-action.css    vendored from design-system-ASK — the compact-action VISUAL RULE, pinned + byte-identical; every page's compact controls consume it (the owner owns the base surface, foreground, border, geometry and interaction; ASK keeps the element semantics, destination, copy, row and placement); the gallery cards, video facades, p5 launch cards and gallery dialog controls take only its attention edge, by class
 surface-document.css  vendored from design-system-ASK — the document-register VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes the full register, while the apex solar kiss, asymptotic system key and studioLeoV pages consume its document-body and authored-inline-emphasis treatment in their opening paragraphs; the apex solar kiss, design, ASKproduKtion and studioLeoV pages set their section headings in its section-title role, and the asymptotic system key page sets the Like Art founding statement as a quotation
-surface-treatments.css  vendored from design-system-ASK — the surface-treatments VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes its surface axes, emphasis rail and label, and the asymptotic system key page its disclosure, for six of its sections
+surface-treatments.css  vendored from design-system-ASK — the surface-treatments VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes its surface axes, emphasis rail and label, the asymptotic system key page its disclosure, for six of its sections, and the CFW map its controlled disclosure trigger, for the inspector's collapse control and the About and Legend triggers used where the canvas cannot hold its caption and legend open
 surface-document-overflow.js  vendored from design-system-ASK — the document register's optional overflow-cue helper, pinned + byte-identical; the CFW conclusions page loads it
 colors_and_type.css   vendored from design-system-ASK (canonical tokens)
 fonts/                vendored Inter + JetBrains Mono (OFL)
@@ -153,7 +170,7 @@ apple-touch-icon.png  vendored from design-system-ASK — the iOS home-screen ic
 apex-solar-kiss/      native builder subpage — the object map (practice + two domain applications + the builder machine)
 apex-solar-kiss/design/  native design gateway — live design-system surfaces + the retained external design-portfolio board
 apex-solar-kiss/consciousness-free-will/  CFW conclusions — the structured survey over the typed relation atlas, a distinct ASK-authored conclusion + an ASK prospective axis; an ordinary shell page
-apex-solar-kiss/consciousness-free-will/map/  the interactive CFW mind map — the one named full-viewport interactive-application exception to the shell; vendors spectral-state.css from design-system-ASK (pinned + byte-identical)
+apex-solar-kiss/consciousness-free-will/map/  the interactive CFW mind map — the one named full-viewport interactive-application exception to the shell; vendors spectral-state.css and the shared fit helper diagrams-fit.js from design-system-ASK (pinned + byte-identical; when it fits, the map passes its own panel selector, or none, for every edge, so the helper's default panel selectors never apply to it)
 askproduktion/        native creative-production subpage (Track A.1)
 asymptotic-system-key/  native artistic-practice subpage (Track A.2; per-category p5.js pages)
 asymptotic-system-key/lineage/  public-safe influence lineage (canon as substrate: readymade >> pop >> appropriation >> generative systems)
@@ -177,7 +194,8 @@ it vendors the canonical foundations (tokens, fonts, wordmark), **the
 rules**, then adds its own payload layout and instance adaptations around them.
 The shared page chrome is owned upstream, not here. The CFW map named above is
 the one full-viewport application exception to that chrome, and it vendors one
-further design-system primitive, `spectral-state.css`, on the same terms.
+further design-system primitive, `spectral-state.css`, and the shared fit
+helper, `diagrams-fit.js`, on the same terms.
 
 The homepage tier panels and every page's compact controls inherit their
 presentation from the two vendored visual rules. The split is not identical
