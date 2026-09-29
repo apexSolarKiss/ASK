@@ -856,7 +856,9 @@
         inspToggle.setAttribute("aria-expanded", on ? "true" : "false");
         inspToggle.setAttribute("aria-label", name);
         inspToggle.setAttribute("title", name);
-        inspToggle.textContent = on ? "\u2212" : "+";
+        /* aria-expanded is the one state the trigger shows: surface-treatments.css turns its
+           indicator right when collapsed and down when expanded. The label and indicator
+           are markup, never rewritten here. */
       }
       if (changed && opts.refit && viewAtFit) { fit(); return; }
       if (on && !opts.refit && (changed || COMPACT.matches)) viewAtFit = false;

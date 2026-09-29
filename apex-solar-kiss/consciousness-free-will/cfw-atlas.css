@@ -125,21 +125,20 @@ svg { width: 100%; height: 100%; display: block; }
 .inspector { top: 18px; right: 18px; width: 322px; max-height: 40%;
              overflow-y: auto; padding: 16px 18px; font-size: 12px; line-height: 1.5; }
 /* the inspector's collapse control floats at the panel's top right and stays there
-   while the panel scrolls. Collapsed, the panel is a labelled pill; its label and
-   control take the primary foreground, as the HUD's controls do. */
+   while the panel scrolls. It is a controlled disclosure trigger: its label, its
+   indicator (right when collapsed, down when expanded), hover and focus come from
+   surface-treatments.css, the same grammar as every disclosure. Collapsed, the panel is
+   a pill carrying the labeled trigger; expanded, the trigger shows its indicator only. */
 .inspector .insp-bar { position: sticky; top: 0; float: right; z-index: 1;
                        display: flex; align-items: center; gap: 8px; margin: -8px -10px 0 8px; }
 .inspector .insp-label { display: none; margin: 0; }
-.inspector .insp-toggle { font-family: var(--font-mono); font-size: 15px; line-height: 1;
-                          width: 26px; height: 26px; padding: 0; border: none;
-                          border-radius: var(--radius-sm); background: transparent;
-                          color: var(--fg-1); cursor: pointer; }
-.inspector .insp-toggle:hover { background: var(--surface-glass-2); }
+.inspector .insp-toggle { min-width: 26px; height: 26px; padding: 0 6px; justify-content: center;
+                          border-radius: var(--radius-sm); }
 .inspector #inspbody > .backlink { clear: right; }
 body.insp-collapsed .inspector { width: auto; max-height: none; overflow: visible;
                                  padding: 6px 8px 6px 14px; }
 body.insp-collapsed .inspector .insp-bar { position: static; float: none; margin: 0; }
-body.insp-collapsed .inspector .insp-label { display: block; color: var(--fg-1); }
+body.insp-collapsed .inspector .insp-label { display: block; }
 body.insp-collapsed .inspector #inspbody { display: none; }
 .inspector .name  { font-size: 14px; font-weight: 500; margin-bottom: 8px; text-wrap: pretty; }
 .inspector .state-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
@@ -360,9 +359,11 @@ body.atlas-open .atlas-panel { display: block; }
    keeps its specificity and the themer's own pill still wins on source order.
    The inspector's source links are excluded the same way: surface-text-link.css
    draws their focus on their own underline, and a ring would be a second
-   indicator, broken at every line cut of a wrapped URL. */
+   indicator, broken at every line cut of a wrapped URL. Its disclosure trigger is
+   excluded too: surface-treatments.css draws the trigger's own outline and turns
+   its indicator magenta. */
 .atlas-panel :focus-visible, .bar :focus-visible:where(:not(.surface-action)), .hud :focus-visible,
-.inspector :focus-visible:where(:not(.surface-text-link)) {
+.inspector :focus-visible:where(:not(.surface-text-link, .surface-disclosure-trigger)) {
   outline: 2px solid var(--fg-1); outline-offset: 2px; border-radius: var(--radius-sm);
 }
 /* The inspector panel is made focusable (tabindex -1) and focused by script
