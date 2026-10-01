@@ -73,7 +73,9 @@
      the other callouts too), the Fit names the largest that fit and the others
      return at the next level. Where it cannot hold even the regions' names that way,
      the Fit leaves them to the next level as well, and the centre label too where
-     that does not fit (fitPopulation). Nothing is removed at any level. */
+     that does not fit; and where a count line's letters meet a name's, it leaves
+     the counts to the next level before any name (fitPopulation). Nothing is
+     removed at any level. */
   var LOD = [
     { k: 0,    name: "regions",  leafLabels: false, ids: false, branchMin: 16 },
     { k: 0.58, name: "branches", leafLabels: false, ids: false, branchMin: 0  },
@@ -394,9 +396,10 @@
     /* viewAtFit: the reader is looking at a whole-map fit. wholeK: that fit's
        scale, which stays the zoom floor after a group or section is framed. */
     var viewAtFit = false, wholeK = 0;
-    /* held: the population a whole-map Fit chose ({ lod, centre, regions, keep }):
-       whether it deferred the centre label, whether it deferred the regions' names
-       (and with them every branch), and the MAJOR branch callouts it kept; or null.
+    /* held: the population a whole-map Fit chose ({ lod, centre, regions, counts,
+       keep }): whether it deferred the centre label, whether it deferred the regions'
+       names (and with them every branch), whether it deferred the count lines, and
+       the MAJOR branch callouts it kept; or null.
        It holds through pan, pinch and zoom, rests at every other level of detail and
        applies again on the way back to its own, and ends at the next fit. It records
        tiers and kept callouts, not hidden ones, so a section that changes without a
@@ -421,6 +424,7 @@
       var W = stage.clientWidth, H = stage.clientHeight;
       var sides = { l: [], r: [] }, rootObstacle = null;
       var cx0 = view.x, cy0 = view.y;                 /* world origin, projected */
+      var countsHeld = !!(held && held.lod === L2.name && held.counts);
       labelEls.forEach(function (le) {
         var n = le.n, show;
         if (!visible[n.id]) show = false;             /* outside the section */
@@ -432,6 +436,7 @@
                                    : n.kind === "region" ? h.regions : h.regions || !h.keep[n.id]));
         if (le.held) show = false;
         le.show = show;
+        le.cntHeld = false;
         if (!show) {
           le.t.style.display = "none";
           if (le.cnt) le.cnt.style.display = "none";
@@ -610,7 +615,9 @@
             }
           }
           if (le.cnt) {
-            le.cnt.style.display = "";
+            /* a count the Fit left to the next level is placed but not drawn */
+            le.cntHeld = countsHeld;
+            le.cnt.style.display = countsHeld ? "none" : "";
             le.cnt.setAttribute("x", it.x);
             le.cnt.setAttribute("y", it.y + (n.kind === "region" ? 15 : 12));
             le.cnt.setAttribute("text-anchor", s === "r" ? "start" : "end");
@@ -722,6 +729,43 @@
           out[[B[i].id, B[j].id].sort().join("|")] = true;
       return out;
     }
+    /* A text line's letters as a box: across, the line's own box; down, the ascent and
+       descent its glyphs actually reach from the baseline (measured once per font and
+       text, and again once the webfonts have loaded), not the font's line box, whose
+       leading a neighbor may cross without touching a letter. The baseline is the line
+       box's bottom less the font's descent, whatever baseline the label is set on.
+       Without font metrics, the line box. */
+    var inkCtx = null, inkCache = {};
+    function inkBox(e) {
+      var r = e.getBoundingClientRect(), cs = getComputedStyle(e);
+      var font = cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily;
+      var key = (document.fonts ? document.fonts.status : "") + "|" + font + "|" + e.textContent, g = inkCache[key];
+      if (!g) {
+        inkCtx = inkCtx || document.createElement("canvas").getContext("2d");
+        if (!inkCtx) return { l: r.left, r: r.right, t: r.top, b: r.bottom };
+        inkCtx.font = font;
+        var t = inkCtx.measureText(e.textContent);
+        g = inkCache[key] = { a: t.actualBoundingBoxAscent, d: t.actualBoundingBoxDescent, fd: t.fontBoundingBoxDescent };
+      }
+      if (!(g.fd >= 0) || !(g.a >= 0)) return { l: r.left, r: r.right, t: r.top, b: r.bottom };
+      var y = r.bottom - g.fd;
+      return { l: r.left, r: r.right, t: y - g.a, b: y + (g.d || 0) };
+    }
+    /* the pairs of a shown count line and another label's shown name whose letters
+       meet by more than a pixel each way, keyed by ids */
+    function obscured() {
+      var N = [], Q = [], out = {};
+      labelEls.forEach(function (le) {
+        if (!le.show || le.n.kind === "leaf") return;
+        var b;
+        if (le.t.style.display !== "none") { b = inkBox(le.t); b.id = le.n.id; N.push(b); }
+        if (le.cnt && le.cnt.style.display !== "none") { b = inkBox(le.cnt); b.id = le.n.id; Q.push(b); }
+      });
+      Q.forEach(function (q) { N.forEach(function (a) {
+        if (q.id !== a.id && q.l < a.r - 1 && a.l < q.r - 1 && q.t < a.b - 1 && a.t < q.b - 1)
+          out[q.id + ">" + a.id] = true; }); });
+      return out;
+    }
     function empty(o) { for (var k in o) return false; return true; }
     /* whether the shown names stand clear: none under that chrome, none outside the
        canvas, none overprinting another */
@@ -786,11 +830,12 @@
     /* What __FITREPORT says about a fit. `clear` is the drawing's clearance the shared
        helper reports (kept as drawingClear), and, on top of it, that no callout or
        centre-label line sits under reserved chrome (labelsUnder) or runs outside the
-       canvas (labelsOutside), that no shown name overprints another (overprinted), and
-       that nothing the reader has open covers the drawing or its labels (covered: the
-       atlas drawer, or an About or Legend panel open as an overlay). `deferred` counts
-       the names the fit leaves to the next level (centre, regions, branches); a fit can
-       be clear with names deferred. `cause` is "explicit" only for the Fit
+       canvas (labelsOutside), that no shown name overprints another (overprinted) and
+       no count line's letters meet a name's (obscured), and that nothing the reader
+       has open covers the drawing or its labels (covered: the atlas drawer, or an
+       About or Legend panel open as an overlay). `deferred` counts the names and count
+       lines the fit leaves to the next level (centre, regions, branches, counts); a
+       fit can be clear with them deferred. `cause` is "explicit" only for the Fit
        control's own final fit; every other fit is "auto" (a resize, a filter, a panel,
        the first load) or "frame" (a region framing), so a refit that kept the reader's
        panels open reports clear: false where they cover the map and never passes for an
@@ -804,9 +849,11 @@
       r.labelsUnder = linesUnder(chromeRects());
       r.labelsOutside = Object.keys(outsideSet()).length;
       r.overprinted = Object.keys(overprints()).length;
-      r.deferred = { centre: 0, regions: 0, branches: 0 };
+      r.obscured = Object.keys(obscured()).length;
+      r.deferred = { centre: 0, regions: 0, branches: 0, counts: 0 };
       labelEls.forEach(function (le) {
         if (le.held) r.deferred[le.n.kind === "root" ? "centre" : le.n.kind === "region" ? "regions" : "branches"]++;
+        if (le.cntHeld) r.deferred.counts++;
       });
       r.covered = [];
       [["atlas", document.body.classList.contains("atlas-open") ? document.getElementById("atlas") : null],
@@ -814,42 +861,61 @@
        ["legend", document.querySelector('.legend[data-cfw-edge="none"]')]].forEach(function (x) {
         if (covers(x[1])) r.covered.push(x[0]);
       });
-      r.clear = r.drawingClear && !r.labelsUnder && !r.labelsOutside && !r.overprinted && !r.covered.length;
+      r.clear = r.drawingClear && !r.labelsUnder && !r.labelsOutside && !r.overprinted && !r.obscured &&
+                !r.covered.length;
     }
 
     /* The Fit's population. The fit keeps the DRAWING clear of the chrome it reserves,
        but the callouts stack beyond the drawing's extent, and on a small canvas they run
-       under the pill, a trigger row or the HUD, outside the canvas or over one another.
-       Where they do, at the overview's level of detail, the Fit first places the centre
-       label and the regions alone. If those names do not stand clear (namesClear: no
-       line under that chrome or outside the canvas, no name over another), the Fit
-       leaves every region's name to the next level, and the centre label too where it
-       does not stand clear alone, and names no branch: a whole tier goes, never one
-       region of five. Otherwise it tries the MAJOR branch callouts largest first
+       under the pill, a trigger row or the HUD, outside the canvas or over one another,
+       and a count line can lie across a neighbor's name. At the overview's level of
+       detail, where every name already stands clear and the canvas is not short
+       landscape, the most that goes is the count lines: all of them, where any count
+       line's letters meet another label's name (obscured), and every name stays.
+       Otherwise the Fit first places the centre label and the regions alone. If those names do not stand clear (namesClear: no line under that chrome or
+       outside the canvas, no name over another), the Fit leaves the count lines to the
+       next level and tries again, since names come before counts; if they still do not,
+       it leaves every region's name to the next level too, and the centre label as well
+       where it does not stand clear alone, and names no branch: a whole tier goes, never
+       one region of five. Otherwise it tries the MAJOR branch callouts largest first
        (visible objects, then the order of labelEls: the regions' order, largest first
        within each), keeping each one only if, with it placed, the names still stand
        clear; on a short landscape canvas (data-cfw-short, written by cfw-release.js),
        where the honest fit is smallest, every overlapping pair of callouts must also
        have been there already. A callout that fails is skipped and the next one tried;
-       the rest return at the next level. The placement is placeLabels' own at every
-       step, and the population holds through pan, pinch and zoom. The next fit or a
-       region framing ends it. Where every callout stands clear (and, on a short
-       landscape canvas, every MAJOR one clears the others), nothing is deferred. */
+       the rest return at the next level. Last, where any count line's letters meet
+       another label's name (obscured), the count lines go, all of them: the names and
+       their places stay. The placement is placeLabels' own at every step, and the
+       population holds through pan, pinch and zoom. The next fit or a region framing
+       ends it. Where every callout stands clear and no count meets a name (and, on a
+       short landscape canvas, every MAJOR callout clears the others), nothing is
+       deferred. */
     function fitPopulation() {
       var cs = chromeRects(), L2 = lodFor(view.k), guard = wrapEl.hasAttribute("data-cfw-short");
-      if (!L2.branchMin || !(guard || !namesClear(cs))) return;
+      if (!L2.branchMin) return;
       var order = [];
       labelEls.forEach(function (le, i) {
         if (le.show && le.n.kind === "branch")
           order.push({ id: le.n.id, i: i, n: branchVis[le.n.id] || 0 });
       });
       order.sort(function (a, b) { return b.n - a.n || a.i - b.i; });
-      held = { lod: L2.name, centre: false, regions: false, keep: {} };
+      if (!guard && namesClear(cs)) {
+        /* every name already stands clear: at most the counts go, and every name stays */
+        if (empty(obscured())) return;
+        held = { lod: L2.name, centre: false, regions: false, counts: true, keep: {} };
+        order.forEach(function (o) { held.keep[o.id] = true; });
+        placeLabels(L2);
+        return;
+      }
+      held = { lod: L2.name, centre: false, regions: false, counts: false, keep: {} };
       placeLabels(L2);
       if (!namesClear(cs)) {
-        held.regions = true; placeLabels(L2);
-        if (!namesClear(cs)) { held.centre = true; placeLabels(L2); }
-        return;
+        held.counts = true; placeLabels(L2);
+        if (!namesClear(cs)) {
+          held.regions = true; placeLabels(L2);
+          if (!namesClear(cs)) { held.centre = true; placeLabels(L2); }
+          return;
+        }
       }
       var baseO = guard ? crowding() : null;
       order.forEach(function (o) {
@@ -858,6 +924,7 @@
         if (!namesClear(cs) || (guard && !within(crowding(), baseO))) delete held.keep[o.id];
       });
       placeLabels(L2);
+      if (!held.counts && !empty(obscured())) { held.counts = true; placeLabels(L2); }
     }
     /* one zoom range for buttons, wheel and pinch: down to the whole-map fit (or
        0.24 where that fit is larger), up to 14 */

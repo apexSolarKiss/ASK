@@ -27,7 +27,9 @@
  *                     open beside the HUD where the canvas holds them, behind
  *                     About and Legend triggers everywhere else, one at a time,
  *                     opening above the bottom controls — never hidden without
- *                     a way back
+ *                     a way back, except where a short landscape canvas leaves
+ *                     a panel no readable room: there its trigger is not
+ *                     offered until the canvas gives it room
  *   small   <  768    the map keeps its two-row application bar and opens with
  *                     the inspector collapsed to a pill, as a touch screen at
  *                     most 520px tall also does; opening a record expands the
@@ -140,6 +142,11 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
 .canvas-wrap[data-cfw-row="beside"] .cfw-info-trigger { padding-top: 0; padding-bottom: 0; }
 /* A closed panel is hidden; its trigger is the way back to it. */
 .canvas-wrap .cfw-caption[hidden], .canvas-wrap .legend[hidden] { display: none; }
+/* A trigger, or the whole row, that is not offered (cfw-release.js: NOT OFFERED, where a
+   short landscape canvas leaves its panel no readable room) takes no space, wherever the
+   row stands. */
+.canvas-wrap[data-cfw-chrome] .cfw-info-triggers[hidden], .bar .cfw-info-triggers[hidden],
+.cfw-info-triggers .cfw-info-trigger[hidden] { display: none; }
 /* The one open panel opens upward from the bottom controls and scrolls inside the
    space between them and the top of the canvas or the inspector; beside the
    collapsed inspector's pill it may be narrower, down to a floor (cfw-release.js). */
@@ -157,8 +164,9 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
    HUD keeps its band and each companion stays beside it while the band holds it,
    and otherwise moves into the application bar — the export pair first, then
    About/Legend (cfw-release.js writes data-cfw-short on the canvas and the bar:
-   "band", "export", "info" or "lane"). The same controls in every arrangement;
-   nothing is hidden.
+   "band", "export", "info" or "lane"). The same controls in every arrangement,
+   except About/Legend where their panels would have no readable room (not offered,
+   above).
    In the band the export pair takes its right end, past the triggers, as tall as
    the HUD, so the band stays one row. */
 .canvas-wrap[data-cfw-short="band"] .hud .hud-row-export {

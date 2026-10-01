@@ -862,15 +862,18 @@
      it again where the panel then has MIN_ROOM beside it. Where the collapsed pill
      leaves a panel less than READ_MIN, the panel narrows beside it, down to
      NARROW_MIN; narrower than that it keeps its width and the room below the pill.
-     A resize or a band move closes a panel only to set it aside: when it takes a
-     panel that had READ_MIN below it, or leaves any open panel below LINE_MIN; an
+     A resize or a band move closes a panel only to set it aside (or, on a short
+     landscape canvas that leaves it no readable room, because it is not offered:
+     NOT OFFERED, below): when it takes a panel that had READ_MIN below it, or leaves
+     any open panel below LINE_MIN; an
      inspector that yielded in that same step is expanded again. The panel's trigger
      then reads closed, and a later resize or band move that gives it READ_MIN again
      (LINE_MIN, if it had less) reopens it. Using a trigger, Escape on one, expanding
      or collapsing the inspector, selecting or clearing a record, a step inside the
      inspector or opening the atlas panel forgets it. A panel the reader opens with
      less than READ_MIN stays open, scrolling in what there is, while resizes leave
-     it at least LINE_MIN and until one gives it READ_MIN. A hover preview, with
+     it at least LINE_MIN and until one gives it READ_MIN; on a short landscape
+     canvas a panel that would open with less is not offered at all. A hover preview, with
      nothing selected, can lengthen the expanded inspector and shorten a panel beside
      it below READ_MIN, and on a short enough canvas to its padding, while the
      pointer rests on a concept; nothing closes, and the room returns when the
@@ -905,11 +908,21 @@
      them, and otherwise take the bar's first row beside the title, which wraps as it
      must there; that last place takes them whatever room the bar has. The test is
      the viewport, never the canvas this arrangement resizes. The nodes move with
-     their listeners and their state; focus on a moved node stays on it. Nothing is
-     hidden, and the export and the triggers work as they do in the canvas. Wherever
-     the bar is one row on a short landscape canvas, its action group keeps its own
-     width and the title and release stamp wrap instead, so the theme control never
-     runs under the stamp.
+     their listeners and their state; focus on a moved node stays on it, and the
+     export and the triggers work as they do in the canvas. Wherever the bar is one
+     row on a short landscape canvas, its action group keeps its own width and the
+     title and release stamp wrap instead, so the theme control never runs under the
+     stamp.
+
+     NOT OFFERED. On the narrowest of these canvases a panel can have no readable room
+     at all (measured: at 400 to 460px wide and 320px tall About and Legend opened as a
+     strip one line high). Where a click would give a panel less than READ_MIN, its trigger is not
+     offered (hidden, and out of the tab order) and the panel stays closed; with both
+     gone the trigger row goes too. The decision is taken with the triggers in place,
+     so the room their absence gives the canvas cannot bring them back, and the next
+     update that gives a panel READ_MIN offers it again. Focus on a control that is no
+     longer offered moves to the Fit control. The caption and the legend stay in the
+     page, so the PNG page export reads them as before.
 
      WHAT THIS IS NOT. No new content and no second copy of any: About is the
      authored caption and Legend the engine's legend, in every state, so the PNG
@@ -963,6 +976,8 @@
     var shortAs = null;      /* the one-row arrangement in force: "band", "export", "info", "lane", or null */
     var laneT = null;        /* "lane": where the triggers are: "band" or "bar" */
     var LOD_CHARS = 8;       /* the longest level-of-detail word: BRANCHES, CONCEPTS */
+    var pill = null;         /* the collapsed inspector's pill as last measured: size and inset from the canvas's top right */
+    var asPill = null;       /* place(): judge the panel against this pill instead of the inspector as it is */
     var THEME_SLACK = 8;     /* the theme control's label changes width as it cycles */
 
     function rect(el) { return el.getBoundingClientRect(); }
@@ -1134,7 +1149,8 @@
       pairs.forEach(function (x) {
         var w = x.p === cap ? Math.min(CAPTION_MAX, wr.width - 2 * EDGE) : Math.min(LEGEND_W, wr.width - 2 * EDGE);
         var free = Math.max(0, Math.floor(floor - GAP - (wr.top + EDGE))), room = free, at = wr.top + EDGE;
-        if (shown(insp)) { var ir = rect(insp);
+        var ir = asPill || (shown(insp) ? rect(insp) : null);
+        if (ir) {
           if (ir.left < wr.left + EDGE + w && ir.right > wr.left + EDGE) {
             at = Math.max(wr.top + EDGE, ir.bottom + GAP);
             room = Math.max(0, Math.floor(floor - GAP - at));
@@ -1144,7 +1160,7 @@
                keeps the canvas's whole height (below the bar, from the canvas's
                top-left) */
             var nw = Math.floor(ir.left - GAP - (wr.left + EDGE));
-            if ((shortAs || room < READ_MIN) && !inspOpen() && nw >= NARROW_MIN) { w = nw; room = free; at = wr.top + EDGE; } } }
+            if ((shortAs || room < READ_MIN) && (asPill || !inspOpen()) && nw >= NARROW_MIN) { w = nw; room = free; at = wr.top + EDGE; } } }
         px(x.p === cap ? "--cfw-caption-cw" : "--cfw-legend-cw", w);
         if (x === o) out = { room: room, free: free };
         x.p.style.setProperty("--cfw-panel-max", room + "px");
@@ -1178,12 +1194,41 @@
       return [mode, wrap.getAttribute("data-cfw-row"), wrap.style.getPropertyValue("--cfw-row-bottom"),
               wrap.style.getPropertyValue("--cfw-caption-left"), wrap.style.getPropertyValue("--cfw-caption-w"),
               mode === "wide" ? Math.round(rect(cap).height) : 0, wrap.clientWidth, wrap.clientHeight,
-              shortAs, laneT, wrap.style.getPropertyValue("--cfw-export-left")].join("|");
+              shortAs, laneT, wrap.style.getPropertyValue("--cfw-export-left"),
+              row.hidden, pairs.map(function (x) { return x.t.hidden; }).join()].join("|");
     }
     function settle() {
       var s = signature();
       if (s !== sig) { sig = s; if (V.atFit()) V.fit(); }
     }
+    /* NOT OFFERED (SHORT LANDSCAPE, above): every trigger back in place, to be measured */
+    function offer() {
+      row.hidden = false;
+      pairs.forEach(function (x) { x.t.hidden = false; });
+    }
+    /* the collapsed inspector's pill, measured whenever it is collapsed: its size and its
+       inset from the canvas's top right do not change with the canvas */
+    function notePill() {
+      if (inspOpen() || !shown(insp)) return;
+      var wr = rect(wrap), ir = rect(insp);
+      pill = { w: ir.width, h: ir.height, r: wr.right - ir.right, t: ir.top - wr.top };
+    }
+    /* the room a click would give the panel: beside the expanded inspector where it leaves the
+       panel MIN_ROOM, and otherwise beside the pill it yields to; a pill never yet seen
+       collapsed is not guessed, and the panel is judged beside the inspector as it is, so a
+       strip is never offered */
+    function clickRoom(x) {
+      var wr = rect(wrap);
+      notePill();
+      var q = place(x);
+      if (!inspOpen() || !inspectorCrowds(q) || !pill) return q.room;
+      asPill = { left: wr.right - pill.r - pill.w, right: wr.right - pill.r, top: wr.top + pill.t, bottom: wr.top + pill.t + pill.h };
+      q = place(x); asPill = null; place();
+      return q.room;
+    }
+    /* where focus goes when its control is no longer offered: the Fit control, which every
+       arrangement keeps */
+    function retained() { return document.getElementById("zfit"); }
     function keepFocus(fa) {
       if (!fa || fa === document.body || !document.contains(fa)) return;
       /* focus in the inspector's body, which a collapse hides, moves to its toggle */
@@ -1191,8 +1236,8 @@
       if (inspBody && inspBody.contains(fa) && !shown(inspBody) && t && shown(t)) { focusQuietly(t); return; }
       for (var i = 0; i < pairs.length; i++) {
         var x = pairs[i];
-        if (x.t === fa && !shown(fa)) { focusQuietly(x.p); return; }
-        if (x.p.hidden && (x.p === fa || x.p.contains(fa))) { focusQuietly(x.t); return; }
+        if (x.t === fa && !shown(fa)) { focusQuietly(shown(x.p) ? x.p : retained()); return; }
+        if (x.p.hidden && (x.p === fa || x.p.contains(fa))) { focusQuietly(shown(x.t) ? x.t : retained()); return; }
       }
     }
 
@@ -1201,6 +1246,8 @@
       if (!(wrap.clientHeight > 0)) return;
       var fa = document.activeElement, before = mode;
       var was = pairs.map(function (x) { return !x.p.hidden; });
+      offer();
+      notePill();
       var o = before === "compact" ? openPair() : null, top = o ? o.p.scrollTop : 0;
       /* SHORT: the canvas is compact whatever else holds, so the trigger row is drawn
          and measured before the arrangement is decided; then the nodes move (where the
@@ -1245,6 +1292,13 @@
         }
         if (resized) lastRoom = openPair() ? r.room : 0;
         if (o && !o.p.hidden) o.p.scrollTop = top;
+        /* NOT OFFERED: on a short landscape canvas, a panel a click could not give READ_MIN */
+        if (shortAs) {
+          var off = pairs.filter(function (x) { return clickRoom(x) < READ_MIN; });
+          off.forEach(function (x) { if (!x.p.hidden) setOpen(x, false); x.t.hidden = true; });
+          if (off.length === pairs.length) row.hidden = true;
+          else if (off.length) place();
+        }
       }
       keepFocus(fa);
       settle();

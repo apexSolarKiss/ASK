@@ -103,7 +103,9 @@ one. On a canvas too small to keep the map's caption and legend open beside the
 HUD, those two panels close behind two more, About and Legend, which sit with
 the HUD and open one panel at a time above the bottom controls; on a short
 landscape screen they can move into the application bar instead, and a panel
-then opens below it. A canvas that holds them shows both panels open, placed
+then opens below it. On the narrowest of those screens, where a panel would have
+no readable room, its trigger is not shown and the panel stays closed until the
+window gives it room. A canvas that holds them shows both panels open, placed
 with the HUD so that none overlaps another. The presentation of each trigger's label and triangle indicator —
 pointing right when collapsed and down when expanded — and its hover and
 keyboard focus come from `surface-treatments.css`, the grammar of the asymptotic
