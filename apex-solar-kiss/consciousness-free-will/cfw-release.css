@@ -27,7 +27,9 @@
  *                     open beside the HUD where the canvas holds them, behind
  *                     About and Legend triggers everywhere else, one at a time,
  *                     opening above the bottom controls — never hidden without
- *                     a way back
+ *                     a way back, except where a short landscape canvas leaves
+ *                     a panel no readable room: there its trigger is not
+ *                     offered until the canvas gives it room
  *   small   <  768    the map keeps its two-row application bar and opens with
  *                     the inspector collapsed to a pill, as a touch screen at
  *                     most 520px tall also does; opening a record expands the
@@ -84,7 +86,10 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
    under them at any width; the row stays out of flow, so it never changes the
    HUD's own box. It carries its own glass because it is visually a second pill,
    not a detached strip. At 320px it is still far inside the viewport, so no
-   third row and no clipping. */
+   third row and no clipping. On a short landscape canvas it takes the band's right
+   end or the application bar, and where neither holds it, the canvas's right edge
+   just above the band, in the lane the fit keeps clear for the inspector's pill
+   (SHORT LANDSCAPE, below). */
 .hud .hud-row-export {
   position: absolute; left: -1px; bottom: calc(100% + 7px);
   display: flex; align-items: center; gap: 4px; flex-wrap: nowrap;
@@ -137,6 +142,11 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
 .canvas-wrap[data-cfw-row="beside"] .cfw-info-trigger { padding-top: 0; padding-bottom: 0; }
 /* A closed panel is hidden; its trigger is the way back to it. */
 .canvas-wrap .cfw-caption[hidden], .canvas-wrap .legend[hidden] { display: none; }
+/* A trigger, or the whole row, that is not offered (cfw-release.js: NOT OFFERED, where a
+   short landscape canvas leaves its panel no readable room) takes no space, wherever the
+   row stands. */
+.canvas-wrap[data-cfw-chrome] .cfw-info-triggers[hidden], .bar .cfw-info-triggers[hidden],
+.cfw-info-triggers .cfw-info-trigger[hidden] { display: none; }
 /* The one open panel opens upward from the bottom controls and scrolls inside the
    space between them and the top of the canvas or the inspector; beside the
    collapsed inspector's pill it may be narrower, down to a floor (cfw-release.js). */
@@ -149,6 +159,70 @@ html[data-theme="light"] .rel-mark .rel-mark-dark  { display: none; }
 }
 .canvas-wrap[data-cfw-chrome="compact"] .cfw-caption { width: var(--cfw-caption-cw, 560px); }
 .canvas-wrap[data-cfw-chrome="compact"] .legend { width: var(--cfw-legend-cw, 306px); }
+/* SHORT LANDSCAPE: ONE LOWER ROW. On a landscape viewport at most 340px tall, or
+   376px where the band cannot hold the triggers beside the HUD at the overview, the
+   HUD keeps its band and each companion stays beside it while the band holds it,
+   and otherwise moves into the application bar — the export pair first, then
+   About/Legend (cfw-release.js writes data-cfw-short on the canvas and the bar:
+   "band", "export", "info" or "lane"). The same controls in every arrangement,
+   except About/Legend where their panels would have no readable room (not offered,
+   above).
+   In the band the export pair takes its right end, past the triggers, as tall as
+   the HUD, so the band stays one row. */
+.canvas-wrap[data-cfw-short="band"] .hud .hud-row-export {
+  left: var(--cfw-export-left, calc(100% + 240px)); top: -1px; bottom: -1px;
+}
+/* In the two-row bar the export pair is the action row's fourth column, as tall as
+   the row, so the bar does not grow; the pill and the HUD register are its own. */
+.bar[data-cfw-short="export"] .bar-actions,
+.bar[data-cfw-short="info"] .bar-actions {
+  grid-template-columns: minmax(0, 1fr) max-content max-content max-content;
+}
+.bar .hud-row-export {
+  display: flex; align-items: center; align-self: stretch; gap: 4px; flex-wrap: nowrap;
+  padding: 0 6px;
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+  border: 1px solid var(--surface-glass-2);
+  border-radius: var(--radius-md);
+}
+.bar .hud-export {
+  width: auto; height: 26px; padding: 0 9px;
+  border: none; border-radius: var(--radius-sm); background: transparent; cursor: pointer;
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em;
+  color: var(--fg-2); white-space: nowrap;
+}
+.bar .hud-export:hover { color: var(--fg-1); background: var(--surface-glass-2); }
+.bar .hud-export[disabled] { opacity: 0.55; cursor: default; }
+/* Where the band cannot hold the triggers either, they sit in the bar's first row
+   after the title, as tall as the bar's own action pills, and their panels hang
+   from the top of the canvas, directly below the bar. */
+.bar .cfw-info-triggers { display: flex; align-items: stretch; gap: var(--space-2); flex: none; }
+.bar .cfw-info-trigger { padding-top: 0; padding-bottom: 0; min-height: 34px; }
+.canvas-wrap[data-cfw-row="bar"] .cfw-caption,
+.canvas-wrap[data-cfw-row="bar"] .legend { top: var(--cfw-panel-top, 18px); bottom: auto; }
+/* Where the action row cannot take the export pair, it stands at the canvas's right
+   edge just above the band, in the lane the fit keeps clear beside the inspector's
+   pill; the triggers stay in the band, or else take the bar's first row, the title
+   wrapping there as it must ("lane"). */
+.canvas-wrap[data-cfw-short="lane"] .hud .hud-row-export { left: var(--cfw-export-left, -1px); }
+/* There the expanded inspector ends above the export pair, a gap short of it, so the
+   pair never lies on the record (cfw-release.js writes --cfw-lane-top). */
+body:not(.insp-collapsed) .canvas-wrap[data-cfw-short="lane"] .inspector {
+  max-height: min(40%, calc(var(--cfw-lane-top, 100%) - 18px - 8px));
+}
+@media (max-width: 767px) {
+  body:not(.insp-collapsed) .canvas-wrap[data-cfw-short="lane"] .inspector {
+    max-height: min(46%, calc(var(--cfw-lane-top, 100%) - var(--space-5) - 8px));
+  }
+}
+/* In the two-row bar the title gives the triggers its row by wrapping, rather than
+   pushing them onto a third row. */
+@media (max-width: 767px) { .bar[data-cfw-short] .title-block { flex-basis: 0; } }
+/* In every short-landscape arrangement the bar's action group keeps its own width:
+   where the bar is one row, the title and the release stamp wrap instead, so the
+   theme control never runs under the stamp. */
+.bar[data-cfw-short] .bar-actions { flex-shrink: 0; }
 /* A panel in the tab order takes the map's own focus ring, drawn inside it, as
    the inspector panel does. */
 .canvas-wrap .cfw-caption:focus-visible,

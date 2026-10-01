@@ -1240,7 +1240,10 @@
        own box.
 
        Nothing existing is moved, reordered or rewrapped: the HUD's children are
-       left exactly as the release wrote them, and this appends one element. */
+       left exactly as the release wrote them, and this appends one element. On a
+       short landscape canvas cfw-release.js places this row at the band's right end
+       or at the canvas's right edge just above the band, or moves it, with its
+       listeners, into the application bar. */
     var row = DOC.createElement("span");
     row.className = "hud-row-export";
     var a = mkButton("exportPng", "PNG page",
