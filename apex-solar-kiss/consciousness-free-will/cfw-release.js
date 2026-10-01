@@ -886,6 +886,31 @@
      only while the reader's view is at Fit. An explicit Fit closes an open panel
      that covers the fitted drawing; it never clears the selection or the filter.
 
+     SHORT LANDSCAPE: ONE LOWER ROW. On a landscape viewport at most 340px tall the
+     canvas is about 230px high, and a second row of lower chrome leaves the fit less
+     than its minimum height, so it drops the vertical reservation and the drawing
+     runs under the controls. Up to 376px tall the same holds wherever the band
+     cannot hold the triggers beside the HUD at the overview, because the ordinary
+     layout then stacks them above the export pair as a third row (measured: its
+     fit is not clear at 376px, and is at 377px). There the lower chrome keeps one
+     row: the HUD keeps its band, and each of its companions stays beside it while
+     the band holds it and otherwise moves into the application bar — the export
+     pair first, into the bar's action row as a fourth column, then the About/Legend
+     triggers, into the bar's first row beside the title, their panels then hanging
+     from the top of the canvas below the bar. Each moves only where the bar holds it
+     with the title and the conclusions link whole. Where the action row cannot take
+     the export pair, it stands at the canvas's right edge just above the band, in
+     the lane the fit keeps clear beside the inspector's pill, so it costs the
+     drawing no height; the triggers then stay beside the HUD where the band holds
+     them, and otherwise take the bar's first row beside the title, which wraps as it
+     must there; that last place takes them whatever room the bar has. The test is
+     the viewport, never the canvas this arrangement resizes. The nodes move with
+     their listeners and their state; focus on a moved node stays on it. Nothing is
+     hidden, and the export and the triggers work as they do in the canvas. Wherever
+     the bar is one row on a short landscape canvas, its action group keeps its own
+     width and the title and release stamp wrap instead, so the theme control never
+     runs under the stamp.
+
      WHAT THIS IS NOT. No new content and no second copy of any: About is the
      authored caption and Legend the engine's legend, in every state, so the PNG
      page export reads them unchanged whatever is open. The triggers are neither
@@ -924,6 +949,21 @@
     var lastRoom = 0;        /* the open panel's room after the reader opened it or the last resize */
     var aside = null;        /* a panel a resize set aside ... */
     var asideNeed = READ_MIN; /* ... and the room a resize must give back to reopen it */
+    /* SHORT: a landscape viewport too short for two lower rows (SHORT LANDSCAPE, above) */
+    var SHORT = window.matchMedia ? window.matchMedia("(max-height: 340px) and (orientation: landscape)") : null;
+    /* STACKED: up to 376px, where the ordinary layout would stack the triggers above the HUD as
+       well (SHORT LANDSCAPE, above) */
+    var STACKED = window.matchMedia ? window.matchMedia("(max-height: 376px) and (orientation: landscape)") : null;
+    /* the overview's level-of-detail word, the one the HUD shows at the Fit */
+    var OVERVIEW_CHARS = window.CFWAtlas && CFWAtlas.LOD && CFWAtlas.LOD[0] ? CFWAtlas.LOD[0].name.length : 7;
+    var bar = document.querySelector("header.bar");
+    var barActions = bar && bar.querySelector(".bar-actions");
+    var titleBlock = bar && bar.querySelector(".title-block");
+    var concl = barActions && barActions.querySelector(".bar-conclusions");
+    var shortAs = null;      /* the one-row arrangement in force: "band", "export", "info", "lane", or null */
+    var laneT = null;        /* "lane": where the triggers are: "band" or "bar" */
+    var LOD_CHARS = 8;       /* the longest level-of-detail word: BRANCHES, CONCEPTS */
+    var THEME_SLACK = 8;     /* the theme control's label changes width as it cycles */
 
     function rect(el) { return el.getBoundingClientRect(); }
     function shown(el) { return !!el && el.getClientRects().length > 0; }
@@ -956,7 +996,89 @@
        changes by a few characters; only where that moves the triggers is it a change) */
     function bandOf() {
       var wr = rect(wrap), hb = hudBlock();
-      return [wrap.clientWidth, wrap.clientHeight, Math.round(hb.top - wr.top), besides(wr, rect(hud))].join("|");
+      return [wrap.clientWidth, wrap.clientHeight, Math.round(hb.top - wr.top), besides(wr, rect(hud)), shortAs, laneT].join("|");
+    }
+
+    /* SHORT LANDSCAPE: ONE LOWER ROW. The arrangement is decided from widths only —
+       the canvas, the HUD (with its longest level-of-detail word), the trigger row,
+       the export pair and the bar's rows, none of which a move changes — so deciding
+       again after a move decides the same. A filter, which lengthens the HUD's
+       census, can change it. */
+    /* a viewport where the short composition may apply: the trigger row is drawn (compact)
+       and measured before it is decided */
+    function maybeShort() { return !!((SHORT && SHORT.matches) || (STACKED && STACKED.matches)); }
+    function isShort() {
+      if (!(bar && barActions && titleBlock && concl)) return false;
+      if (SHORT && SHORT.matches) return true;
+      /* taller, only where the band cannot hold the triggers beside the HUD at the overview,
+         so the ordinary layout would stack them: widths only, none of which the arrangement or
+         a zoom changes (a filter, lengthening the HUD's census, can) */
+      return !!(STACKED && STACKED.matches) && shown(row) && hudRight(OVERVIEW_CHARS) + SIDE + rect(row).width > rect(wrap).right - EDGE;
+    }
+    function exportRow() { return document.querySelector(".hud-row-export"); }
+    /* an element's text on one line, whatever its box does with it now */
+    function lineW(el) {
+      var r = document.createRange(), w = 0;
+      r.selectNodeContents(el);
+      Array.prototype.forEach.call(r.getClientRects(), function (q) { w += q.width; });
+      return w;
+    }
+    function num(v) { return parseFloat(v) || 0; }
+    /* the two-row bar's action row takes the export pair as a fourth column while the
+       conclusions link keeps its own label's width */
+    function barHoldsExport(x) {
+      var cs = getComputedStyle(barActions);
+      if (cs.display !== "grid") return false;
+      var used = 0, n = 0, gap = num(cs.columnGap), cc = getComputedStyle(concl);
+      Array.prototype.forEach.call(barActions.children, function (c) {
+        if (c !== concl && c !== x) { used += rect(c).width; n++; } });
+      var need = lineW(concl) + num(cc.paddingLeft) + num(cc.paddingRight) + num(cc.borderLeftWidth) + num(cc.borderRightWidth);
+      return barActions.clientWidth - used - rect(x).width - (n + 1) * gap >= need + 2 + THEME_SLACK;
+    }
+    /* the two-row bar's first row takes the triggers beside the title while the title
+       stays on one line */
+    function barHoldsInfo() {
+      if (getComputedStyle(barActions).display !== "grid") return false;
+      var bs = getComputedStyle(bar), mark = bar.querySelector(".mark"), t = titleBlock.querySelector(".t") || titleBlock;
+      var inner = bar.clientWidth - num(bs.paddingLeft) - num(bs.paddingRight);
+      return inner - (mark ? rect(mark).width + num(bs.columnGap) : 0) - lineW(t) - num(bs.columnGap) - rect(row).width >= 8;
+    }
+    /* the HUD's right edge with its level-of-detail word at c characters (its longest by
+       default), from the word's own text and not its padded box, so zooming through a level
+       never moves a control between the canvas and the bar */
+    function hudRight(c) {
+      var h = rect(hud), lod = document.getElementById("lod"), n = lod ? lod.textContent.length : 0;
+      return h.right + (n ? lineW(lod) / n * ((c || LOD_CHARS) - n) : 0);
+    }
+    function arrangement() {
+      if (!isShort()) return { s: null, t: null };
+      var wr = rect(wrap), end = wr.right - EDGE, x = exportRow();
+      var trig = hudRight() + SIDE + rect(row).width;
+      if (trig > end) { if (barHoldsInfo() && (!x || barHoldsExport(x))) return { s: "info", t: null }; }
+      else if (!x || trig + SIDE + rect(x).width <= end) return { s: "band", t: null };
+      else if (barHoldsExport(x)) return { s: "export", t: null };
+      /* the export pair takes the lane; the triggers the band, or else the bar's first row */
+      return { s: "lane", t: trig <= end ? "band" : "bar" };
+    }
+    /* the triggers are in the application bar */
+    function trigInBar() { return shortAs === "info" || laneT === "bar"; }
+    /* move the export pair and the trigger row to where the arrangement puts them: the
+       export pair into the HUD (its band, its own place or the lane) or the bar's
+       action row, the triggers into the canvas (before the caption, their own place)
+       or the bar's first row, after the title */
+    function dock(a) {
+      var s = a.s, x = exportRow(), fa = document.activeElement, moved = false;
+      if (x) { var to = s === "export" || s === "info" ? barActions : hud; if (x.parentNode !== to) { to.appendChild(x); moved = true; }
+        /* in the lane the export pair is right chrome, beside the inspector's pill */
+        if (s === "lane") x.setAttribute("data-cfw-edge", "right"); else x.removeAttribute("data-cfw-edge"); }
+      if (s === "info" || a.t === "bar") { if (row.parentNode !== bar) { bar.insertBefore(row, titleBlock.nextSibling); moved = true; } }
+      else if (row.parentNode !== wrap) { wrap.insertBefore(row, cap); moved = true; }
+      if (s) { wrap.setAttribute("data-cfw-short", s); bar.setAttribute("data-cfw-short", s); }
+      else if (shortAs) { wrap.removeAttribute("data-cfw-short"); if (bar) bar.removeAttribute("data-cfw-short"); }
+      shortAs = s; laneT = a.t;
+      /* a focused node the DOM moved has lost focus; it keeps it */
+      if (fa && fa !== document.body && fa !== document.activeElement && document.contains(fa)) focusQuietly(fa);
+      return moved;
     }
 
     /* WIDE: place the caption in its slot and say whether the layout holds. */
@@ -985,31 +1107,49 @@
        without the inspector. */
     function place(target) {
       var wr = rect(wrap), hb = hudBlock(), hr = rect(hud);
-      var beside = besides(wr, hr);
-      if (beside) {
+      /* inBar: the triggers are in the application bar (SHORT, "info", or "lane") */
+      var inBar = trigInBar(), beside = !inBar && besides(wr, hr);
+      if (inBar) {
+        ["--cfw-row-left", "--cfw-row-bottom", "--cfw-row-h"].forEach(function (n) { wrap.style.removeProperty(n); });
+      } else if (beside) {
         px("--cfw-row-left", hr.right - wr.left + SIDE); px("--cfw-row-bottom", wr.bottom - hr.bottom);
         px("--cfw-row-h", hr.height);
       } else {
         px("--cfw-row-left", EDGE); px("--cfw-row-bottom", wr.bottom - hb.top + GAP);
         wrap.style.removeProperty("--cfw-row-h");
       }
-      wrap.setAttribute("data-cfw-row", beside ? "beside" : "above");
-      var rr = rect(row), floor = Math.min(hb.top, rr.top);
+      wrap.setAttribute("data-cfw-row", inBar ? "bar" : beside ? "beside" : "above");
+      var rr = rect(row), floor = inBar ? hb.top : Math.min(hb.top, rr.top);
+      /* SHORT, "band": the export pair takes the band's right end, past the triggers,
+         measured from the HUD's own padding box, which positions it */
+      if (shortAs === "band") px("--cfw-export-left", rr.right + SIDE - hr.left - hud.clientLeft);
+      /* SHORT, "lane": the export pair at the canvas's right edge, above the band, and the
+         expanded inspector ending above it */
+      else if (shortAs === "lane" && shown(exportRow())) {
+        px("--cfw-export-left", wr.right - EDGE - rect(exportRow()).width - hr.left - hud.clientLeft);
+        px("--cfw-lane-top", rect(exportRow()).top - wr.top);
+      }
       px("--cfw-panel-bottom", wr.bottom - floor + GAP);
       var o = target || openPair(), out = { room: 0, free: 0 };
       pairs.forEach(function (x) {
         var w = x.p === cap ? Math.min(CAPTION_MAX, wr.width - 2 * EDGE) : Math.min(LEGEND_W, wr.width - 2 * EDGE);
-        var free = Math.max(0, Math.floor(floor - GAP - (wr.top + EDGE))), room = free;
+        var free = Math.max(0, Math.floor(floor - GAP - (wr.top + EDGE))), room = free, at = wr.top + EDGE;
         if (shown(insp)) { var ir = rect(insp);
           if (ir.left < wr.left + EDGE + w && ir.right > wr.left + EDGE) {
-            room = Math.max(0, Math.floor(floor - GAP - Math.max(wr.top + EDGE, ir.bottom + GAP)));
+            at = Math.max(wr.top + EDGE, ir.bottom + GAP);
+            room = Math.max(0, Math.floor(floor - GAP - at));
             /* where the collapsed inspector's pill would leave the panel less than
-               READ_MIN, the panel narrows to clear it, down to NARROW_MIN */
+               READ_MIN, the panel narrows to clear it, down to NARROW_MIN; on a short
+               landscape canvas a panel narrows beside the pill wherever it can, so it
+               keeps the canvas's whole height (below the bar, from the canvas's
+               top-left) */
             var nw = Math.floor(ir.left - GAP - (wr.left + EDGE));
-            if (room < READ_MIN && !inspOpen() && nw >= NARROW_MIN) { w = nw; room = free; } } }
+            if ((shortAs || room < READ_MIN) && !inspOpen() && nw >= NARROW_MIN) { w = nw; room = free; at = wr.top + EDGE; } } }
         px(x.p === cap ? "--cfw-caption-cw" : "--cfw-legend-cw", w);
         if (x === o) out = { room: room, free: free };
         x.p.style.setProperty("--cfw-panel-max", room + "px");
+        /* below the bar, the panel hangs from its top edge instead of standing on the HUD */
+        if (inBar) x.p.style.setProperty("--cfw-panel-top", Math.round(at - wr.top) + "px");
       });
       return out;
     }
@@ -1025,17 +1165,20 @@
       return r;
     }
     function unplace() {
-      ["--cfw-row-left", "--cfw-row-bottom", "--cfw-row-h", "--cfw-panel-bottom", "--cfw-caption-cw", "--cfw-legend-cw"]
-        .forEach(function (n) { wrap.style.removeProperty(n); });
-      pairs.forEach(function (x) { x.p.style.removeProperty("--cfw-panel-max"); });
+      ["--cfw-row-left", "--cfw-row-bottom", "--cfw-row-h", "--cfw-panel-bottom", "--cfw-caption-cw", "--cfw-legend-cw",
+       "--cfw-export-left", "--cfw-lane-top"].forEach(function (n) { wrap.style.removeProperty(n); });
+      pairs.forEach(function (x) { x.p.style.removeProperty("--cfw-panel-max"); x.p.style.removeProperty("--cfw-panel-top"); });
       wrap.removeAttribute("data-cfw-row");
     }
 
-    /* everything the fit depends on; a change refits a map that is at Fit */
+    /* everything the fit depends on; a change refits a map that is at Fit (the one-row
+       arrangement and where the export pair sits in the band are part of it: the
+       Fit's callouts are placed clear of that chrome) */
     function signature() {
       return [mode, wrap.getAttribute("data-cfw-row"), wrap.style.getPropertyValue("--cfw-row-bottom"),
               wrap.style.getPropertyValue("--cfw-caption-left"), wrap.style.getPropertyValue("--cfw-caption-w"),
-              mode === "wide" ? Math.round(rect(cap).height) : 0, wrap.clientWidth, wrap.clientHeight].join("|");
+              mode === "wide" ? Math.round(rect(cap).height) : 0, wrap.clientWidth, wrap.clientHeight,
+              shortAs, laneT, wrap.style.getPropertyValue("--cfw-export-left")].join("|");
     }
     function settle() {
       var s = signature();
@@ -1057,12 +1200,19 @@
     function update(flip) {
       if (!(wrap.clientHeight > 0)) return;
       var fa = document.activeElement, before = mode;
-      var b = bandOf(), resized = !!flip || b !== band;
-      band = b;
       var was = pairs.map(function (x) { return !x.p.hidden; });
       var o = before === "compact" ? openPair() : null, top = o ? o.p.scrollTop : 0;
+      /* SHORT: the canvas is compact whatever else holds, so the trigger row is drawn
+         and measured before the arrangement is decided; then the nodes move (where the
+         taller band only may apply, the wide test below still runs) */
+      if (maybeShort()) wrap.setAttribute("data-cfw-chrome", "compact");
+      /* a node that moved changed the chrome the last fit reserved: the next settle
+         refits a map at Fit even where nothing in the signature changed */
+      if (dock(arrangement())) sig = null;
+      var b = bandOf(), resized = !!flip || b !== band;
+      band = b;
       unplace();
-      if (layWide()) {
+      if (!shortAs && layWide()) {
         /* in wide a panel is in the tab order only when it has something to scroll */
         pairs.forEach(function (x) { setOpen(x, true);
           x.p.setAttribute("tabindex", x.p.scrollHeight > x.p.clientHeight + 1 ? "0" : "-1"); });
@@ -1070,7 +1220,8 @@
       } else {
         wrap.setAttribute("data-cfw-chrome", "compact");
         cap.setAttribute("data-cfw-edge", "none"); leg.setAttribute("data-cfw-edge", "none");
-        row.setAttribute("data-cfw-edge", "bottom");
+        /* in the bar the triggers are no chrome of the canvas's */
+        row.setAttribute("data-cfw-edge", trigInBar() ? "none" : "bottom");
         pairs.forEach(function (x, i) { x.p.setAttribute("tabindex", "0"); setOpen(x, before === "compact" && was[i]); });
         mode = "compact";
         var r = resized ? budget() : place(), op = openPair();
@@ -1108,6 +1259,8 @@
       var r = on ? budget() : place();
       lastRoom = on ? r.room : 0;
       keepFocus(fa);
+      /* from the bar the panel is far from its trigger in the tab order: go to it */
+      if (on && trigInBar() && !pair.p.hidden) focusQuietly(pair.p);
       settle();
       seen = observed(); seenCauses = causes();
     }
@@ -1172,12 +1325,16 @@
       new MutationObserver(schedule).observe(hud, { childList: true });
     }
 
-    /* An explicit Fit closes an open panel that covers the drawing it just fitted. */
-    var zfit = document.getElementById("zfit");
-    if (zfit) zfit.addEventListener("click", function () {
+    /* An explicit Fit closes an open panel that covers the drawing or its labels.
+       cfw-atlas.js dispatches cfw:fit after its own dismissals and before its last fit. */
+    document.addEventListener("cfw:fit", function () {
+      /* the fit just rewrote the HUD's level-of-detail word; place the lower chrome for
+         it first, so the panel is judged where it now stands and the explicit fit that
+         follows is the last one */
+      update();
       var o = mode === "compact" ? openPair() : null;
       var g = document.querySelector("#stage svg > g");
-      if (o && g && hits(rect(o.p), rect(g))) close(false);
+      if (o && ((g && hits(rect(o.p), rect(g))) || (V.labelsUnder && V.labelsUnder(o.p) > 0))) close(false);
     });
 
     var pending = false;

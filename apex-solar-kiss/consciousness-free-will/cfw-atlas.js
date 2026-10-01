@@ -67,8 +67,13 @@
   };
 
   /* Level of detail. `branchMin` is the honest part: at Fit the overview names
-     every region and every MAJOR branch, and the rest resolve one zoom step in.
-     Nothing is removed at any level. */
+     every region and every MAJOR branch, and the rest resolve at the next level.
+     Where the canvas cannot hold every MAJOR branch's callout clear of the chrome,
+     inside the canvas and off the other names (on a short landscape canvas, clear of
+     the other callouts too), the Fit names the largest that fit and the others
+     return at the next level. Where it cannot hold even the regions' names that way,
+     the Fit leaves them to the next level as well, and the centre label too where
+     that does not fit (fitPopulation). Nothing is removed at any level. */
   var LOD = [
     { k: 0,    name: "regions",  leafLabels: false, ids: false, branchMin: 16 },
     { k: 0.58, name: "branches", leafLabels: false, ids: false, branchMin: 0  },
@@ -389,6 +394,16 @@
     /* viewAtFit: the reader is looking at a whole-map fit. wholeK: that fit's
        scale, which stays the zoom floor after a group or section is framed. */
     var viewAtFit = false, wholeK = 0;
+    /* held: the population a whole-map Fit chose ({ lod, centre, regions, keep }):
+       whether it deferred the centre label, whether it deferred the regions' names
+       (and with them every branch), and the MAJOR branch callouts it kept; or null.
+       It holds through pan, pinch and zoom, rests at every other level of detail and
+       applies again on the way back to its own, and ends at the next fit. It records
+       tiers and kept callouts, not hidden ones, so a section that changes without a
+       refit (opening a record outside a filter) cannot bring back a branch the Fit
+       did not try, or one region of five. */
+    var held = null;
+    var fitSeq = 0;                                   /* each fit's report is numbered */
     /* SMALL: the inspector expands as a sheet across the top. COMPACT: the
        inspector opens collapsed — a viewport at most 767px wide, or a touch screen
        at most 520px tall. COARSE: a touch screen. */
@@ -412,6 +427,10 @@
         else if (n.kind === "leaf")      show = L2.leafLabels;
         else if (n.kind === "branch") show = (branchVis[n.id] || n.count) >= (L2.branchMin || 0);
         else show = true;
+        var h = held && held.lod === L2.name && n.kind !== "leaf" ? held : null;
+        le.held = !!(show && h && (n.kind === "root" ? h.centre
+                                   : n.kind === "region" ? h.regions : h.regions || !h.keep[n.id]));
+        if (le.held) show = false;
         le.show = show;
         if (!show) {
           le.t.style.display = "none";
@@ -613,6 +632,101 @@
       });
     }
 
+    /* The chrome the fit reserves, as boxes in stage coordinates: the inspector (a
+       pill, a sheet or a panel), the HUD, its export row, and every lower panel or
+       trigger row that declares an edge, inside the canvas as the fit's own
+       reservation is. el names one element instead. */
+    function chromeRects(el) {
+      var sr = stage.getBoundingClientRect(), out = [];
+      var els = el ? [el] : wrapEl.querySelectorAll('.inspector, .hud, .hud-row-export, [data-cfw-edge="bottom"], [data-cfw-edge="right"]');
+      Array.prototype.forEach.call(els, function (e) {
+        if (!e.getClientRects().length) return;
+        var st = getComputedStyle(e);
+        if (st.visibility === "hidden" || +st.opacity === 0) return;
+        var r = e.getBoundingClientRect();
+        if (r.width && r.height)
+          out.push({ l: r.left - sr.left, r: r.right - sr.left, t: r.top - sr.top, b: r.bottom - sr.top });
+      });
+      return out;
+    }
+    /* whether el covers the drawing or any shown callout or centre-label line */
+    function covers(el) {
+      if (!el || !el.getClientRects().length) return false;
+      var g = gRoot.getBoundingClientRect(), r = el.getBoundingClientRect();
+      return (r.left < g.right && g.left < r.right && r.top < g.bottom && g.top < r.bottom) ||
+             linesUnder(chromeRects(el)) > 0;
+    }
+    /* the pairs of shown callouts (a name with its count as one box) or the centre
+       label that overlap one another by more than a pixel, keyed by their ids */
+    function crowding() {
+      var B = [], out = {}, i, j;
+      labelEls.forEach(function (le) {
+        if (!le.show || le.n.kind === "leaf") return;
+        var b = null;
+        [le.t, le.cnt].forEach(function (e) {
+          if (!e || e.style.display === "none") return;
+          var r = e.getBoundingClientRect();
+          b = b ? { l: Math.min(b.l, r.left), t: Math.min(b.t, r.top), r: Math.max(b.r, r.right), b: Math.max(b.b, r.bottom) }
+                : { l: r.left, t: r.top, r: r.right, b: r.bottom };
+        });
+        if (b) { b.id = le.n.id; B.push(b); }
+      });
+      for (i = 0; i < B.length; i++) for (j = i + 1; j < B.length; j++)
+        if (B[i].l < B[j].r - 1 && B[j].l < B[i].r - 1 && B[i].t < B[j].b - 1 && B[j].t < B[i].b - 1)
+          out[[B[i].id, B[j].id].sort().join("|")] = true;
+      return out;
+    }
+    /* the shown callout or centre-label lines that sit under those boxes, keyed by
+       id and line (name or count) */
+    function underSet(cs) {
+      var sr = stage.getBoundingClientRect(), out = {};
+      labelEls.forEach(function (le) {
+        if (!le.show || le.n.kind === "leaf") return;
+        [le.t, le.cnt].forEach(function (e, k) {
+          if (!e || e.style.display === "none") return;
+          var r = e.getBoundingClientRect(), l = r.left - sr.left, t = r.top - sr.top;
+          if (cs.some(function (c) { return l < c.r && c.l < l + r.width && t < c.b && c.t < t + r.height; }))
+            out[le.n.id + (k ? "|count" : "|name")] = true;
+        });
+      });
+      return out;
+    }
+    function linesUnder(cs) { return Object.keys(underSet(cs)).length; }
+    function within(a, b) { for (var k in a) if (!b[k]) return false; return true; }
+    /* the shown callout or centre-label lines that run more than a pixel outside the
+       canvas, keyed as underSet keys them */
+    function outsideSet() {
+      var sr = stage.getBoundingClientRect(), out = {};
+      labelEls.forEach(function (le) {
+        if (!le.show || le.n.kind === "leaf") return;
+        [le.t, le.cnt].forEach(function (e, k) {
+          if (!e || e.style.display === "none") return;
+          var r = e.getBoundingClientRect();
+          if (r.left < sr.left - 1 || r.top < sr.top - 1 || r.right > sr.right + 1 || r.bottom > sr.bottom + 1)
+            out[le.n.id + (k ? "|count" : "|name")] = true;
+        });
+      });
+      return out;
+    }
+    /* the pairs of shown names (the centre label, or a region's or branch's name line;
+       not the counts) that overprint one another by more than a pixel, keyed by ids */
+    function overprints() {
+      var B = [], out = {}, i, j;
+      labelEls.forEach(function (le) {
+        if (!le.show || le.n.kind === "leaf" || le.t.style.display === "none") return;
+        var r = le.t.getBoundingClientRect();
+        B.push({ id: le.n.id, l: r.left, t: r.top, r: r.right, b: r.bottom });
+      });
+      for (i = 0; i < B.length; i++) for (j = i + 1; j < B.length; j++)
+        if (B[i].l < B[j].r - 1 && B[j].l < B[i].r - 1 && B[i].t < B[j].b - 1 && B[j].t < B[i].b - 1)
+          out[[B[i].id, B[j].id].sort().join("|")] = true;
+      return out;
+    }
+    function empty(o) { for (var k in o) return false; return true; }
+    /* whether the shown names stand clear: none under that chrome, none outside the
+       canvas, none overprinting another */
+    function namesClear(cs) { return !linesUnder(cs) && empty(outsideSet()) && empty(overprints()); }
+
     function apply() {
       gRoot.setAttribute("transform",
         "translate(" + view.x + "," + view.y + ") scale(" + view.k + ")");
@@ -625,7 +739,9 @@
     /* FIT. The shared helper places the whole active drawing inside the part of
        the canvas the reader can see and reports whether the placement `clear`s the
        chrome. The side lane reserves the inspector on the right, the HUD and its
-       export row below, and the atlas panel on the left while it is open; the
+       export row below (the export row on the right instead, where cfw-release.js
+       stands it at the canvas's right edge and it declares that edge), and the
+       atlas panel on the left while it is open; the
        caption, the legend and their trigger row are reserved at the edge each
        declares in data-cfw-edge, which cfw-release.js sets for the lower chrome's
        current arrangement (an open compact panel declares none: it is an overlay).
@@ -646,10 +762,10 @@
         topSelector: edges.top, leftSelector: edges.left
       });
     }
-    function fitTo(b, whole) {
+    function fitTo(b, whole, cause) {
       var left = document.body.classList.contains("atlas-open") ? ".atlas-panel" : null;
       var r = fitCandidate(b, { right: ".inspector, [data-cfw-edge=\"right\"]", left: left, top: null,
-                                bottom: ".hud, .hud-row-export, [data-cfw-edge=\"bottom\"]" });
+                                bottom: ".hud, .hud-row-export:not([data-cfw-edge=\"right\"]), [data-cfw-edge=\"bottom\"]" });
       r.mode = "side";
       if (COMPACT.matches) {
         var band = fitCandidate(b, { top: ".inspector", left: left, right: null,
@@ -660,10 +776,89 @@
       fitK = r.scale; if (whole) wholeK = r.scale;
       lastFit = r; root.__FITREPORT = r;
       viewAtFit = !!whole;
+      held = null;
       apply();
+      if (whole) fitPopulation();
+      report(r, whole, cause);
     }
-    function fit() { fitTo(filtering() ? visibleBounds() : L.bounds, true); }
+    function fit(cause) { fitTo(filtering() ? visibleBounds() : L.bounds, true, cause); }
 
+    /* What __FITREPORT says about a fit. `clear` is the drawing's clearance the shared
+       helper reports (kept as drawingClear), and, on top of it, that no callout or
+       centre-label line sits under reserved chrome (labelsUnder) or runs outside the
+       canvas (labelsOutside), that no shown name overprints another (overprinted), and
+       that nothing the reader has open covers the drawing or its labels (covered: the
+       atlas drawer, or an About or Legend panel open as an overlay). `deferred` counts
+       the names the fit leaves to the next level (centre, regions, branches); a fit can
+       be clear with names deferred. `cause` is "explicit" only for the Fit
+       control's own final fit; every other fit is "auto" (a resize, a filter, a panel,
+       the first load) or "frame" (a region framing), so a refit that kept the reader's
+       panels open reports clear: false where they cover the map and never passes for an
+       explicit Fit. seq numbers the reports. The report is taken when the fit runs:
+       a panel opened afterwards, which does not refit, is not in it. */
+    function report(r, whole, cause) {
+      r.cause = cause || (whole ? "auto" : "frame");
+      r.explicit = r.cause === "explicit";
+      r.seq = ++fitSeq;
+      r.drawingClear = r.clear;
+      r.labelsUnder = linesUnder(chromeRects());
+      r.labelsOutside = Object.keys(outsideSet()).length;
+      r.overprinted = Object.keys(overprints()).length;
+      r.deferred = { centre: 0, regions: 0, branches: 0 };
+      labelEls.forEach(function (le) {
+        if (le.held) r.deferred[le.n.kind === "root" ? "centre" : le.n.kind === "region" ? "regions" : "branches"]++;
+      });
+      r.covered = [];
+      [["atlas", document.body.classList.contains("atlas-open") ? document.getElementById("atlas") : null],
+       ["about", document.querySelector('.cfw-caption[data-cfw-edge="none"]')],
+       ["legend", document.querySelector('.legend[data-cfw-edge="none"]')]].forEach(function (x) {
+        if (covers(x[1])) r.covered.push(x[0]);
+      });
+      r.clear = r.drawingClear && !r.labelsUnder && !r.labelsOutside && !r.overprinted && !r.covered.length;
+    }
+
+    /* The Fit's population. The fit keeps the DRAWING clear of the chrome it reserves,
+       but the callouts stack beyond the drawing's extent, and on a small canvas they run
+       under the pill, a trigger row or the HUD, outside the canvas or over one another.
+       Where they do, at the overview's level of detail, the Fit first places the centre
+       label and the regions alone. If those names do not stand clear (namesClear: no
+       line under that chrome or outside the canvas, no name over another), the Fit
+       leaves every region's name to the next level, and the centre label too where it
+       does not stand clear alone, and names no branch: a whole tier goes, never one
+       region of five. Otherwise it tries the MAJOR branch callouts largest first
+       (visible objects, then the order of labelEls: the regions' order, largest first
+       within each), keeping each one only if, with it placed, the names still stand
+       clear; on a short landscape canvas (data-cfw-short, written by cfw-release.js),
+       where the honest fit is smallest, every overlapping pair of callouts must also
+       have been there already. A callout that fails is skipped and the next one tried;
+       the rest return at the next level. The placement is placeLabels' own at every
+       step, and the population holds through pan, pinch and zoom. The next fit or a
+       region framing ends it. Where every callout stands clear (and, on a short
+       landscape canvas, every MAJOR one clears the others), nothing is deferred. */
+    function fitPopulation() {
+      var cs = chromeRects(), L2 = lodFor(view.k), guard = wrapEl.hasAttribute("data-cfw-short");
+      if (!L2.branchMin || !(guard || !namesClear(cs))) return;
+      var order = [];
+      labelEls.forEach(function (le, i) {
+        if (le.show && le.n.kind === "branch")
+          order.push({ id: le.n.id, i: i, n: branchVis[le.n.id] || 0 });
+      });
+      order.sort(function (a, b) { return b.n - a.n || a.i - b.i; });
+      held = { lod: L2.name, centre: false, regions: false, keep: {} };
+      placeLabels(L2);
+      if (!namesClear(cs)) {
+        held.regions = true; placeLabels(L2);
+        if (!namesClear(cs)) { held.centre = true; placeLabels(L2); }
+        return;
+      }
+      var baseO = guard ? crowding() : null;
+      order.forEach(function (o) {
+        held.keep[o.id] = true;
+        placeLabels(L2);
+        if (!namesClear(cs) || (guard && !within(crowding(), baseO))) delete held.keep[o.id];
+      });
+      placeLabels(L2);
+    }
     /* one zoom range for buttons, wheel and pinch: down to the whole-map fit (or
        0.24 where that fit is larger), up to 14 */
     function clampK(k) { return Math.max(Math.min(fitK, wholeK || fitK, 0.24), Math.min(k, 14)); }
@@ -839,6 +1034,9 @@
     });
     /* the HUD's export row is added after the first fit; take it into account */
     window.addEventListener("load", function () { if (viewAtFit) fit(); });
+    /* so can the webfont, which widens the callouts the Fit's population measured */
+    if (document.fonts && document.fonts.ready)
+      document.fonts.ready.then(function () { if (viewAtFit) fit(); }).catch(function () {});
 
     /* ---------------- inspector: collapse + expand ----------------
        A viewport at most 767px wide, or a touch screen at most 520px tall, opens
@@ -1374,7 +1572,39 @@
 
     document.getElementById("zin").addEventListener("click", function () { zoom(1.3); });
     document.getElementById("zout").addEventListener("click", function () { zoom(1 / 1.3); });
-    document.getElementById("zfit").addEventListener("click", fit);
+    /* An explicit Fit keeps its word. Where the chrome that is open covers the fitted
+       drawing, its callouts or its centre label, the Fit dismisses it and fits again:
+       the atlas drawer through its own control, then, on a compact canvas, an expanded
+       inspector, which collapses to its pill with the record still selected (its own
+       cause, "fit", so the lower chrome does not take it for the reader's action). Each
+       is dismissed only where it covers the drawing or its labels; one that covers
+       neither stays open. Focus inside what closes moves to that element's own control.
+       Selection, filter and search are untouched. Then cfw-release.js, on the cfw:fit
+       event, closes an open About or Legend panel that covers the drawing or its labels
+       and re-places the lower chrome for the fitted view, and one last fit, reported as
+       "explicit", describes what the reader now sees. */
+    document.getElementById("zfit").addEventListener("click", function () {
+      var a = document.activeElement;
+      fit();
+      /* covering is judged against the whole population at main's placement (the
+         centre label, every region and every MAJOR callout): chrome the population
+         merely steered around still obstructs the overview */
+      function obstructs(el) {
+        var h = held; held = null; placeLabels(lodFor(view.k));
+        var c = covers(el); held = h; placeLabels(lodFor(view.k));
+        return c;
+      }
+      if (document.body.classList.contains("atlas-open") && obstructs(panel)) {
+        openPanel(false);
+        if (a && panel.contains(a)) btn.focus();
+      }
+      if (COMPACT.matches && !inspCollapsed() && obstructs(inspEl)) {
+        setInspectorOpen(false, { refit: true, cause: "fit" });
+        if (a && inspEl.contains(a) && a !== inspToggle && inspToggle) inspToggle.focus();
+      }
+      document.dispatchEvent(new CustomEvent("cfw:fit"));
+      fit("explicit");
+    });
 
     if (COMPACT.matches) setInspectorOpen(false, { cause: "compact" });
     inspect(null);
@@ -1384,7 +1614,7 @@
     fit();
 
     root.CFW_VIEW = {
-      fit: fit, select: select, view: view, layout: L, projection: P,
+      fit: function () { fit(); }, select: select, view: view, layout: L, projection: P,
       lodFor: lodFor, labels: labelEls, edges: edgeEls, nodes: nodeEls,
       /* exposed so the validation harness exercises the SAME code the page runs */
       controls: C, index: index, dims: DIMS, notOffered: NOTOFFERED,
@@ -1397,6 +1627,7 @@
       setInspectorOpen: setInspectorOpen,
       inspectorCauses: function () { var o = {}; for (var k in inspCauses) o[k] = inspCauses[k]; return o; },
       atFit: function () { return viewAtFit; },
+      labelsUnder: function (el) { return linesUnder(chromeRects(el)); },
       lockedId: function () { return locked; },
       setFilter: function (dim, vals) {
         panel.querySelectorAll('input[data-dim="' + dim + '"]').forEach(function (cb) {

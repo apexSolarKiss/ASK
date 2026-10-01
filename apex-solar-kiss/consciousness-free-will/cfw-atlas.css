@@ -361,8 +361,9 @@ body.atlas-open .atlas-panel { display: block; }
    draws their focus on their own underline, and a ring would be a second
    indicator, broken at every line cut of a wrapped URL. Its disclosure trigger is
    excluded too: surface-treatments.css draws the trigger's own outline and turns
-   its indicator magenta. */
-.atlas-panel :focus-visible, .bar :focus-visible:where(:not(.surface-action)), .hud :focus-visible,
+   its indicator magenta; so are the About/Legend triggers where a short landscape
+   canvas moves them into the bar (cfw-release.js). */
+.atlas-panel :focus-visible, .bar :focus-visible:where(:not(.surface-action, .surface-disclosure-trigger)), .hud :focus-visible,
 .inspector :focus-visible:where(:not(.surface-text-link, .surface-disclosure-trigger)) {
   outline: 2px solid var(--fg-1); outline-offset: 2px; border-radius: var(--radius-sm);
 }
