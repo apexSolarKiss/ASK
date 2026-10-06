@@ -1,0 +1,33 @@
+/* cfw-map.css — the map page's own composition around the vendored interactive radial pattern:
+   the ASK mark in the application bar, the title block's semantic elements, the release stamp,
+   and, on a short landscape touch screen, the bar's layout, which it restyles there to keep one row.
+   It styles only this page's bar and the elements this page puts in it; the pattern's stylesheet
+   (diagrams-radial.css) owns every panel, the canvas, the HUD and the inspector, and nothing here
+   restates or overrides them. No new token. */
+
+/* the ASK mark: a link home, holding the pattern's two mark slots (one shows per theme) */
+.radial-bar .mark { display: inline-flex; align-items: center; height: 22px; flex: none; }
+.radial-bar .mark img { height: 22px; width: auto; display: block; }
+
+/* the title block is a heading and a paragraph here; the pattern sizes their type */
+.radial-bar .title-block .t, .radial-bar .title-block .s { margin: 0; }
+
+/* the release stamp */
+.radial-bar .stamp { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; line-height: 1.4;
+                     text-transform: uppercase; color: var(--fg-2); text-align: right; }
+.radial-bar .stamp .k { color: var(--fg-1); font-weight: 500; }
+@media (max-width: 767px) { .radial-bar .stamp { display: none; } }
+
+/* A short landscape touch screen. The drawing is bounded by the height there, so the bar keeps to
+   ONE row at every width, with the pattern's own compact padding and gap: the title may wrap to two
+   lines, no control shrinks, and where the controls do not all fit their row scrolls sideways, as
+   the pattern's own narrow bar does. No stamp or subtitle (the stamp reappears on any taller
+   screen, and the plate still carries it). */
+@media (max-height: 520px) and (pointer: coarse) and (orientation: landscape) {
+  .radial-bar { display: flex; gap: 12px; padding: 10px 14px; min-width: 0; }   /* never wider than the shell's column */
+  .radial-bar .spacer { display: block; flex: 1 1 0; min-width: 0; }
+  .radial-bar .title-block { flex: 0 1000 auto; min-width: 120px; }   /* the title wraps before any control scrolls */
+  .radial-bar .stamp, .radial-bar .title-block .s { display: none; }
+  .radial-bar [data-radial-slot="actions"] { flex: 0 1 auto; min-width: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .radial-bar [data-radial-slot="actions"] > * { flex: none; }
+}

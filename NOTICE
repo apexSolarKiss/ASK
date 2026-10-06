@@ -4,9 +4,9 @@ Copyright 2026 Andrew S Klug // ASK
 The ASK meta-brand public landing site — a reference implementation of the
 ASK design family.
 
-This product vendors foundations, one pattern, five visual rules with one
-optional helper, two files the CFW mind map carries, and the canonical
-browser-icon set from design-system-ASK
+This product vendors foundations, two patterns, five visual rules with one
+optional helper, the spectral-state primitive the CFW mind map carries, and the
+canonical browser-icon set from design-system-ASK
 (github.com/apexSolarKiss/design-system-ASK):
   - colors_and_type.css        — canonical tokens (Tier 1 + Tier 2)
   - fonts/                      — Inter + JetBrains Mono variable webfonts (OFL; see fonts/*-OFL.txt)
@@ -24,13 +24,23 @@ browser-icon set from design-system-ASK
                                  apex-solar-kiss/consciousness-free-will/map/,
                                  which requires its governed-state custom
                                  properties
-  - diagrams-fit.js            — the shared diagram fit helper, vendored as a
-                                 pinned byte-identical copy and not modified
-                                 here. The CFW mind map loads it to fit the
-                                 map clear of its panels, and passes its own
-                                 panel selector, or none, for every edge, so
-                                 the helper's default panel selectors never
-                                 apply to it
+  - diagram-interactive-radial — the interactive radial pattern that draws
+                                 the CFW mind map, in
+                                 apex-solar-kiss/consciousness-free-will/:
+                                 diagrams-radial.css, diagrams-radial-contract.js,
+                                 -layout.js, -labels.js, -engine.js, -legend.js,
+                                 -chrome.js, -inspector.js, -facets.js,
+                                 -export.js and -theme.js; diagrams-pointer.js,
+                                 the generated mirror of the shared pointer
+                                 controller; and diagrams-fit.js, the shared
+                                 diagram fit helper, which the pattern's engine
+                                 loads to fit the map clear of the chrome each
+                                 panel declares. All are vendored from one
+                                 design-system-ASK commit as pinned
+                                 byte-identical copies and not modified here.
+                                 The map's adapter, instance and page layer
+                                 (cfw-map-adapter.js, cfw-map.js, cfw-map.css)
+                                 are this site's code, not vendored
   - surface-action.css         — the shared compact-action visual contract,
                                  vendored as a pinned byte-identical copy and
                                  not modified here. It owns the base surface,
@@ -127,12 +137,13 @@ One further page is a named exception: the CFW mind map at
 apex-solar-kiss/consciousness-free-will/map/ is a fixed full-viewport
 interactive application, not a scrolling document, and does not consume the
 shell. It carries ASK Tier 3 in its application bar and follows the
-design-system interactive-diagram family grammar. Its inspector's collapse
-control, and the About and Legend triggers used where the canvas cannot hold its
-caption and legend open, take the disclosure grammar of surface-treatments.css,
-loaded after surface-panel.css as that rule requires; the map applies no panel
-class, adopts neither the document register nor its overflow helper, and keeps
-its own inspector surface, placement and behavior. The exception is specific to
+design-system interactive-diagram family grammar. It is drawn by the vendored
+interactive radial pattern, whose panels, inspector and controls are the
+pattern's: its inspector's collapse control, and the About and Legend triggers
+used where the canvas cannot hold its caption and legend open, take the
+disclosure grammar of surface-treatments.css, loaded after surface-panel.css as
+that rule requires. The map adopts neither the document register nor its
+overflow helper. The exception is specific to
 that page: the CFW conclusions at apex-solar-kiss/consciousness-free-will/ are
 an ordinary shell page and consume the shell and its navigation runtime, as
 every other non-home content page continues to do.

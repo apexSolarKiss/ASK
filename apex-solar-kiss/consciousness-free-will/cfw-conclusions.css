@@ -2,8 +2,9 @@
  *
  * THE ROUTE IS TWO PAGES, AND TWO LAYERS. The conclusions at the route root are
  * an ordinary shell page; the map one level deeper is the full-viewport
- * application, and its layer is cfw-release.css. This file is loaded by the
- * conclusions page alone, and the conclusions page does not load cfw-release.css.
+ * application, drawn by the design-system radial pattern with its own layer,
+ * cfw-map.css. This file is loaded by the conclusions page alone, and the
+ * conclusions page loads none of the map's layers.
  *
  * PRESENTATION COMES FROM THE VENDORED RULES. Every heading, paragraph, label,
  * quotation and preformatted block takes a role from surface-document.css, and
