@@ -81,8 +81,9 @@ canonical browser-icon set from design-system-ASK
                                  pinned byte-identical copy and not modified
                                  here. Presentation only; the CFW conclusions
                                  page consumes its surface axes, emphasis rail
-                                 and label, the asymptotic system key page its
-                                 disclosure, for six of its sections, and the
+                                 and label, the asymptotic system key page and
+                                 its lineage page its disclosure, for six
+                                 sections each, and the
                                  CFW mind map its controlled disclosure
                                  trigger, for the inspector's collapse control
                                  and the About and Legend triggers used where
@@ -92,8 +93,10 @@ canonical browser-icon set from design-system-ASK
                                — the document register's optional overflow-cue
                                  helper, vendored as a pinned byte-identical
                                  copy and not modified here. It reports whether
-                                 a preformatted block is wider than its box; it
-                                 changes no text
+                                 a preformatted block, or a document table's
+                                 scroll box, is wider than its box, and on which
+                                 side, so the stylesheet can draw the overflow
+                                 cue; it changes no text
   - favicon.svg, favicon-32.png,
     favicon.ico,
     apple-touch-icon.png         — the canonical ASK browser-icon set, vendored

@@ -5,20 +5,24 @@
    canonical tokens (colors_and_type.css, vendored) and defines NO new colors,
    type choices, or scale.
 
-   It no longer owns all layout. FIVE canonical files are vendored as pinned
-   byte-identical copies and never hand-edited here: surface-shell.css, the page
-   chrome, which every page except the homepage consumes; surface-shell.js, the
+   It no longer owns all layout. The design-system-ASK files it builds on are
+   vendored as pinned byte-identical copies and never hand-edited here; NOTICE
+   carries the full inventory, and README's Files section describes how the site
+   uses each. The ones this layer works around: surface-shell.css, the page
+   chrome, which every page except the homepage and the CFW map consumes;
+   surface-shell.js, the
    shell's optional navigation runtime, which every shell page opts into by
    authoring a navigation source; surface-panel.css, the live-content-panel
-   visual rule, which the homepage's three tier panels consume;
+   visual rule;
    surface-action.css, the compact-action visual rule, which every page's compact
    controls consume — including this homepage's three footer destinations — and
    whose attention edge the gallery cards, video facades, p5 launch cards and
-   gallery dialog controls take by class; and
+   gallery dialog controls take by class;
    surface-text-link.css, the unboxed textual-link visual rule, opt-in by class,
-   which 6 prose destinations across 5 subpages consume, and which the CFW map
+   which five prose destinations across five subpages consume, and which the CFW map
    additionally consumes for its inspector source links (the CFW conclusions
-   page does not load it). The homepage no longer
+   page does not load it); and surface-document.css and surface-treatments.css,
+   the document register and the surface treatments. The homepage no longer
    consumes the textual-link rule: its footer is compact actions, so the local
    footer-link re-derivation that used to live here is retired. What this file owns is the homepage
    composition, page payload layout, row and placement decisions around the
@@ -32,7 +36,7 @@
    ========================================================================= */
 
 /* ---------- Vendored surface-shell — ASK instance adaptations ----------
-   Every page except the homepage consumes the vendored surface-shell pattern
+   Every page except the homepage and the CFW map consumes the vendored surface-shell pattern
    (surface-shell.css, a pinned byte-identical copy — never hand-edited here).
    The shell owns the page container, header layout, wordmark slot geometry,
    structural title and lede, the header rule, footer alignment, and footer
@@ -392,20 +396,6 @@ html:has(> body > .shell) { overflow-x: clip; }
 }
 
 /* ---------- Selected production portfolio (galleries) ---------- */
-/* `.section-h` no longer marks a content heading. The seven section headings it
-   used to set as uppercase mono labels take the document register's
-   section-title role (`.doc-section-title`) in the markup. What remains is the
-   trigger label of the local `.signal` disclosures that have not adopted the
-   delivered disclosure: the lineage page's six panels. */
-.section-h {
-  font-family: var(--font-mono);
-  font-size: var(--fs-caption);
-  font-weight: var(--fw-light);
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
-  color: var(--fg-2);
-  margin: 0;
-}
 .portfolio { display: flex; flex-direction: column; gap: var(--space-7); }
 .gal-project { display: flex; flex-direction: column; gap: var(--space-3); }
 /* Title and its action group share this row. They are centered rather than
@@ -608,18 +598,6 @@ html:has(> body > .shell) { overflow-x: clip; }
 
 .section-note { margin: var(--space-5) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
 
-/* ---------- Local disclosure panels (the lineage page) ----------
-   The asymptotic system key page's six disclosures take the delivered
-   disclosure (surface-treatments.css) instead. */
-.panel {
-  display: flex; flex-direction: column; gap: var(--space-4);
-  background: var(--surface-glass); border: 1px solid var(--line-1);
-  border-radius: var(--radius-lg); padding: var(--space-6);
-}
-.signal > summary { cursor: pointer; list-style: none; margin: 0; }
-.signal > summary::-webkit-details-marker { display: none; }
-.signal[open] > summary { color: var(--fg-1); margin-bottom: var(--space-4); }
-
 /* fix: long camelCase Lightroom names must wrap within the card */
 .ext-card-name { overflow-wrap: anywhere; word-break: break-word; min-width: 0; }
 .ext-card { overflow: hidden; }
@@ -655,17 +633,8 @@ html:has(> body > .shell) { overflow-x: clip; }
     var(--surface-glass);
 }
 
-/* ---------- Local disclosure chevron (the lineage page) ---------- */
-.signal-summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
-.signal-summary .chev { transition: transform var(--dur-2) var(--ease-out); }
-.signal:not([open]) .signal-summary .chev { transform: rotate(-90deg); }
-
 /* refine: break Lightroom names only at <wbr> (camelCase), not mid-word */
 .ext-card-name { overflow-wrap: break-word; word-break: normal; }
-/* Panel collapse chevron: glyph ▼ (U+25BC) at --fs-caption — exact-matches the
-   ▶ (U+25B6) used on ASKproduKtion's .gal-link chip (same weight, same 14px). */
-.signal-summary .chev { font-size: var(--fs-caption); line-height: 1; color: var(--fg-2); }
-.signal[open] .signal-summary .chev { color: var(--fg-1); }
 
 /* ---------- Provenance marquee ----------
    A second full-bleed band behind the wordmark, built from the first 800 lines
