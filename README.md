@@ -159,12 +159,12 @@ One durable **child sub-surface** (not a fourth tier card): **studioLeoV** at `/
 index.html            the homepage (inline logo-ASK wordmark; three tier panels; footer) — the explicit shell exception
 site.css              ASK payload layout + shell instance adaptations, on top of the tokens (no new tokens)
 surface-shell.css     vendored from design-system-ASK — the surface-shell PATTERN, pinned + byte-identical; every non-home content page consumes it
-surface-panel.css     vendored from design-system-ASK — the live-content-panel VISUAL RULE, pinned + byte-identical; the homepage tier panels consume it (presentation only — ASK keeps its own markup, semantics, and support foreground), as do the asymptotic-system-key and studioLeoV pages' external cards, the asymptotic-system-key page's six disclosures for their panel material and free corners, and the CFW conclusions page, for its held-question rulings and its panels (the framing openings of the ASK conclusion and the ASK prospective axis, the conclusion of its section 8 and its two compressions); the CFW map loads it ahead of surface-treatments.css, the order that rule requires, and applies none of its classes
+surface-panel.css     vendored from design-system-ASK — the live-content-panel VISUAL RULE, pinned + byte-identical; the homepage tier panels consume it (presentation only — ASK keeps its own markup, semantics, and support foreground), as do the asymptotic-system-key and studioLeoV pages' external cards, the asymptotic-system-key page's six disclosures and its lineage page's six for their panel material and free corners, and the CFW conclusions page, for its held-question rulings and its panels (the framing openings of the ASK conclusion and the ASK prospective axis, the conclusion of its section 8 and its two compressions); the CFW map loads it ahead of surface-treatments.css, the order that rule requires, and applies none of its classes
 surface-shell.js      vendored from design-system-ASK — the shell's optional NAVIGATION RUNTIME, pinned + byte-identical; opt-in per page through template.surface-nav-source
 surface-text-link.css vendored from design-system-ASK — the unboxed-textual-link VISUAL RULE, pinned + byte-identical; opt-in by class; the homepage does not consume it
 surface-action.css    vendored from design-system-ASK — the compact-action VISUAL RULE, pinned + byte-identical; every page's compact controls consume it (the owner owns the base surface, foreground, border, geometry and interaction; ASK keeps the element semantics, destination, copy, row and placement); the gallery cards, video facades, p5 launch cards and gallery dialog controls take only its attention edge, by class
 surface-document.css  vendored from design-system-ASK — the document-register VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes the full register, while the apex solar kiss, asymptotic system key and studioLeoV pages consume its document-body and authored-inline-emphasis treatment in their opening paragraphs; the apex solar kiss, design, ASKproduKtion and studioLeoV pages set their section headings in its section-title role, and the asymptotic system key page sets the Like Art founding statement as a quotation
-surface-treatments.css  vendored from design-system-ASK — the surface-treatments VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes its surface axes, emphasis rail and label, the asymptotic system key page its disclosure, for six of its sections, and the CFW map its controlled disclosure trigger, for the inspector's collapse control and the About and Legend triggers used where the canvas cannot hold its caption and legend open
+surface-treatments.css  vendored from design-system-ASK — the surface-treatments VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes its surface axes, emphasis rail and label, the asymptotic system key page and its lineage page its disclosure, for six sections each, and the CFW map its controlled disclosure trigger, for the inspector's collapse control and the About and Legend triggers used where the canvas cannot hold its caption and legend open
 surface-document-overflow.js  vendored from design-system-ASK — the document register's optional overflow-cue helper, pinned + byte-identical; the CFW conclusions page loads it
 colors_and_type.css   vendored from design-system-ASK (canonical tokens)
 fonts/                vendored Inter + JetBrains Mono (OFL)
@@ -195,9 +195,11 @@ plain static hosting anywhere (e.g. GitHub Pages with a `.nojekyll`).
 ## Provenance
 
 A reference implementation of the [ASK design family](https://github.com/apexSolarKiss/design-system-ASK):
-it vendors the canonical foundations (tokens, fonts, wordmark), **the
-`surface-shell` pattern**, and **the `surface-panel` and `surface-action` visual
-rules**, then adds its own payload layout and instance adaptations around them.
+it vendors the canonical foundations (tokens, fonts, wordmark) and browser-icon
+set, **the `surface-shell` pattern**, and **five visual rules** — `surface-panel`,
+`surface-action`, `surface-text-link`, `surface-document` (the document register,
+with its optional overflow helper) and `surface-treatments` — then adds its own
+payload layout and instance adaptations around them.
 The shared page chrome is owned upstream, not here. The CFW map named above is
 the one full-viewport application exception to that chrome, and it vendors the
 design-system interactive radial pattern that draws it,
@@ -205,7 +207,7 @@ design-system interactive radial pattern that draws it,
 on the same terms.
 
 The homepage tier panels and every page's compact controls inherit their
-presentation from the two vendored visual rules. The split is not identical
+presentation from the panel and action rules. The split is not identical
 across the two, and stating it precisely matters more than stating it briefly:
 
 - **Panel.** The owner governs the panel's arrangement and paint and the type
