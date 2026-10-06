@@ -47,8 +47,11 @@ One page is a **named full-viewport interactive-application exception**:
 relation atlas. The map is a fixed full-viewport application rather than a
 scrolling document, so it does not consume `surface-shell`; it follows the
 design-system interactive-diagram family grammar and carries ASK Tier 3 in its
-application bar. The exception applies only to that one page and creates no
-exemption for ordinary non-home content pages.
+application bar. It is drawn by the design-system interactive radial pattern,
+`diagram-interactive-radial`, vendored beside the route, pinned and
+byte-identical; the map's own adapter, instance and page layer supply its
+content, its links and its bar. The exception applies only to that one page and
+creates no exemption for ordinary non-home content pages.
 
 The route root, `/apex-solar-kiss/consciousness-free-will/`, is an **ordinary
 conclusions shell page**: it adopts `surface-shell` and the shell's navigation
@@ -76,8 +79,8 @@ element carrying `.surface-text-link` takes it — and it sets no foreground at
 all: the contextual text colour stays consumer-owned, supplied by whichever
 region the link sits in. Five unboxed prose destinations across five subpages
 consume it. The CFW map additionally consumes it for one separate population,
-the inspector's source links, whose `--fg-1` foreground the map's own layer
-supplies; the CFW conclusions page does not load it. Every shaped control, mark,
+the inspector's source links, whose foreground the vendored radial pattern's
+stylesheet supplies; the CFW conclusions page does not load it. Every shaped control, mark,
 image link, breadcrumb and footer action is excluded by design.
 
 **The CFW conclusions page adopts the document register.**
@@ -94,28 +97,28 @@ hand-edited here. The conclusions page consumes all three, and the panel rule
 for its held-question rulings and its panels; its own layer,
 `cfw-conclusions.css`, keeps only the reading measure, rows and grids, count
 figures, search, section error line and the space the register's compositions do
-not set after a list and before each compression panel. The map keeps its own
-layers, `cfw-atlas.css` and `cfw-release.css`, and adopts neither the register
-nor its overflow cue. It takes one grammar from the treatments rule, the
-**controlled disclosure trigger**: a native button whose `aria-expanded` and
-`aria-controls` state the region it opens. The inspector's collapse control is
-one. On a canvas too small to keep the map's caption and legend open beside the
-HUD, those two panels close behind two more, About and Legend, which sit with
-the HUD and open one panel at a time above the bottom controls; on a short
-landscape screen they can move into the application bar instead, and a panel
-then opens below it. On the narrowest of those screens, where a panel would have
-no readable room, its trigger is not shown and the panel stays closed until the
-window gives it room. A canvas that holds them shows both panels open, placed
-with the HUD so that none overlaps another. The presentation of each trigger's label and triangle indicator —
-pointing right when collapsed and down when expanded — and its hover and
-keyboard focus come from `surface-treatments.css`, the grammar of the asymptotic
-system key page's disclosures. The map's script keeps each `aria-expanded` true
-to its panel and never rewrites a visible label or indicator; on the inspector's
-control it sets only `aria-expanded`, the button's accessible name and its title.
-The map loads `surface-panel.css` before `surface-treatments.css`, the order the
-treatments rule requires, and applies no panel class. The inspector's surface,
-placement and behavior stay the map's own: it opens collapsed on a compact
-screen, and a selection expands it.
+not set after a list and before each compression panel. The map's panels,
+inspector, atlas drawer, controls and their coordination are the vendored radial
+pattern's, and the map adopts neither the register nor its overflow cue. Its own
+layer, `cfw-map.css`, composes only the application bar: the ASK mark, the title
+block and the release stamp, and on a short landscape touch screen one row of
+controls, so the drawing keeps the height. Where the bar's controls do not all
+fit, in portrait as on a short landscape screen, their row scrolls sideways. The
+pattern takes one grammar from the treatments rule, the **controlled disclosure
+trigger**: a native button whose `aria-expanded` and `aria-controls` state the
+region it opens. The inspector's collapse control is one. On a canvas too small
+to keep the map's caption and legend open beside the HUD, those two panels close
+behind two more, About and Legend, beside or above the HUD, and open one at a
+time above the bottom controls; where a panel would have no readable room, its
+trigger is not offered. A canvas that holds them shows both panels open, placed
+so that none overlaps another. The presentation of each trigger's label and
+triangle indicator — pointing right when collapsed and down when expanded — and
+its hover and keyboard focus come from `surface-treatments.css`, the grammar of
+the asymptotic system key page's disclosures. The map loads `surface-panel.css`
+before `surface-treatments.css`, the order the treatments rule and the pattern
+require. The inspector folds with the panels around the map: it is collapsed on
+a compact screen and wherever About and Legend have folded, and a selection, a
+record or its own toggle opens it over the map.
 
 **The browser-icon set is inherited too.** `favicon.svg`, `favicon-32.png`,
 `favicon.ico` and `apple-touch-icon.png` are vendored from `design-system-ASK`,
@@ -134,8 +137,8 @@ On ordinary ASK pages, light/dark follows the system preference
 (`prefers-color-scheme`) with no toggle or theming JS; the two diagonal
 gradients switch with the OS. The named
 `/apex-solar-kiss/consciousness-free-will/map/` full-viewport application is the
-local exception: it carries a non-persistent `auto / light / dark` selector
-implemented by its route-local release layer. The design system's style-guide
+local exception: it carries a non-persistent `auto / light / dark` selector,
+the vendored radial pattern's theme control. The design system's style-guide
 theme selector is **not** vendored here.
 
 ## Structure — three-tier front door
@@ -173,7 +176,7 @@ apple-touch-icon.png  vendored from design-system-ASK — the iOS home-screen ic
 apex-solar-kiss/      native builder subpage — the object map (practice + two domain applications + the builder machine)
 apex-solar-kiss/design/  native design gateway — live design-system surfaces + the retained external design-portfolio board
 apex-solar-kiss/consciousness-free-will/  CFW conclusions — the structured survey over the typed relation atlas, a distinct ASK-authored conclusion + an ASK prospective axis; an ordinary shell page
-apex-solar-kiss/consciousness-free-will/map/  the interactive CFW mind map — the one named full-viewport interactive-application exception to the shell; vendors spectral-state.css and the shared fit helper diagrams-fit.js from design-system-ASK (pinned + byte-identical; when it fits, the map passes its own panel selector, or none, for every edge, so the helper's default panel selectors never apply to it)
+apex-solar-kiss/consciousness-free-will/map/  the interactive CFW mind map — the one named full-viewport interactive-application exception to the shell; drawn by the design-system interactive radial pattern (diagram-interactive-radial: its stylesheet, modules, pointer controller and fit helper diagrams-fit.js) with spectral-state.css, all vendored in the route folder from design-system-ASK, pinned + byte-identical; the map's own code is cfw-map-adapter.js, cfw-map.js and cfw-map.css
 askproduktion/        native creative-production subpage (Track A.1)
 asymptotic-system-key/  native artistic-practice subpage (Track A.2; per-category p5.js pages)
 asymptotic-system-key/lineage/  public-safe influence lineage (canon as substrate: readymade >> pop >> appropriation >> generative systems)
@@ -196,9 +199,10 @@ it vendors the canonical foundations (tokens, fonts, wordmark), **the
 `surface-shell` pattern**, and **the `surface-panel` and `surface-action` visual
 rules**, then adds its own payload layout and instance adaptations around them.
 The shared page chrome is owned upstream, not here. The CFW map named above is
-the one full-viewport application exception to that chrome, and it vendors one
-further design-system primitive, `spectral-state.css`, and the shared fit
-helper, `diagrams-fit.js`, on the same terms.
+the one full-viewport application exception to that chrome, and it vendors the
+design-system interactive radial pattern that draws it,
+`diagram-interactive-radial`, and one further primitive, `spectral-state.css`,
+on the same terms.
 
 The homepage tier panels and every page's compact controls inherit their
 presentation from the two vendored visual rules. The split is not identical
