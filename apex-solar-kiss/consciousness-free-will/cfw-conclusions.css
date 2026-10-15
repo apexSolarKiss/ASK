@@ -19,8 +19,8 @@
  * search, the section error line and the space the compositions do not set
  * after a list and before each compression panel. It defines NO token.
  *
- * LOAD ORDER   colors_and_type.css -> surface-action.css -> surface-shell.css
- *              -> surface-panel.css -> surface-document.css
+ * LOAD ORDER   colors_and_type.css -> surface-action.css -> surface-text-link.css
+ *              -> surface-shell.css -> surface-panel.css -> surface-document.css
  *              -> surface-treatments.css -> this file
  */
 
@@ -130,6 +130,21 @@
   margin: 0; padding: var(--space-3); color: var(--fg-2); font-size: var(--fs-small);
   line-height: var(--lh-body); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
 }
+
+/* ---- the reader's guide -------------------------------------------------
+   The plain-language account around the records: the opening, the terms, each
+   question's section and the evidence. Its roles come from the vendored
+   register; this keeps only the rows and spacing those roles leave to a
+   consumer. A guide list keeps its markers inside the measure, like ASK's. */
+.guide-ul { margin: 0; padding-left: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
+.guide-terms { margin: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+.guide-terms dd { margin: 0; }
+/* Each question is one section; the space between questions is wider than the
+   space between the parts of one question, so the six read as six. */
+.guide-q + .guide-q { margin-top: var(--space-6); }
+/* A ruling record that renders into its question's section keeps the record
+   surface it has in the list form. */
+.ruling-slot { display: flex; flex-direction: column; }
 
 /* ---- small screen ------------------------------------------------------- */
 @media (max-width: 767px) {

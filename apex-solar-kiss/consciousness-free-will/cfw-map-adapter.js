@@ -22,7 +22,7 @@
   if (!A || !Array.isArray(A.objects)) throw new Error('cfw-map: the published payload (atlas-data.public.js) is not loaded');
 
   /* the plate's stamp: the application bar's release stamp, as the page shows it (uppercase there) */
-  var STAMP = 'RELEASE 1.2 STRUCTURED SURVEY // FAMILY GENERATION V11';
+  var STAMP = 'RELEASE 1.3 STRUCTURED SURVEY // FAMILY GENERATION V12';
 
   /* ------------------------------------------------------------ the tables -- */
   var REGION_LABEL = {
@@ -53,9 +53,9 @@
   };
   var CLASS_NAME = {
     'CFW-N': 'node \u2014 a survey position, argument, tradition or distinction',
-    'CFW-C': 'claim card', 'CFW-B': 'bounded claim', 'CFW-M': 'ASK mapping row',
-    'CFW-F': 'frame object', 'CFW-A': 'ASK articulation', 'CFW-Q': 'held question',
-    'CFW-X': 'cross-cutting object', 'CFW-T': 'topology object', 'CFW-S': 'evidence owner (inspector plane)'
+    'CFW-C': 'consciousness claim', 'CFW-B': 'bridge claim', 'CFW-M': 'machine + personhood claim',
+    'CFW-F': 'free-will claim', 'CFW-A': 'ASK mapping row', 'CFW-Q': 'held question',
+    'CFW-X': 'architecture-pressure item \u2014 a premise or test obligation', 'CFW-T': 'theory card', 'CFW-S': 'evidence owner (inspector plane)'
   };
   var ROOT = { id: 'ROOT', label: 'Consciousness + free will' };
   var RECORD_CLASS = 'CFW-S';                 /* evidence owners: undrawn records, resolvable by identifier */

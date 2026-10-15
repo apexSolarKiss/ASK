@@ -35,9 +35,14 @@
      elevation, chosen on the owner's three axes. Its content is the collection
      item's anatomy: the identifier as metadata, the question as the panel title,
      the disposition and the field names as operative labels. */
+  /* Each record renders into its question's slot, [data-ruling="<id>"], beside the
+     plain-language account of that question; a page without slots keeps the single
+     list. Either way the record's text comes from the payload alone. */
   var list = document.getElementById("rulings");
-  if (list) questions.forEach(function (q) {
-    var li = el("li", "surface-separate surface-material-panel surface-attach-free surface-elevation-flush doc-group");
+  questions.forEach(function (q) {
+    var slot = document.querySelector('[data-ruling="' + q.id + '"]');
+    if (!slot && !list) return;
+    var li = el(slot ? "div" : "li", "surface-separate surface-material-panel surface-attach-free surface-elevation-flush doc-group");
     li.appendChild(text(el("span", "rq doc-meta"), q.id));
     li.appendChild(text(el("strong", "rtitle surface-panel-title"), q.question || q.label));
     if (q.disposition) li.appendChild(text(el("span", "rdisp doc-label"), q.disposition));
@@ -54,7 +59,7 @@
     }
     li.appendChild(text(el("p", "ask-note doc-meta"),
       "Fields above are ASK's rulings of 2026-08-23. Rationale ASK did not rule is not published."));
-    list.appendChild(li);
+    (slot || list).appendChild(li);
   });
 
 
