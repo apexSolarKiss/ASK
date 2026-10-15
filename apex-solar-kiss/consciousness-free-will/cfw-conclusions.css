@@ -8,8 +8,8 @@
  *
  * PRESENTATION COMES FROM THE VENDORED RULES. Every heading, paragraph, label,
  * quotation and preformatted block takes a role from surface-document.css, and
- * the space between roles comes from its compositions; a held-question ruling's
- * surface and the panels of each part's framing opening, section 8's conclusion
+ * the space between roles comes from its compositions; the disclosure a
+ * held-question ruling sits in and the panels of each part's framing opening, section 8's conclusion
  * and each compression come from surface-panel.css and surface-treatments.css, as do the authorial
  * callout and attention rails.
  * index.html and cfw-release.js apply those classes beside the historical
@@ -115,9 +115,10 @@
 .orient-results button.ores-r:focus-visible { outline: 2px solid var(--fg-1); outline-offset: 2px; }
 
 /* ---- ASK conclusion ------------------------------------------------------
-   Deliberately NOT styled like .rulings. A ruling is a survey disposition on its
-   own surface; this is ASK's own prose, in ordinary flow, and must not be read as
-   one. A list keeps its markers inside the measure. */
+   Deliberately NOT styled like .rulings. A ruling is a survey disposition set
+   apart as a record, in its question's disclosure or, on a page without slots, on
+   its own surface; this is ASK's own prose, in ordinary flow, and must not be read
+   as one. A list keeps its markers inside the measure. */
 .askc-ul { margin: 0; padding-left: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
 /* A list is its own group, not the lead-in to the passage after it: a set-apart
    passage directly after a list takes the buffer the vendored register gives a
@@ -142,8 +143,9 @@
 /* Each question is one section; the space between questions is wider than the
    space between the parts of one question, so the six read as six. */
 .guide-q + .guide-q { margin-top: var(--space-6); }
-/* A ruling record that renders into its question's section keeps the record
-   surface it has in the list form. */
+/* A ruling record that renders into its question's section sits in that
+   section's disclosure, whose enclosure is its one surface; it takes no surface
+   of its own there. */
 .ruling-slot { display: flex; flex-direction: column; }
 
 /* ---- small screen ------------------------------------------------------- */
