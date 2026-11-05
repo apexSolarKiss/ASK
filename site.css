@@ -16,8 +16,8 @@
    visual rule;
    surface-action.css, the compact-action visual rule, which every page's compact
    controls consume — including this homepage's three footer destinations — and
-   whose attention edge the gallery cards, video facades, p5 launch cards and
-   gallery dialog controls take by class;
+   whose attention edge the gallery cards and thumbnails, video facades, p5
+   launch cards and gallery dialog controls take by class;
    surface-text-link.css, the unboxed textual-link visual rule, opt-in by class,
    which five prose destinations across five subpages consume, and which the CFW map
    additionally consumes for its inspector source links (the CFW conclusions
@@ -407,6 +407,26 @@ html:has(> body > .shell) { overflow-x: clip; }
    within the group at narrow widths, but neither can remain beside the title
    while the other drops below. */
 .gal-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
+/* Centering alone sets the group on the title's line box, and Inter puts the
+   center of its line box near its cap-height midline, so beside a mostly
+   lowercase title the pills sit visibly high. The group drops by an optical
+   offset that brings its labels' lowercase midline onto the title's. The
+   offsets are measured on the rendered fonts: the gap between the two
+   midlines is 1.1px beside a .gal-title (the h3 step) and 2.8px beside a
+   .doc-section-title (the h2 step), which is not a fixed fraction of the type
+   size, so neither offset is derived from the fonts' metrics. Each offset
+   belongs to its title class and its size step; re-measure if either
+   changes. `top` moves the group without
+   changing the row's height or its neighbors. When the group wraps below its
+   title it sits the same distance lower, nearer the content that follows. */
+.gal-head > .gal-title + .gal-actions {
+  position: relative;
+  top: 1.1px;
+}
+.gal-head > .doc-section-title + .gal-actions {
+  position: relative;
+  top: 2.8px;
+}
 .gal-title {
   font-size: var(--fs-h3);
   font-weight: var(--fw-light);
@@ -504,6 +524,71 @@ html:has(> body > .shell) { overflow-x: clip; }
    and in dark, where the module paints no ring, focus would match rest. */
 .gal-card .gal-link:hover,
 .gal-card .gal-link:focus-visible { border-color: var(--ask-emphasis-magenta); }
+
+/* ---------- Design portfolio (apex solar kiss // design) ----------
+   The design portfolio reuses the production portfolio's cards and gallery
+   dialog (site-gallery.js). What follows is only what that second use adds:
+   project cards that are links to a project page rather than gallery
+   triggers, artifact thumbnails shown whole, captions, lead and full-page
+   images, videos, and the dialog's full-size link. The work keeps its own
+   appearance inside these frames; nothing here restyles it. No new token and
+   no new color: existing tokens only, and the full-size link repeats the
+   white of the dialog's other controls. */
+
+/* A project card that opens a project page is an <a>, not a <button>. The
+   foundation's anchor rule would otherwise add a hover fade the button cards
+   do not have; the card's own border and the shared attention edge already
+   carry its state. */
+a.gal-card-trigger { text-decoration: none; }
+a.gal-card-trigger:hover { opacity: 1; }
+
+/* An artifact set: a titled stage, its actions, then its thumbnails. */
+.gal-stage { display: flex; flex-direction: column; gap: var(--space-3); }
+
+/* Artifact thumbnails are shown whole, never cropped: a slide, a screen or a
+   study is the evidence, and its edges carry it. The tile keeps one shape so
+   the grid stays even; the artifact letterboxes inside it. The thumbnail is
+   the gallery's own trigger, so it takes the shared attention edge by class,
+   as the cards do. */
+.gal-grid--whole .gal-thumb { aspect-ratio: 4 / 3; }
+.gal-grid--whole .gal-thumb img { object-fit: contain; }
+.gal-grid--whole .gal-thumb:hover img { transform: none; }
+/* The portfolio's cards show their cover whole too: a mark or a lockup is cut
+   by a crop, so it letterboxes inside the card's 4:3 cover instead. */
+.gal-cards--whole .gal-cover { object-fit: contain; }
+/* Same control-foreground restoration as .gal-card-trigger above. */
+.gal-thumb { color: inherit; }
+
+/* A video stays a video, never a still. */
+.gal-media { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: var(--space-5); }
+.gal-video { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.gal-video video { width: 100%; height: auto; display: block; border: 1px solid var(--line-1); border-radius: var(--radius-lg); background: var(--surface-glass); }
+
+/* The dialog's full-size link: the image at its full resolution, in a new tab,
+   where the browser's own zoom can inspect it. Same paint as the dialog's
+   other controls, which sit on the same dark scrim. */
+.lb-full { position: absolute; top: 14px; left: 16px; font-family: var(--font-mono); font-size: var(--fs-caption); color: #fff; opacity: .7; padding: 8px; border: 0; }
+.lb-full:hover { opacity: 1; }
+
+/* A captioned artifact keeps its caption under its thumbnail, where its source
+   page shows it. */
+.gal-fig { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.gal-fig figcaption { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-3); }
+
+/* A single image that leads a project is shown whole at reading width rather
+   than as one small tile. */
+.gal-grid--lead { grid-template-columns: minmax(0, 640px); }
+.gal-grid--lead .gal-thumb { aspect-ratio: auto; }
+.gal-grid--lead .gal-thumb img { height: auto; }
+
+/* A full-page export taller than any viewport scrolls inside its own frame, at
+   reading width, instead of shrinking to a strip. */
+.gal-tall { max-width: 960px; max-height: 80vh; overflow-y: auto; border: 1px solid var(--line-1); border-radius: var(--radius-lg); background: var(--surface-glass); }
+.gal-tall img { display: block; width: 100%; height: auto; }
+
+/* A project's own text: its lists sit in the prose column with the paragraphs. */
+.prose ul, .prose ol { margin: 0; padding-left: 1.4em; max-width: 64ch; font-size: var(--fs-body); line-height: var(--lh-body); color: var(--fg-1); }
+.prose li + li { margin-top: var(--space-2); }
 
 /* ---------- Asymptotic: philosophy (collapsible, default open) ---------- */
 .philosophy { border-top: 1px solid var(--line-1); padding-top: var(--space-4); margin-top: var(--space-2); }
