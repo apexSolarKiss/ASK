@@ -6,7 +6,7 @@
 
 - A-S-K.studio / this repo is the intended public canonical for ASK public content.
 - Notion is a **named legacy / staging / exception surface** only — no page stays canonical on Notion by inertia.
-- Retained Notion exceptions are scoped to content, not whole sub-brands: the retained apex solar kiss root Notion surface carries the **portfolio / assets / comps content** (design portfolio / apexSolarKiss assets · UI/UX comps WIP · logo/branding comps WIP); ASKproduKtion retains the Timberland videos. The apex solar kiss **builder landing / object map** is native at `/apex-solar-kiss/` and sits outside that exception.
+- Retained Notion exceptions are scoped to content, not whole sub-brands: ASKproduKtion retains the Timberland videos. The apex solar kiss **design portfolio** is native at `/apex-solar-kiss/design/`; its former Notion board is no longer linked from the site and is not a source of truth, and the UI/UX and logo/branding comp boards are retired from public wayfinding. The apex solar kiss **builder landing / object map** is native at `/apex-solar-kiss/`.
 - Strategic/private brand context is maintained operator-side and is mirror-not-lead for this public canonical.
 
 ## Content model (proposed; finalized in Phase 2)

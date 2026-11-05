@@ -48,9 +48,10 @@ canonical browser-icon set from design-system-ASK
                                  the consuming surface keeps the element
                                  semantics, destination, copy, row and
                                  placement. Its attention edge is also taken
-                                 by class on the gallery cards, video facades,
-                                 p5 launch cards and gallery dialog controls,
-                                 for hover and keyboard focus only
+                                 by class on the gallery cards and thumbnails,
+                                 video facades, p5 launch cards and gallery
+                                 dialog controls, for hover and keyboard focus
+                                 only
   - surface-text-link.css      — the shared unboxed-textual-link contract,
                                  vendored as a pinned byte-identical copy and
                                  not modified here. It is OPT-IN BY CLASS: only
@@ -73,10 +74,14 @@ canonical browser-icon set from design-system-ASK
                                  pages consume its document-body and
                                  authored-inline-emphasis treatment in their
                                  opening paragraphs. The apex solar kiss,
-                                 design, ASKproduKtion and studioLeoV pages set
+                                 design, design portfolio project, ASKproduKtion
+                                 and studioLeoV pages set
                                  their section headings in its section-title
-                                 role, and the asymptotic system key page sets
-                                 the Like Art founding statement as a quotation
+                                 role, the bonAmi.ai portfolio page sets its
+                                 feature headings in its subsection-title role,
+                                 and the asymptotic system key page sets the
+                                 Like Art founding statement, and the cryptoEATS
+                                 portfolio page its tagline, as a quotation
   - surface-treatments.css     — the shared surface treatments, vendored as a
                                  pinned byte-identical copy and not modified
                                  here. Presentation only; the CFW conclusions
@@ -160,6 +165,13 @@ See the LICENSE file for the full license text.
 
 The Inter and JetBrains Mono fonts are licensed under the SIL Open Font
 License 1.1; see fonts/Inter-OFL.txt and fonts/JetBrainsMono-OFL.txt.
+
+The design portfolio images, documents and videos in assets/images/design/,
+assets/docs/design/ and assets/video/design/, and the project texts on the
+design portfolio's project pages under apex-solar-kiss/design/, document
+design work, including work made for clients and collaborators, and are
+published here for display. They are not licensed under the Apache
+License, Version 2.0; all rights remain with their respective owners.
 
 The glyphsASK artwork images in assets/asymptotic/glyphsask/ are original
 artworks by Andrew S Klug // ASK (2024), published here for display. They are

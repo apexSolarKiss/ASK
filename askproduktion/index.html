@@ -268,26 +268,8 @@
     <button class="lb-next surface-attention-edge surface-attention-edge--borderless" type="button" aria-label="Next">›</button>
     <p class="lb-cap" id="lb-cap"></p>
   </div>
-  <script>
-  (function(){
-    /* Open: everything behind the gallery, the shell's seated mark included, is
-       inert, and focus moves to Close. Close: only what open made inert is
-       restored, and focus returns to the card that opened it. */
-    var lb=document.getElementById('lightbox'),img=lb.querySelector('img'),cap=lb.querySelector('.lb-cap'),set=[],i=0,meta={},from=null,held=[];
-    function show(){img.src=set[i];cap.textContent=meta.title+' // '+meta.credit+'  ('+(i+1)+' / '+set.length+')';}
-    function open(t){from=t;lb.classList.add('open');lb.removeAttribute('aria-hidden');held=[].filter.call(document.body.children,function(e){return e!==lb&&!e.inert;});held.forEach(function(e){e.inert=true;});document.body.style.overflow='hidden';show();lb.querySelector('.lb-close').focus();}
-    function close(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true');held.forEach(function(e){e.inert=false;});held=[];img.src='';document.body.style.overflow='';if(from){from.focus({preventScroll:true});from=null;}}
-    function nav(d){i=(i+d+set.length)%set.length;show();}
-    document.addEventListener('click',function(e){
-      var trig=e.target.closest('.gal-card-trigger');
-      if(trig){var data=JSON.parse(trig.closest('.gal-card').querySelector('.gal-data').textContent);set=data.images;meta={title:data.title,credit:data.credit};i=0;open(trig);return;}
-      if(e.target.closest('.lb-next')){nav(1);return;}
-      if(e.target.closest('.lb-prev')){nav(-1);return;}
-      if(e.target===lb||e.target.closest('.lb-close')){close();}
-    });
-    document.addEventListener('keydown',function(e){if(!lb.classList.contains('open'))return;if(e.key==='Escape')close();else if(e.key==='ArrowRight')nav(1);else if(e.key==='ArrowLeft')nav(-1);});
-  })();
-  </script>
+  <!-- The gallery dialog's behavior is the site's shared ASK-local helper. -->
+  <script src="/site-gallery.js"></script>
   <script src="/surface-shell.js"></script>
   </body>
 </html>
