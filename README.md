@@ -153,9 +153,11 @@ theme selector is **not** vendored here.
 
 | Tier | Surface | Links to |
 | --- | --- | --- |
-| builder | **apex solar kiss** | native `/apex-solar-kiss/` (the object map) + GitHub `@apexSolarKiss` + native `/apex-solar-kiss/design/` (live design-system surfaces + the design portfolio) |
+| builder | **apex solar kiss** | AP-ASK at `https://asset-pipeline.a-s-k.studio/` (direct project destination) + native `/apex-solar-kiss/` (the object map) + GitHub `@apexSolarKiss` + native `/apex-solar-kiss/design/` (live design-system surfaces + the design portfolio) |
 | artistic practice | **asymptotic system key** | native `/asymptotic-system-key/` (Lightroom stills + YouTube motion as named external media) |
 | creative production | **ASKproduKtion** | native `/askproduktion/` (Timberland films = named external-video exception) |
+
+The homepage's current-builder-focus band and apex solar kiss card lead with systems for creative operations + commercial visual production, centered on AP-ASK. The builder page presents AP first, then the supporting method, execution-protocol + visual-system layers, the underlying method, other active work and research. The other two practices retain their own identities and portfolios; UO remains active and reachable.
 
 Native repo surfaces (`/apex-solar-kiss/`, `/askproduktion/`, `/asymptotic-system-key/`) are the intended public canonical after the source-of-truth flip. **Notion is retained only as a legacy / staging / named-exception layer** — the apex solar kiss **design portfolio** is native at `/apex-solar-kiss/design/`, and its former Notion board is no longer linked from the site or a source of truth; the **UI/UX** and **logo/branding comp boards are retired from public wayfinding** and are not migration candidates, so apex solar kiss keeps no external-design exception; the builder **object map** is native at `/apex-solar-kiss/`. ASKproduKtion's Timberland films remain a named external-video exception on their own root Notion page. Asymptotic system key uses named external media sources (Lightroom stills + YouTube motion) through ASK-native facades. Notion is no longer the general embed/depth layer.
 
@@ -182,7 +184,7 @@ favicon.svg           vendored from design-system-ASK — canonical browser icon
 favicon-32.png        vendored from design-system-ASK — 32px raster browser icon, pinned + byte-identical
 favicon.ico           vendored from design-system-ASK — the root-probe fallback browsers request unasked
 apple-touch-icon.png  vendored from design-system-ASK — the iOS home-screen icon, pinned + byte-identical
-apex-solar-kiss/      native builder subpage — the object map (practice + two domain applications + the builder machine)
+apex-solar-kiss/      native builder subpage — current AP-ASK focus, supporting systems, method + grounding, other active work and research
 apex-solar-kiss/design/  native design gateway — live design-system surfaces, and the design portfolio: each entry of the ASK-approved selection as a card, under UI/UX or branding/identity + graphic design
 apex-solar-kiss/design/{voltaire,bonami,cryptoeats,nisei,sociedade,systamental}/  design portfolio project pages — the entries that carry text, links or documents; the other entries open as galleries on the gateway
 apex-solar-kiss/consciousness-free-will/  CFW conclusions — the structured survey over the typed relation atlas, a distinct ASK-authored conclusion + an ASK prospective axis; an ordinary shell page

@@ -114,11 +114,11 @@
   .wordmark { color: var(--ask-lavender-ask); }   /* dark-mode pairing = lavender-ASK */
 }
 
-/* The band sits on the same metric as `.positioning-primitive` below it —
+/* The band sits on the same metric as `.positioning-title` below it —
    24 / 300 / 1.12 / -0.02em — so the two read as one measure down the page.
    `line-height` is declared rather than inherited: without it the foundation's
    `p` rule supplies --lh-body (1.45), and at 24px that alone made the band's
-   line box ~29% taller than the primitive's at an identical font-size. The
+   line box ~29% taller than the title's at an identical font-size. The
    quieter --fg-2 foreground is what still separates them, and it stays. */
 .tagline {
   font-family: var(--font-sans);
@@ -129,7 +129,7 @@
   color: var(--fg-2);
   margin: var(--space-6) 0 0 0;
   /* iOS Safari can inflate text inside a block much wider than the viewport.
-     `.tagline-track` is `width: max-content`, while the primitive sits in an
+     `.tagline-track` is `width: max-content`, while the title sits in an
      ordinary-width block, so the marquee alone rendered larger on iPhone.
      `100%` suppresses that automatic inflation while preserving the authored
      24px size. */
@@ -191,8 +191,9 @@ html:has(> body > .shell) { overflow-x: clip; }
   gap: var(--space-3);
 }
 /* Band foreground: the ordinary hierarchy, in both themes. The category and the
-   supporting statement take --fg-2; the named primitive takes --fg-1. The semantic
-   tokens perform the theme switch, so this band needs no theme-specific color rule. */
+   supporting statement take --fg-2; the primary current-practice positioning line
+   takes --fg-1. The semantic tokens perform the theme switch, so this band needs
+   no theme-specific color rule. */
 .positioning-category {
   font-family: var(--font-sans);
   font-weight: var(--fw-light);
@@ -202,7 +203,8 @@ html:has(> body > .shell) { overflow-x: clip; }
   color: var(--fg-2);
   margin: 0;
 }
-/* The named primitive is a primary label on the family's shared METRIC —
+/* The primary current-practice positioning line is a primary label on the
+   family's shared METRIC —
    24 / 300 / 1.12 / -0.02em, the four declarations the vendored
    `.surface-panel-title` and the vendored shell's `.surface-title` both carry.
    FAMILY is not part of that shared object; it is owned per selector upstream,
@@ -212,7 +214,7 @@ html:has(> body > .shell) { overflow-x: clip; }
 
    Declared locally rather than by adopting the panel class, because this band
    is not a panel: the metric is shared, the container is not. */
-.positioning-primitive {
+.positioning-title {
   font-family: var(--font-sans);
   font-size: var(--fs-body);
   font-weight: var(--fw-light);
