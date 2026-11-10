@@ -190,19 +190,10 @@ html:has(> body > .shell) { overflow-x: clip; }
   align-items: flex-start;
   gap: var(--space-3);
 }
-/* Band foreground: the ordinary hierarchy, in both themes. The category and the
-   supporting statement take --fg-2; the primary current-practice positioning line
-   takes --fg-1. The semantic tokens perform the theme switch, so this band needs
-   no theme-specific color rule. */
-.positioning-category {
-  font-family: var(--font-sans);
-  font-weight: var(--fw-light);
-  font-size: var(--fs-caption);
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
-  color: var(--fg-2);
-  margin: 0;
-}
+/* Band foreground: the ordinary hierarchy, in both themes. The supporting
+   statement takes --fg-2; the primary current-practice positioning line takes
+   --fg-1. The semantic tokens perform the theme switch, so this band needs no
+   theme-specific color rule. */
 /* The primary current-practice positioning line is a primary label on the
    family's shared METRIC —
    24 / 300 / 1.12 / -0.02em, the four declarations the vendored
