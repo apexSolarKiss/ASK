@@ -166,6 +166,33 @@ See the LICENSE file for the full license text.
 The Inter and JetBrains Mono fonts are licensed under the SIL Open Font
 License 1.1; see fonts/Inter-OFL.txt and fonts/JetBrainsMono-OFL.txt.
 
+The JavaScript libraries in assets/asymptotic/p5/lib/, which the asymptotic
+system key sketches in assets/asymptotic/p5/gallery/ load, are third-party
+software under their own licenses. Their license texts are in
+assets/asymptotic/p5/lib/licenses/.
+  - p5-<version>.min.js        — p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11, one
+                                 file per version; licensed under the GNU
+                                 Lesser General Public License, version 2.1:
+                                 see licenses/p5-LGPL-2.1.txt. Source:
+                                 github.com/processing/p5.js, tags 1.1.9,
+                                 v1.4.0, v1.11.7 and v1.11.11
+  - p5.sound-<version>.min.js  — p5.sound 0.3.12 (p5.sound-1.1.9.min.js) and
+                                 1.0.1 (the other three, each named for the
+                                 p5.js version it loads with); Copyright (c)
+                                 2014-2015 The Processing Foundation; licensed
+                                 under the MIT License: see
+                                 licenses/p5.sound-MIT.txt. Each includes
+                                 portions of Tone.js, under the MIT License:
+                                 see licenses/Tone-MIT.txt
+  - Tone-13.8.25.js            — Tone.js 13.8.25; Copyright (c) 2014-2019
+                                 Yotam Mann; licensed under the MIT License:
+                                 see licenses/Tone-MIT.txt
+  - simplex-noise-2.4.0.min.js — simplex-noise 2.4.0; Copyright (c) 2018 Jonas
+                                 Wagner and Copyright (C) 2010 Johannes Baagøe;
+                                 licensed under the MIT License: see
+                                 licenses/simplex-noise-MIT.txt
+This repository's Apache License, Version 2.0, does not cover them.
+
 The design portfolio images, documents and videos in assets/images/design/,
 assets/docs/design/ and assets/video/design/, and the project texts on the
 design portfolio's project pages under apex-solar-kiss/design/, document
@@ -216,3 +243,9 @@ third-party material shown in this work.
 The glyphsASK artwork images in assets/asymptotic/glyphsask/ are original
 artworks by Andrew S Klug // ASK (2024), published here for display. They are
 not licensed under the Apache License, Version 2.0; all rights reserved.
+
+The production portfolio images in assets/images/askproduktion/ document
+productions ASKproduKtion worked on, including work made for clients and
+production partners, and are published here for display. They are not
+licensed under the Apache License, Version 2.0; all rights remain with their
+respective owners.
