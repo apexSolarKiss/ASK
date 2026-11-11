@@ -170,8 +170,48 @@ The design portfolio images, documents and videos in assets/images/design/,
 assets/docs/design/ and assets/video/design/, and the project texts on the
 design portfolio's project pages under apex-solar-kiss/design/, document
 design work, including work made for clients and collaborators, and are
-published here for display. They are not licensed under the Apache
-License, Version 2.0; all rights remain with their respective owners.
+published here for display. Their terms follow the material, not the file:
+one image can hold open interface work and a reserved logo, and each thumb/
+copy takes the terms of the image it reproduces.
+
+ASK's own branding assets are licensed under the Apache License, Version
+2.0:
+  - assets/images/design/ask/  — ASK identity artwork, except 05.jpg
+
+ASK-authored UI/UX work in the following images is also licensed under the
+Apache License, Version 2.0, to the extent of the rights Andrew S Klug // ASK
+holds in it:
+  - assets/images/design/bonami/02.jpg to 06.jpg
+                               — the bonAmi.ai content map, interaction map,
+                                 sitemap, wireframes and prototypes
+  - assets/images/design/cryptoeats/04.jpg and 05.jpg
+                               — the cryptoEATS pattern library and UI
+                                 prototypes
+  - assets/images/design/nisei/01.jpg and 02.png to 12.png
+                               — the Nisei sitemap and wireframes
+Where they appear in these UI/UX images, other projects' logos and identity
+artwork, including the bonAmi.ai, cryptoEATS and Nisei marks, and
+third-party material, such as map tiles, device frames, photographs,
+third-party icons, and service and wallet logos, are excluded from that grant.
+
+Voltaire and RQWST identity artwork created by Andrew S Klug // ASK,
+including logos and wordmark artwork, is excluded from the Apache License
+2.0. All rights reserved. It is in assets/images/design/voltaire/ and
+assets/images/design/rqwst/. The Voltaire pitch deck in voltaire/06.jpg and
+voltaire/06-full.jpg also carries presentation copy and figures, which keep
+their existing rights.
+
+All other material in assets/images/design/, assets/docs/design/ and
+assets/video/design/, and the project texts, are not licensed under the
+Apache License, Version 2.0; all rights remain with their respective owners.
+This includes the identity work for other projects, the other branding,
+identity and graphic design work, and client and collaborator content such as
+presentation copy, figures, photography, illustration, video, documents and
+third-party artwork.
+
+The grants and the reservation above cover only rights Andrew S Klug // ASK
+holds. None of them covers a project name, a typeface, a generic color or
+third-party material shown in this work.
 
 The glyphsASK artwork images in assets/asymptotic/glyphsask/ are original
 artworks by Andrew S Klug // ASK (2024), published here for display. They are
