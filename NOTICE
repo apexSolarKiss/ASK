@@ -177,7 +177,9 @@ assets/asymptotic/p5/lib/licenses/.
                                  github.com/processing/p5.js, release commit
                                  d35bef5faa75fe33741632e2127d1d19396327e8
                                  for 1.1.9, and tags v1.4.0, v1.11.7 and
-                                 v1.11.11
+                                 v1.11.11. A copy of that source, with
+                                 p5.js's build scripts, is in source/; see
+                                 source/README.txt
   - p5.sound-<version>.min.js  — p5.sound 0.3.12 (p5.sound-1.1.9.min.js) and
                                  1.0.1 (the other three, each named for the
                                  p5.js version it loads with); Copyright (c)
@@ -194,6 +196,59 @@ assets/asymptotic/p5/lib/licenses/.
                                  licensed under the MIT License: see
                                  licenses/simplex-noise-MIT.txt
 This repository's Apache License, Version 2.0, does not cover them.
+
+The p5.js files also contain code that p5.js's build compiles into them
+from other packages, and code in p5.js's own source that carries other
+notices. The build removes the notices that
+assets/asymptotic/p5/lib/licenses/p5-bundled-packages.txt reproduces. This
+code is third-party software under its own licenses, and the Apache
+License, Version 2.0, does not cover it either. The packages, as published
+on npm, are in assets/asymptotic/p5/lib/source/bundled/.
+p5-bundled-packages.txt also says which p5.js versions contain each
+package, gives each package's license text where it publishes one, and
+says where a package publishes no license text or no copyright line.
+  - opentype.js 0.9.0          — Copyright (c) 2017 Frederik De Bleser; its
+                                 hinting interpreter (c) 2017 Axel
+                                 Kittenberger; MIT License. It includes
+                                 tiny-inflate 1.0.2, by Devon Govett, MIT
+                                 License, a port of Joergen Ibsen's tinf
+                                 (zlib License); and
+                                 string.prototype.codepointat 0.2.1,
+                                 Copyright Mathias Bynens, MIT License
+  - libtess 1.2.2              — Copyright 2000, Silicon Graphics, Inc. and
+                                 Copyright 2012, Google Inc. (2015 in the
+                                 file p5.js compiles in); SGI Free Software
+                                 License B, version 2.0
+  - omggif 1.0.10              — (c) Dean McNamee, 2013; MIT License
+  - file-saver 1.3.8           — Copyright © 2016 Eli Grey; MIT License
+  - fetch-jsonp 1.1.3          — by Cam Song; MIT License
+  - whatwg-fetch 2.0.4         — Copyright (c) 2014-2016 GitHub, Inc.; MIT
+                                 License
+  - es6-promise 4.2.8          — Copyright (c) 2014 Yehuda Katz, Tom Dale,
+                                 Stefan Penner and contributors; MIT License
+  - core-js 3.6.5              — Copyright (c) 2014-2020 Denis Pushkarev; MIT
+                                 License. In 1.4.0, 1.11.7 and 1.11.11
+  - regenerator-runtime 0.13.3 — Copyright (c) 2014-present, Facebook, Inc.;
+                                 MIT License. In 1.11.7 and 1.11.11
+  - gifenc 1.0.3               — Copyright (c) 2017 Matt DesLauriers; MIT
+                                 License. In 1.11.7 and 1.11.11
+  - Browserify's modules       — buffer 5.4.3, base64-js 1.3.1, process
+                                 0.11.10, path-browserify 0.0.1 (Copyright
+                                 Joyent, Inc. and other Node contributors),
+                                 browser-pack 6.1.0, umd 3.0.3 and
+                                 insert-module-globals 7.2.0, under the MIT
+                                 License, and ieee754 1.1.13, Copyright
+                                 2008 Fair Oaks Labs, Inc., under the BSD
+                                 3-Clause License
+  - Babel's helpers            — @babel/helpers 7.7.4, Copyright (c)
+                                 2014-present Sebastian McKenzie and other
+                                 contributors; MIT License
+  - In p5.js's own source      — code from stacktrace.js, Copyright (c) 2017
+                                 Eric Wendelin and other contributors, MIT
+                                 License; portions copyright 2008 Dmitry
+                                 Baranovskiy, MIT License; code adapted from
+                                 resize-image-data, MIT License; and a
+                                 credit to Tone.js, MIT License, Yotam Mann
 
 The design portfolio images, documents and videos in assets/images/design/,
 assets/docs/design/ and assets/video/design/, and the project texts on the

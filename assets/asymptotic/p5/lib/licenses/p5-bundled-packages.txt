@@ -1,0 +1,831 @@
+Licenses and notices for the code compiled into the p5.js files
+
+The p5.js files in assets/asymptotic/p5/lib/ (p5-1.1.9.min.js,
+p5-1.4.0.min.js, p5-1.11.7.min.js and p5-1.11.11.min.js) contain code that
+p5.js's own build compiles into them from the packages in part 1, and code
+in p5.js's own source that carries the notices in part 2. The build removes
+comments, and with them most of the license notices in that code; this file
+reproduces the notices it removes. core-js's copyright, a string in its
+code, stays in the files from 1.4.0 on.
+
+Part 1 gives each package's license text where the package publishes one,
+copied from the package's own published copy in
+assets/asymptotic/p5/lib/source/bundled/, which holds the package as
+published on npm. Where the files p5.js compiles in carry notices beyond
+that text, it reproduces them. Where a package publishes no license text or
+no copyright line, its entry says so.
+
+Part 2 gives the notices in p5.js's own source that the build removes. The
+source archives are in assets/asymptotic/p5/lib/source/.
+
+Quoted in-file comments are re-indented. In the license texts, umd's CRLF
+line ends are normalized to LF, and each text ends in one newline. The
+content is otherwise verbatim.
+
+========================================================================
+Part 1. Packages compiled into the p5.js files
+========================================================================
+
+------------------------------------------------------------------------
+opentype.js 0.9.0 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: dist/opentype.js
+Package: source/bundled/opentype.js-0.9.0.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+dist/opentype.js, the file p5.js compiles in, also contains tiny-inflate
+and string.prototype.codepointat, listed next. p5.js's build removes
+these notices in it: its opening comment, the polyfill's banner, and the
+first lines of its hinting interpreter's comment:
+
+    /**
+    * https://opentype.js.org v0.9.0 | (c) Frederik De Bleser and other contributors | MIT License | Uses tiny-inflate by Devon Govett and string.prototype.codepointat polyfill by Mathias Bynens
+    */
+
+    /*! https://mths.be/codepointat v0.2.0 by @mathias */
+
+    /* A TrueType font hinting interpreter.
+    *
+    * (c) 2017 Axel Kittenberger
+
+The MIT License (MIT)
+
+Copyright (c) 2017 Frederik De Bleser
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+------------------------------------------------------------------------
+tiny-inflate 1.0.2 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11, inside opentype.js
+Code compiled in: index.js, within opentype.js's dist/opentype.js
+Package: source/bundled/tiny-inflate-1.0.2.tgz
+------------------------------------------------------------------------
+
+The package ships no license text and no copyright line. Its
+package.json and README declare the MIT License, and its package.json
+names Devon Govett as its author.
+
+Its README describes it as a port of Joergen Ibsen's tinf ("tiny
+inflate") and links bitbucket.org/jibsen/tinf without naming a tinf
+revision; that address no longer serves the repository. tinf's history,
+as now published at github.com/jibsen/tinf, has no commit between
+2014-06-27 and 2018-12-31, a span that includes tiny-inflate's first
+commit (2015-02-15) and its 1.0.2 commit (2015-12-15). The commit
+current throughout that span, 474a7faa319d242f582901944062ab228aa1aee7,
+opens its src/tinflate.c with this notice (the zlib License):
+
+    /*
+     * tinflate - tiny inflate
+     *
+     * Copyright (c) 2003-2014 Joergen Ibsen
+     *
+     * This software is provided 'as-is', without any express
+     * or implied warranty.  In no event will the authors be
+     * held liable for any damages arising from the use of
+     * this software.
+     *
+     * Permission is granted to anyone to use this software
+     * for any purpose, including commercial applications,
+     * and to alter it and redistribute it freely, subject to
+     * the following restrictions:
+     *
+     * 1. The origin of this software must not be
+     *    misrepresented; you must not claim that you
+     *    wrote the original software. If you use this
+     *    software in a product, an acknowledgment in
+     *    the product documentation would be appreciated
+     *    but is not required.
+     *
+     * 2. Altered source versions must be plainly marked
+     *    as such, and must not be misrepresented as
+     *    being the original software.
+     *
+     * 3. This notice may not be removed or altered from
+     *    any source distribution.
+     */
+
+------------------------------------------------------------------------
+string.prototype.codepointat 0.2.1 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11, inside opentype.js
+Code compiled in: codepointat.js, within opentype.js's dist/opentype.js
+Package: source/bundled/string.prototype.codepointat-0.2.1.tgz
+Text: package/LICENSE-MIT.txt
+------------------------------------------------------------------------
+
+Copyright Mathias Bynens <https://mathiasbynens.be/>
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+------------------------------------------------------------------------
+libtess 1.2.2 (SGI Free Software License B, version 2.0)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: libtess.min.js
+Package: source/bundled/libtess-1.2.2.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+libtess.min.js, the file p5.js compiles in, opens with the header below,
+which p5.js's build removes. It gives Google Inc.'s copyright year as
+2015 where the LICENSE gives 2012, and it does not carry the LICENSE's
+paragraph on the name of Silicon Graphics, Inc.:
+
+    Copyright 2000, Silicon Graphics, Inc. All Rights Reserved.
+    Copyright 2015, Google Inc. All Rights Reserved.
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to
+    deal in the Software without restriction, including without limitation the
+    rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+    sell copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice including the dates of first publication and
+    either this permission notice or a reference to http://oss.sgi.com/projects/FreeB/
+    shall be included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+    SILICON GRAPHICS, INC. BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+    IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+    Original Code. The Original Code is: OpenGL Sample Implementation,
+    Version 1.2.1, released January 26, 2000, developed by Silicon Graphics,
+    Inc. The Original Code is Copyright (c) 1991-2000 Silicon Graphics, Inc.
+    Copyright in any portions created by third parties is as indicated
+    elsewhere herein. All Rights Reserved.
+
+SGI FREE SOFTWARE LICENSE B (Version 2.0, Sept. 18, 2008)
+Copyright 2000, Silicon Graphics, Inc. All Rights Reserved.  
+Copyright 2012, Google Inc. All Rights Reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice including the dates of first publication and
+either this permission notice or a reference to http://oss.sgi.com/projects/FreeB/
+shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+SILICON GRAPHICS, INC. BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of Silicon Graphics, Inc. shall not
+be used in advertising or otherwise to promote the sale, use or other dealings
+in this Software without prior written authorization from Silicon Graphics, Inc.
+
+Original Code. The Original Code is: OpenGL Sample Implementation,
+Version 1.2.1, released January 26, 2000, developed by Silicon Graphics,
+Inc. The Original Code is Copyright (c) 1991-2000 Silicon Graphics, Inc.
+Copyright in any portions created by third parties is as indicated
+elsewhere herein. All Rights Reserved.
+
+------------------------------------------------------------------------
+omggif 1.0.10 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: omggif.js
+Package: source/bundled/omggif-1.0.10.tgz
+Text: package/omggif.js
+------------------------------------------------------------------------
+
+The package has no separate license file; this is the license comment at
+the head of omggif.js.
+
+// (c) Dean McNamee <dean@gmail.com>, 2013.
+//
+// https://github.com/deanm/omggif
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
+
+------------------------------------------------------------------------
+file-saver 1.3.8 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: FileSaver.js
+Package: source/bundled/file-saver-1.3.8.tgz
+Text: package/LICENSE.md
+------------------------------------------------------------------------
+
+The MIT License
+
+Copyright © 2016 [Eli Grey][1].
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+  [1]: http://eligrey.com
+
+------------------------------------------------------------------------
+fetch-jsonp 1.1.3 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: build/fetch-jsonp.js
+Package: source/bundled/fetch-jsonp-1.1.3.tgz
+------------------------------------------------------------------------
+
+The package ships no license text and no copyright line. Its
+package.json and README declare the MIT License, and its package.json
+names Cam Song as its author. Its repository,
+github.com/camsong/fetch-jsonp, has no license file at this version's
+release commit, 0dfd008b28fe230f3543a075aeabb7b4da408a95, which npm
+records for 1.1.3; the repository has no tag for 1.1.3.
+
+------------------------------------------------------------------------
+whatwg-fetch 2.0.4 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: fetch.js
+Package: source/bundled/whatwg-fetch-2.0.4.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+Copyright (c) 2014-2016 GitHub, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+------------------------------------------------------------------------
+es6-promise 4.2.8 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: auto.js, dist/es6-promise.js
+Package: source/bundled/es6-promise-4.2.8.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+dist/es6-promise.js, which p5.js compiles in with auto.js, opens with
+this comment, which p5.js's build removes:
+
+    /*!
+    * @overview es6-promise - a tiny implementation of Promises/A+.
+    * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
+    * @license   Licensed under MIT license
+    *            See https://raw.githubusercontent.com/stefanpenner/es6-promise/master/LICENSE
+    * @version   v4.2.8+1e68dce6
+    */
+
+Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------------------
+buffer 5.4.3 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: index.js
+Package: source/bundled/buffer-5.4.3.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+buffer, base64-js, ieee754, process and path-browserify are the browser
+versions of Node.js modules that Browserify supplies to the bundle.
+
+The MIT License (MIT)
+
+Copyright (c) Feross Aboukhadijeh, and other contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+------------------------------------------------------------------------
+base64-js 1.3.1 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: index.js
+Package: source/bundled/base64-js-1.3.1.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+The MIT License (MIT)
+
+Copyright (c) 2014 Jameson Little
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+------------------------------------------------------------------------
+ieee754 1.1.13 (BSD 3-Clause License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: index.js
+Package: source/bundled/ieee754-1.1.13.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+Copyright 2008 Fair Oaks Labs, Inc.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+------------------------------------------------------------------------
+process 0.11.10 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: browser.js
+Package: source/bundled/process-0.11.10.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+(The MIT License)
+
+Copyright (c) 2013 Roman Shtylman <shtylman@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+------------------------------------------------------------------------
+path-browserify 0.0.1 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: index.js
+Package: source/bundled/path-browserify-0.0.1.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+Its LICENSE has no copyright line, and its package.json names James
+Halliday as its author. index.js, the file p5.js compiles in, opens with
+this notice, which p5.js's build removes:
+
+    // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
+    // backported and transplited with Babel, with backwards-compat fixes
+
+    // Copyright Joyent, Inc. and other Node contributors.
+    //
+    // Permission is hereby granted, free of charge, to any person obtaining a
+    // copy of this software and associated documentation files (the
+    // "Software"), to deal in the Software without restriction, including
+    // without limitation the rights to use, copy, modify, merge, publish,
+    // distribute, sublicense, and/or sell copies of the Software, and to permit
+    // persons to whom the Software is furnished to do so, subject to the
+    // following conditions:
+    //
+    // The above copyright notice and this permission notice shall be included
+    // in all copies or substantial portions of the Software.
+    //
+    // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    // OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+    // NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+    // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+    // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+    // USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+This software is released under the MIT license:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+------------------------------------------------------------------------
+browser-pack 6.1.0 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: _prelude.js
+Package: source/bundled/browser-pack-6.1.0.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+browser-pack supplies the bundle's module loader: _prelude.js, which its
+own build makes from prelude.js. Its LICENSE has no copyright line; the
+LICENSE at its release commit, e5ca7eb5053a4fc6c7b198e1ac831e7f9c3b44d6
+in github.com/browserify/browser-pack, is the same file. Its
+package.json names James Halliday as its author.
+
+This software is released under the MIT license:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+------------------------------------------------------------------------
+umd 3.0.3 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: the wrapper template in index.js
+Package: source/bundled/umd-3.0.3.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+umd supplies the outer wrapper that lets the file load as a script or as
+a module.
+
+Copyright (c) 2013 Forbes Lindesay
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+------------------------------------------------------------------------
+insert-module-globals 7.2.0 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: the wrapper templates in index.js
+Package: source/bundled/insert-module-globals-7.2.0.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+Browserify uses insert-module-globals to wrap each module that uses
+Node.js's Buffer, process or global in a function that supplies them,
+and the wrappers stay in the compiled file. Its LICENSE has no copyright
+line, and its package.json names James Halliday as its author.
+
+This software is released under the MIT license:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+------------------------------------------------------------------------
+core-js 3.6.5 (MIT License)
+Compiled into: p5.js 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: the files in modules/ and internals/ that each version's build selects
+Package: source/bundled/core-js-3.6.5.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+Copyright (c) 2014-2020 Denis Pushkarev
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+------------------------------------------------------------------------
+regenerator-runtime 0.13.3 (MIT License)
+Compiled into: p5.js 1.11.7 and 1.11.11
+Code compiled in: runtime.js
+Package: source/bundled/regenerator-runtime-0.13.3.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+MIT License
+
+Copyright (c) 2014-present, Facebook, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------------------
+gifenc 1.0.3 (MIT License)
+Compiled into: p5.js 1.11.7 and 1.11.11
+Code compiled in: dist/gifenc.js
+Package: source/bundled/gifenc-1.0.3.tgz
+Text: package/LICENSE.md
+------------------------------------------------------------------------
+
+The MIT License (MIT)
+Copyright (c) 2017 Matt DesLauriers
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+OR OTHER DEALINGS IN THE SOFTWARE.
+
+------------------------------------------------------------------------
+@babel/helpers 7.7.4 (MIT License)
+Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
+Code compiled in: helper templates in lib/helpers.js
+Package: source/bundled/babel-helpers-7.7.4.tgz
+Text: package/LICENSE
+------------------------------------------------------------------------
+
+Babel, which p5.js's build runs on p5.js's own source, writes helper
+functions from this package into the compiled code. lib/helpers.js holds
+the code of each. The helpers in p5.js 1.1.9 and 1.4.0 are:
+arrayWithHoles, arrayWithoutHoles, assertThisInitialized,
+classCallCheck, construct, createClass, getPrototypeOf, inherits,
+interopRequireDefault, interopRequireWildcard, isNativeFunction,
+iterableToArray, iterableToArrayLimit, nonIterableRest,
+nonIterableSpread, possibleConstructorReturn, setPrototypeOf,
+slicedToArray, toConsumableArray, typeof, wrapNativeSuper. p5.js 1.11.7
+and 1.11.11 have the same helpers and asyncToGenerator, defineProperty,
+get and superPropBase.
+
+MIT License
+
+Copyright (c) 2014-present Sebastian McKenzie and other contributors
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+========================================================================
+Part 2. Notices in p5.js's own source
+========================================================================
+
+Each file below is in the source of all four versions and is compiled
+into all four p5.js files.
+
+src/webgl/shaders/line.vert's notice, copyright The Processing
+Foundation, Ben Fry and Casey Reas, and the Massachusetts Institute of
+Technology under the GNU Lesser General Public License, version 2.1, is
+part of a shader string that stays in all four compiled files, so the
+file is not listed here.
+
+------------------------------------------------------------------------
+Code from stacktrace.js
+src/core/friendly_errors/stacktrace.js: lines 7-25 in 1.1.9, 1.4.0,
+1.11.7 and 1.11.11
+------------------------------------------------------------------------
+
+The file gives the license with the code it took from stacktrace.js:
+
+    // Borrow from stacktracejs https://github.com/stacktracejs/stacktrace.js with
+    // minor modifications. The license for the same and the code is included below
+
+    // Copyright (c) 2017 Eric Wendelin and other contributors
+    // Permission is hereby granted, free of charge, to any person obtaining a copy of
+    // this software and associated documentation files (the "Software"), to deal in
+    // the Software without restriction, including without limitation the rights to
+    // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+    // of the Software, and to permit persons to whom the Software is furnished to do
+    // so, subject to the following conditions:
+    // The above copyright notice and this permission notice shall be included in all
+    // copies or substantial portions of the Software.
+    // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    // SOFTWARE.
+
+------------------------------------------------------------------------
+Portions by Dmitry Baranovskiy
+src/typography/p5.Font.js: line 610 in 1.1.9 and 1.4.0; line 740 in
+1.11.7 and 1.11.11
+------------------------------------------------------------------------
+
+The file gives no license text beyond this line:
+
+    // Portions of below code copyright 2008 Dmitry Baranovskiy (via MIT license)
+
+------------------------------------------------------------------------
+Code adapted from resize-image-data
+src/image/p5.Image.js: line 491 in 1.1.9; line 496 in 1.4.0; line 957 in
+1.11.7 and 1.11.11
+------------------------------------------------------------------------
+
+The adapted code is the nearest-neighbor function in p5.Image's
+resize(), which follows the nearestNeighbor function of
+resize-image-data 0.1.1 and later line for line. resize-image-data's
+package.json declares the MIT License, but none of its npm releases
+(0.1.0 to 0.3.1) contains a license text or a copyright line, its
+package.json names no author, and its repository's current tree has no
+license file. The comment in p5.js reads:
+
+    //adapted from github.com/LinusU/resize-image-data
+
+------------------------------------------------------------------------
+A credit to Tone.js
+src/dom/dom.js: lines 3288-3289 in 1.1.9; lines 3319-3320 in 1.4.0;
+lines 4083-4084 in 1.11.7 and 1.11.11
+------------------------------------------------------------------------
+
+Tone.js's license text is in Tone-MIT.txt in this directory. The comment
+in p5.js reads:
+
+    // Cue inspired by JavaScript setTimeout, and the
+    // Tone.js Transport Timeline Event, MIT License Yotam Mann 2015 tonejs.org
