@@ -77,7 +77,7 @@ owns its base foreground, with only the bounded `gal-link` on-image paint
 adaptation described below. The text-link rule is **opt-in by class** — only an
 element carrying `.surface-text-link` takes it — and it sets no foreground at
 all: the contextual text colour stays consumer-owned, supplied by whichever
-region the link sits in. Five unboxed prose destinations across five subpages
+region the link sits in. The unboxed links set in a subpage's own prose
 consume it. The CFW conclusions page also consumes it, for every link in its
 reading text: its contents list, and its links to ASK's method doctrine and to the
 sources it cites, inside its disclosures as well as outside them. The CFW map

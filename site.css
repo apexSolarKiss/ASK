@@ -19,9 +19,9 @@
    whose attention edge the gallery cards and thumbnails, video facades, p5
    launch cards and gallery dialog controls take by class;
    surface-text-link.css, the unboxed textual-link visual rule, opt-in by class,
-   which five prose destinations across five subpages consume, and which the CFW map
-   additionally consumes for its inspector source links (the CFW conclusions
-   page does not load it); and surface-document.css and surface-treatments.css,
+   which the unboxed links set in a subpage's own prose consume, as do the links
+   in the CFW conclusions page's reading text and the CFW map's inspector source
+   links; and surface-document.css and surface-treatments.css,
    the document register and the surface treatments. The homepage no longer
    consumes the textual-link rule: its footer is compact actions, so the local
    footer-link re-derivation that used to live here is retired. What this file owns is the homepage
@@ -278,25 +278,11 @@ html:has(> body > .shell) { overflow-x: clip; }
 }
 
 /* ---------- Footer ---------- */
-/* Right-aligned on every page: the footer is the terminal element, and the
-   reader's eye travels top-left to bottom-right, so it sits where the reading
-   path ends.
-
-   This is the HOMEPAGE footer — the shell's .surface-footer closes every other
-   page. The two track each other on size, and both now sit on the CAPTION SIZE
-   step at 14px, the step the compact action also takes: terminal navigation and
-   compact controls are both operative chrome a reader clicks rather than prose
-   a reader reads. Keep this in step with the vendored .surface-footer rather
-   than letting the front door drift a step away from the family.
-
-   Sharing that size merges no roles. This footer stays terminal navigation: it
-   takes no pill geometry, no fill, no border, and none of surface-action.css's
-   interaction contract. It is not Caption either — never uppercased, and it
-   declares neither --fw-regular nor wide tracking. It stays JetBrains Mono with
-   NORMAL tracking: at this step wide tracking would add 1.12px between letters
-   — 0.08em of 14px — and mono's fixed advances already carry the terminal
-   distinction on their own, so normal tracking is what keeps the footer from
-   overstating it. */
+/* The homepage footer is right-aligned at the end of the reading path.
+   The container owns placement, wrapping and gap. Its destinations consume
+   surface-action.css as secondary compact actions; that module owns their
+   typography, geometry, foreground, paint and interaction. The shell's
+   .surface-footer owns the corresponding row on ordinary content pages. */
 .footer {
   display: flex;
   flex-wrap: wrap;
@@ -307,11 +293,10 @@ html:has(> body > .shell) { overflow-x: clip; }
   letter-spacing: var(--tracking-normal);
   color: var(--fg-2);
 }
-/* The homepage footer's three plain destinations consume the vendored
-   surface-text-link rule. The local `.footer a` / `:hover` pair that used to
-   re-derive that treatment is RETIRED — the owner module owns rest, hover,
-   active and focus. `.footer` above still supplies the contextual --fg-2,
-   which the module deliberately inherits rather than setting. */
+/* The homepage footer does not consume the vendored surface-text-link rule:
+   its three destinations are compact actions on surface-action.css. The local
+   `.footer a` / `:hover` pair that once re-derived a text-link treatment stays
+   RETIRED. */
 
 /* ---------- Sub-brand pages (migrated public-canonical content) ----------
    The shared subpage shell that used to live here is RETIRED. Four rules were
