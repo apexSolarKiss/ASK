@@ -166,13 +166,88 @@ See the LICENSE file for the full license text.
 The Inter and JetBrains Mono fonts are licensed under the SIL Open Font
 License 1.1; see fonts/Inter-OFL.txt and fonts/JetBrainsMono-OFL.txt.
 
+The JavaScript libraries in assets/asymptotic/p5/lib/, which the asymptotic
+system key sketches in assets/asymptotic/p5/gallery/ load, are third-party
+software under their own licenses. Their license texts are in
+assets/asymptotic/p5/lib/licenses/.
+  - p5-<version>.min.js        — p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11, one
+                                 file per version; licensed under the GNU
+                                 Lesser General Public License, version 2.1:
+                                 see licenses/p5-LGPL-2.1.txt. Source:
+                                 github.com/processing/p5.js, release commit
+                                 d35bef5faa75fe33741632e2127d1d19396327e8
+                                 for 1.1.9, and tags v1.4.0, v1.11.7 and
+                                 v1.11.11
+  - p5.sound-<version>.min.js  — p5.sound 0.3.12 (p5.sound-1.1.9.min.js) and
+                                 1.0.1 (the other three, each named for the
+                                 p5.js version it loads with); Copyright (c)
+                                 2014-2015 The Processing Foundation; licensed
+                                 under the MIT License: see
+                                 licenses/p5.sound-MIT.txt. Each includes
+                                 portions of Tone.js, under the MIT License:
+                                 see licenses/Tone-MIT.txt
+  - Tone-13.8.25.js            — Tone.js 13.8.25; Copyright (c) 2014-2019
+                                 Yotam Mann; licensed under the MIT License:
+                                 see licenses/Tone-MIT.txt
+  - simplex-noise-2.4.0.min.js — simplex-noise 2.4.0; Copyright (c) 2018 Jonas
+                                 Wagner and Copyright (C) 2010 Johannes Baagøe;
+                                 licensed under the MIT License: see
+                                 licenses/simplex-noise-MIT.txt
+This repository's Apache License, Version 2.0, does not cover them.
+
 The design portfolio images, documents and videos in assets/images/design/,
 assets/docs/design/ and assets/video/design/, and the project texts on the
 design portfolio's project pages under apex-solar-kiss/design/, document
 design work, including work made for clients and collaborators, and are
-published here for display. They are not licensed under the Apache
-License, Version 2.0; all rights remain with their respective owners.
+published here for display. Their terms follow the material, not the file:
+one image can hold open interface work and a reserved logo, and each thumb/
+copy takes the terms of the image it reproduces.
+
+ASK's own branding assets are licensed under the Apache License, Version
+2.0:
+  - assets/images/design/ask/  — ASK identity artwork, except 05.jpg
+
+ASK-authored UI/UX work in the following images is also licensed under the
+Apache License, Version 2.0, to the extent of the rights Andrew S Klug // ASK
+holds in it:
+  - assets/images/design/bonami/02.jpg to 06.jpg
+                               — the bonAmi.ai content map, interaction map,
+                                 sitemap, wireframes and prototypes
+  - assets/images/design/cryptoeats/04.jpg and 05.jpg
+                               — the cryptoEATS pattern library and UI
+                                 prototypes
+  - assets/images/design/nisei/01.jpg and 02.png to 12.png
+                               — the Nisei sitemap and wireframes
+Where they appear in these UI/UX images, other projects' logos and identity
+artwork, including the bonAmi.ai, cryptoEATS and Nisei marks, and
+third-party material, such as map tiles, device frames, photographs,
+third-party icons, and service and wallet logos, are excluded from that grant.
+
+Voltaire and RQWST identity artwork created by Andrew S Klug // ASK,
+including logos and wordmark artwork, is excluded from the Apache License
+2.0. All rights reserved. It is in assets/images/design/voltaire/ and
+assets/images/design/rqwst/. The Voltaire pitch deck in voltaire/06.jpg and
+voltaire/06-full.jpg also carries presentation copy and figures, which keep
+their existing rights.
+
+All other material in assets/images/design/, assets/docs/design/ and
+assets/video/design/, and the project texts, are not licensed under the
+Apache License, Version 2.0; all rights remain with their respective owners.
+This includes the identity work for other projects, the other branding,
+identity and graphic design work, and client and collaborator content such as
+presentation copy, figures, photography, illustration, video, documents and
+third-party artwork.
+
+The grants and the reservation above cover only rights Andrew S Klug // ASK
+holds. None of them covers a project name, a typeface, a generic color or
+third-party material shown in this work.
 
 The glyphsASK artwork images in assets/asymptotic/glyphsask/ are original
 artworks by Andrew S Klug // ASK (2024), published here for display. They are
 not licensed under the Apache License, Version 2.0; all rights reserved.
+
+The production portfolio images in assets/images/askproduktion/ document
+productions ASKproduKtion worked on, including work made for clients and
+production partners, and are published here for display. They are not
+licensed under the Apache License, Version 2.0; all rights remain with their
+respective owners.

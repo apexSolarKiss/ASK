@@ -247,4 +247,4 @@ control without either stopping being what it is.
 When this site and `design-system-ASK` disagree on a foundation value, on the
 shell, or on a vendored visual rule, the canonical file wins — see `NOTICE`.
 
-Licensed under the Apache License 2.0 // see [LICENSE](LICENSE).
+Licensed under the Apache License 2.0 // see [LICENSE](LICENSE). Some material is excluded or under other terms, including parts of the design portfolio // see [NOTICE](NOTICE).
