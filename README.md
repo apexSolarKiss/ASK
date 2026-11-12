@@ -186,7 +186,7 @@ favicon.ico           vendored from design-system-ASK — the root-probe fallbac
 apple-touch-icon.png  vendored from design-system-ASK — the iOS home-screen icon, pinned + byte-identical
 apex-solar-kiss/      native builder subpage — current AP-ASK focus, supporting systems, method + grounding, other active work and research
 apex-solar-kiss/design/  native design gateway — live design-system surfaces, and the design portfolio: each entry of the ASK-approved selection as a card, under UI/UX or branding/identity + graphic design
-apex-solar-kiss/design/{voltaire,bonami,cryptoeats,nisei,sociedade,systamental}/  design portfolio project pages — the entries that carry text, links or documents; the other entries open as galleries on the gateway
+apex-solar-kiss/design/{voltaire,rqwst,bonami,cryptoeats,nisei,sociedade,systamental}/  design portfolio project pages — the entries that carry text, links or documents; the other entries open as galleries on the gateway
 apex-solar-kiss/consciousness-free-will/  CFW conclusions — the structured survey over the typed relation atlas, a distinct ASK-authored conclusion + an ASK prospective axis; an ordinary shell page
 apex-solar-kiss/consciousness-free-will/map/  the interactive CFW mind map — the one named full-viewport interactive-application exception to the shell; drawn by the design-system interactive radial pattern (diagram-interactive-radial: its stylesheet, modules, pointer controller and fit helper diagrams-fit.js) with spectral-state.css, all vendored in the route folder from design-system-ASK, pinned + byte-identical; the map's own code is cfw-map-adapter.js, cfw-map.js and cfw-map.css
 askproduktion/        native creative-production subpage (Track A.1)
