@@ -174,8 +174,10 @@ assets/asymptotic/p5/lib/licenses/.
                                  file per version; licensed under the GNU
                                  Lesser General Public License, version 2.1:
                                  see licenses/p5-LGPL-2.1.txt. Source:
-                                 github.com/processing/p5.js, tags 1.1.9,
-                                 v1.4.0, v1.11.7 and v1.11.11
+                                 github.com/processing/p5.js, release commit
+                                 d35bef5faa75fe33741632e2127d1d19396327e8
+                                 for 1.1.9, and tags v1.4.0, v1.11.7 and
+                                 v1.11.11
   - p5.sound-<version>.min.js  — p5.sound 0.3.12 (p5.sound-1.1.9.min.js) and
                                  1.0.1 (the other three, each named for the
                                  p5.js version it loads with); Copyright (c)
