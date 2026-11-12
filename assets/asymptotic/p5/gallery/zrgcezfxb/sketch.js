@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); this file may not be used except in compliance with the License, a copy of which is available at http://www.apache.org/licenses/LICENSE-2.0
 // Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-// adapted from https://p5js.org/reference/#/p5/randomGaussian
+// the star drawing follows the algorithm of the second randomGaussian() example in the p5.js 1.4.0 reference (src/math/random.js); the code is ASK's own
 
 var init = 3;
 // var trail = 20;
@@ -64,20 +64,21 @@ class Star {
     this.x = _x;
     this.y = _y;
     this.colorStroke = _colorStroke;
-    this.distribution = new Array(360);
-    for (let i = 0; i < this.distribution.length; i++) {
-      this.distribution[i] = floor(randomGaussian(0, sizeASK));
+    // one ray per degree, each reaching a whole number of pixels set by a
+    // normal distribution centered on 0 with a spread of sizeASK
+    this.rays = [];
+    for (let degree = 1; degree <= 360; degree++) {
+      const reach = Math.abs(Math.floor(randomGaussian(0, sizeASK)));
+      const angle = degree * Math.PI / 180;
+      this.rays.push([reach * Math.cos(angle), reach * Math.sin(angle)]);
     }
   }
 
   show() {
     stroke(this.colorStroke);
     translate(this.x, this.y);
-    for (let i = 0; i < this.distribution.length; i++) {
-      rotate(TWO_PI / this.distribution.length);
-      stroke(this.colorStroke);
-      let dist = abs(this.distribution[i]);
-      line(0, 0, dist, 0);
+    for (const [endX, endY] of this.rays) {
+      line(0, 0, endX, endY);
     }
   }
 

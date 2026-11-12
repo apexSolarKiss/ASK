@@ -1,8 +1,18 @@
-// Copyright (c) 2022 >> Andrew S Klug // ASKproduKtion
-// Licensed under the Apache License, Version 2.0 (the "License"); this file may not be used except in compliance with the License, a copy of which is available at http://www.apache.org/licenses/LICENSE-2.0
+// Copyright (c) 2022 >> Andrew S Klug // ASKproduKtion, for ASK's additions only: the colorsASK palette, the color picker, the mouse-press reset and the use of those colors.
+// ASK's additions are licensed under the Apache License, Version 2.0 (the "License"); they may not be used except in compliance with the License, a copy of which is available at http://www.apache.org/licenses/LICENSE-2.0
 // Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-
-// adapted from @mattdesl https://twitter.com/mattdesl https://glitch.com/edit/#!/p5-example-line
+//
+// The rest of this file is adapted from an example by Matt DesLauriers, https://glitch.com/edit/#!/p5-example-line. The license of that example has not been established. That code is not licensed under the Apache License, Version 2.0, and this file grants no license to it.
+//
+// The function segment() is also published in https://github.com/mattdesl/workshop-p5-intro (docs/snippets.md) and is used under that repository's MIT License:
+//
+// The MIT License (MIT) Copyright (c) 2019 Matt DesLauriers
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 var colorBackground, colorStroke;
 var colorsASK = [];

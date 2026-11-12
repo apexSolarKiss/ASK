@@ -306,3 +306,36 @@ productions ASKproduKtion worked on, including work made for clients and
 production partners, and are published here for display. They are not
 licensed under the Apache License, Version 2.0; all rights remain with their
 respective owners.
+
+Five p5 sketches in assets/asymptotic/p5/gallery/ adapt examples by Matt
+DesLauriers that he published on Glitch and in the repository
+github.com/mattdesl/workshop-web-audio, whose files are licensed under the
+MIT License, Copyright (c) 2017 Matt DesLauriers:
+  - PLhaWZyEX/sketch.js        — from src/js/13-tone-effects.js
+  - WAQYx7PA5/sketch.js        — from src/js/14-tone-sequencer.js
+  - Xh2SzChe1/sketch.js        — from src/js/10-tone-demo.js
+  - Y0OcuYd6v/sketch.js        — from src/js/11-tone-tap.js
+  - mYSYfMoho/sketch.js        — its sound, from src/js/13-tone-effects.js
+                                 and src/js/11-tone-tap.js; its star drawing
+                                 is ASK's own code, following the algorithm of
+                                 the second randomGaussian() example in the
+                                 p5.js 1.4.0 reference (src/math/random.js)
+The code in them that matches those files is used under the MIT License;
+ASK's changes and additions are licensed under the Apache License, Version
+2.0. Each of these files carries the MIT notice, and the license text is
+also in assets/asymptotic/p5/gallery/licenses/workshop-web-audio-LICENSE.md.
+
+Three other p5 sketches in assets/asymptotic/p5/gallery/, PeCZXBgfM/sketch.js,
+eHiAR6vNf/sketch.js and n-c1K1IdW/sketch.js, adapt examples by Matt
+DesLauriers that he published on Glitch. The license of those examples has
+not been established. That code is not licensed under the Apache License,
+Version 2.0, and this repository grants no license to it; only ASK's
+additions in those files are licensed under the Apache License, Version 2.0.
+The segment() function in eHiAR6vNf/sketch.js is also published in
+github.com/mattdesl/workshop-p5-intro under the MIT License, Copyright (c)
+2019 Matt DesLauriers, and is used under that license. n-c1K1IdW/sketch.js
+also contains, from the example it adapts, a port of intersect() from
+evil-mad/EggBot (inkscape_driver/eggbot_hatch.py, written by Daniel C. Newman
+for the Eggbot Project). That file is licensed under the GNU General Public
+License, version 2 or later. The port is not licensed under the Apache
+License, Version 2.0, either, and this repository grants no license to it.
