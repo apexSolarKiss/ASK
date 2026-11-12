@@ -1,9 +1,9 @@
-// Copyright (c) 2022 >> Andrew S Klug // ASKproduKtion
-// Licensed under the Apache License, Version 2.0 (the "License"); this file may not be used except in compliance with the License, a copy of which is available at http://www.apache.org/licenses/LICENSE-2.0
+// Copyright (c) 2022 >> Andrew S Klug // ASKproduKtion, for ASK's additions only: the colorsASK palette, the color picker, the mouse-press reset and the use of those colors.
+// ASK's additions are licensed under the Apache License, Version 2.0 (the "License"); they may not be used except in compliance with the License, a copy of which is available at http://www.apache.org/licenses/LICENSE-2.0
 // Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-
-// adapted from @mattdesl https://twitter.com/mattdesl https://glitch.com/edit/#!/p5-example-algorithm
-// implementing Jared Tarbell's "Substrate" algorithm
+//
+// The rest of this file is adapted from an example by Matt DesLauriers, https://glitch.com/edit/#!/p5-example-algorithm, implementing Jared Tarbell's "Substrate" algorithm. The license of that example has not been established. That code is not licensed under the Apache License, Version 2.0, and this file grants no license to it.
+// The function intersectLineSegmentsFract, which this file keeps from that example, is a port of intersect() from evil-mad/EggBot (inkscape_driver/eggbot_hatch.py, written by Daniel C. Newman for the Eggbot Project). That file is licensed under the GNU General Public License, version 2 or (at your option) any later version. The port is not licensed under the Apache License, Version 2.0, either, and this file grants no license to it.
 
 var colorBackground, colorStroke;
 var colorsASK = [];
