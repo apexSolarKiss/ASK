@@ -201,9 +201,10 @@ The p5.js files also contain code that p5.js's build compiles into them
 from other packages, and code in p5.js's own source that carries other
 notices. The build removes the notices that
 assets/asymptotic/p5/lib/licenses/p5-bundled-packages.txt reproduces. This
-code is third-party software under its own licenses, and the Apache
-License, Version 2.0, does not cover it either. The packages, as published
-on npm, are in assets/asymptotic/p5/lib/source/bundled/.
+code is third-party software under its own licenses, and this repository's
+grant under the Apache License, Version 2.0, does not cover it either. The
+packages, as published on npm, are in
+assets/asymptotic/p5/lib/source/bundled/.
 p5-bundled-packages.txt also says which p5.js versions contain each
 package, gives each package's license text where it publishes one, and
 says where a package publishes no license text or no copyright line.
@@ -218,7 +219,10 @@ says where a package publishes no license text or no copyright line.
   - libtess 1.2.2              — Copyright 2000, Silicon Graphics, Inc. and
                                  Copyright 2012, Google Inc. (2015 in the
                                  file p5.js compiles in); SGI Free Software
-                                 License B, version 2.0
+                                 License B, version 2.0. Its export table,
+                                 Copyright 2014 Google Inc., is under the
+                                 Apache License, Version 2.0, whose text is
+                                 in assets/asymptotic/p5/lib/licenses/libtess-Apache-2.0.txt
   - omggif 1.0.10              — (c) Dean McNamee, 2013; MIT License
   - file-saver 1.3.8           — Copyright © 2016 Eli Grey; MIT License
   - fetch-jsonp 1.1.3          — by Cam Song; MIT License

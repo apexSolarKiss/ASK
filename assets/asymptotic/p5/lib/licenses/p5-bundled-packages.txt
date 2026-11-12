@@ -13,7 +13,10 @@ copied from the package's own published copy in
 assets/asymptotic/p5/lib/source/bundled/, which holds the package as
 published on npm. Where the files p5.js compiles in carry notices beyond
 that text, it reproduces them. Where a package publishes no license text or
-no copyright line, its entry says so.
+no copyright line, its entry says so. For the five packages whose upstream
+source is in assets/asymptotic/p5/lib/source/upstream/, the entry also says
+whether that source carries a notice beyond these, and reproduces any it
+carries.
 
 Part 2 gives the notices in p5.js's own source that the build removes. The
 source archives are in assets/asymptotic/p5/lib/source/.
@@ -150,11 +153,12 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ------------------------------------------------------------------------
-libtess 1.2.2 (SGI Free Software License B, version 2.0)
+libtess 1.2.2 (SGI Free Software License B, version 2.0; its export
+table, Apache License, Version 2.0)
 Compiled into: p5.js 1.1.9, 1.4.0, 1.11.7 and 1.11.11
 Code compiled in: libtess.min.js
 Package: source/bundled/libtess-1.2.2.tgz
-Text: package/LICENSE
+Text: package/LICENSE; for the export table, licenses/libtess-Apache-2.0.txt
 ------------------------------------------------------------------------
 
 libtess.min.js, the file p5.js compiles in, opens with the header below,
@@ -188,6 +192,38 @@ paragraph on the name of Silicon Graphics, Inc.:
     Inc. The Original Code is Copyright (c) 1991-2000 Silicon Graphics, Inc.
     Copyright in any portions created by third parties is as indicated
     elsewhere herein. All Rights Reserved.
+
+The upstream source, source/upstream/libtess-1.2.2-source.tar.gz, carries
+two notices beyond these. Each file in its src/ opens with the header
+above, apart from the year in the Google Inc. line: 2015, as above, in
+eight files; 2012, as in the LICENSE, in src/mesh.js and
+src/mesh/GluMesh.js; and in the other seven files:
+
+    Copyright 2014, Google Inc. All Rights Reserved.
+
+The Closure Compiler compiles build/closure_exports.js, which sets the
+names libtess.min.js exports, into libtess.min.js with src/, and that code
+is in all four p5.js files. build/closure_exports.js opens with this
+notice, which the compilation removes:
+
+    Copyright 2014 Google Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+Neither the package nor the repository at that commit includes the text
+of the Apache License, Version 2.0. It is in
+licenses/libtess-Apache-2.0.txt, as published by the Apache Software
+Foundation.
 
 SGI FREE SOFTWARE LICENSE B (Version 2.0, Sept. 18, 2008)
 Copyright 2000, Silicon Graphics, Inc. All Rights Reserved.  
@@ -286,7 +322,9 @@ package.json and README declare the MIT License, and its package.json
 names Cam Song as its author. Its repository,
 github.com/camsong/fetch-jsonp, has no license file at this version's
 release commit, 0dfd008b28fe230f3543a075aeabb7b4da408a95, which npm
-records for 1.1.3; the repository has no tag for 1.1.3.
+records for 1.1.3; the repository has no tag for 1.1.3. The upstream
+source, source/upstream/fetch-jsonp-1.1.3-source.tar.gz, carries no notice
+either.
 
 ------------------------------------------------------------------------
 whatwg-fetch 2.0.4 (MIT License)
@@ -335,6 +373,11 @@ this comment, which p5.js's build removes:
     *            See https://raw.githubusercontent.com/stefanpenner/es6-promise/master/LICENSE
     * @version   v4.2.8+1e68dce6
     */
+
+The upstream source, source/upstream/es6-promise-4.2.8-source.tar.gz,
+carries no notice beyond these: its config/versionTemplate.txt is this
+comment with a placeholder for the version, and its LICENSE is the text
+below.
 
 Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors
 
@@ -567,7 +610,8 @@ Text: package/LICENSE
 ------------------------------------------------------------------------
 
 umd supplies the outer wrapper that lets the file load as a script or as
-a module.
+a module. The upstream source, source/upstream/umd-3.0.3-source.tar.gz,
+carries no notice beyond the LICENSE, which is the text below.
 
 Copyright (c) 2013 Forbes Lindesay
 
@@ -727,6 +771,10 @@ nonIterableSpread, possibleConstructorReturn, setPrototypeOf,
 slicedToArray, toConsumableArray, typeof, wrapNativeSuper. p5.js 1.11.7
 and 1.11.11 have the same helpers and asyncToGenerator, defineProperty,
 get and superPropBase.
+
+The upstream source, source/upstream/babel-helpers-7.7.4-source.tar.gz,
+carries no notice beyond the repository's LICENSE, which Babel's release
+copies into the package and which is the text below.
 
 MIT License
 

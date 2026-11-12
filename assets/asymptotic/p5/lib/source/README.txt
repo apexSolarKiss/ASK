@@ -2,9 +2,10 @@ Source code for the p5.js files in assets/asymptotic/p5/lib/
 
 p5.js is licensed under the GNU Lesser General Public License, version 2.1;
 see ../licenses/p5-LGPL-2.1.txt. This directory holds the source code of
-each p5.js version this site serves, next to the files themselves, and the
-packages, as published on npm, whose code p5.js's build compiles into them
-(five upstream build sources are not here; see below).
+each p5.js version this site serves, next to the files themselves, the
+packages, as published on npm, whose code p5.js's build compiles into them,
+and, for five of those packages, the upstream source and build files from
+which the package's built file is made.
 
 
 p5.js
@@ -130,29 +131,106 @@ where a package publishes none.
 
 The file p5.js's build reads from a package is usually that package's own
 source. Where it is the output of the package's own build, the package
-holds the source as well, except in these five cases. The upstream form is
-in the package's repository at the commit npm records for the release, and
-it is not in this directory:
+holds the source and the build files as well, except in five cases, where
+it leaves out the source, the build files or both. For those, upstream/
+holds the files in the package's repository, at the release's commit, from
+which its build makes that file: the source, the build scripts and
+configuration, and the repository's license file where it has one. An
+archive can repeat files the package also holds. Every file in an archive
+is byte-identical to the file at the same path in that commit. File
+owners, modes and timestamps are normalized.
 
-  fetch-jsonp 1.1.3: src/fetch-jsonp.js, which its build compiles into
-      build/fetch-jsonp.js. github.com/camsong/fetch-jsonp, commit
-      0dfd008b28fe230f3543a075aeabb7b4da408a95
-  libtess 1.2.2: src/ and gulpfile.js, from which its build makes
-      libtess.min.js. The package also holds two unminified files,
-      libtess.cat.js and libtess.debug.js.
+  upstream/babel-helpers-7.7.4-source.tar.gz (@babel/helpers)
+      github.com/babel/babel, commit
+      75767d87cb147709b9bd9b99bf44daa6688874a9 (tag v7.7.4).
+      packages/babel-helpers/src/helpers.js and src/index.js, which
+      Babel's build compiles into the package's lib/helpers.js, whose
+      helper code Babel writes into p5.js, and lib/index.js; the package's
+      package.json; the repository's build files, Makefile, Gulpfile.js,
+      scripts/gulp-tasks.js, babel.config.js, package.json, yarn.lock and
+      lerna.json; scripts/clone-license.sh, which copies the repository's
+      LICENSE into each package; and LICENSE.
+      SHA-256 dbd201ef47c0992541b1a19cf6840ab7842a73f3f9e4da44ba5e4a8745078147
+  upstream/es6-promise-4.2.8-source.tar.gz
+      github.com/stefanpenner/es6-promise, commit
+      1e68dce6f674e5613f4a1797aedd55dc70ac1dcb (tag v4.2.8). The package
+      holds lib/, which Brocfile.js compiles with Babel 6 and Rollup into
+      dist/es6-promise.js, the file p5.js compiles in with auto.js, but
+      not the build configuration. The archive repeats lib/ next to it:
+      Brocfile.js, which package.json's build script runs through
+      ember-cli; config/versionTemplate.txt, the comment Brocfile.js puts
+      at the top of that file; test/, which Brocfile.js also reads and
+      bundles into the build's test output, which the package does not
+      publish; and package.json, yarn.lock and LICENSE.
+      SHA-256 bc4b1d01dbaa59ea47cb64cfe5bef2c90c43c599f5f703d8d52be619a7b0920f
+  upstream/fetch-jsonp-1.1.3-source.tar.gz
+      github.com/camsong/fetch-jsonp, commit
+      0dfd008b28fe230f3543a075aeabb7b4da408a95, which npm records for
+      1.1.3; the repository has no tag for it. src/fetch-jsonp.js, which
+      package.json's build script compiles with Babel 5 into
+      build/fetch-jsonp.js, the file p5.js compiles in; and package.json.
+      The repository has no license file at this commit.
+      SHA-256 54da540cabb87f561439dc1ae73c273b69ba7b9339203f3d6a6550e54f0cfc20
+  upstream/libtess-1.2.2-source.tar.gz
       github.com/brendankenny/libtess.js, commit
-      f88246ee473984be763dc09de492755e6c55b71f
-  umd 3.0.3: template.js and source.js, from which its build makes
-      index.js. github.com/ForbesLindesay/umd, commit
-      9aa85b63ef4e6809dc9f0f9993a574919ef20e7a
-  es6-promise 4.2.8: Brocfile.js and config/versionTemplate.txt, the build
-      configuration that makes dist/es6-promise.js from lib/, which the
-      package holds. github.com/stefanpenner/es6-promise, commit
-      1e68dce6f674e5613f4a1797aedd55dc70ac1dcb
-  @babel/helpers 7.7.4: packages/babel-helpers/src/helpers.js, which
-      Babel's build compiles into lib/helpers.js. The code of the helpers
-      p5.js uses is the same text in both. github.com/babel/babel, commit
-      75767d87cb147709b9bd9b99bf44daa6688874a9
+      f88246ee473984be763dc09de492755e6c55b71f (tag 1.2.2). src/ and
+      build/closure_exports.js, which gulpfile.js's build-min task
+      compiles with the Closure Compiler into libtess.min.js, the file
+      p5.js compiles in; build/node_export.js, which its build-cat task
+      adds to src/ to make the package's two unminified files,
+      libtess.cat.js and libtess.debug.js; and gulpfile.js, package.json
+      and LICENSE.
+      SHA-256 9680d924cebe99c5c67e5091f856f184eb80d92fcd1243ce829628ae9fd58164
+  upstream/umd-3.0.3-source.tar.gz
+      github.com/ForbesLindesay/umd, commit
+      01e5f297ed6792acb1f2beb4bb54dee517ac92a3 (tag 3.0.3), the release
+      commit, whose package.json is the one published. template.js and
+      source.js, from which package.json's build script makes index.js,
+      whose wrapper p5.js's build uses: uglify-js minifies template.js,
+      and brfs inlines it into source.js. Also package.json and LICENSE.
+      npm records the release commit's parent,
+      9aa85b63ef4e6809dc9f0f9993a574919ef20e7a, for 3.0.3. The two
+      commits differ only in package.json, which gives version 3.0.2 at
+      the parent; the archive's other files are identical at both.
+      SHA-256 444ff37b8812f8202197c4c55ed666a4ade8bfdf5a57df4a6176551d67df0b72
+
+On 2026-11-11, with Node.js 22.12.0 and npm 10.9.0, the build step that
+makes the file p5.js uses was run on four of these archives, with the
+build tools below from the npm registry, installed with --ignore-scripts:
+the versions the archive's lockfile pins, or, where it has none, the
+newest versions its package.json allowed on the commit's date. Each
+produced a file identical byte for byte to the published one:
+
+  @babel/helpers  lib/helpers.js and lib/index.js, from src/helpers.js
+                  and src/index.js, with @babel/core 7.7.2 and the preset
+                  and plugins babel.config.js names, and with every
+                  package yarn.lock resolves to a single version held to
+                  that version. Babel ran with BABEL_ENV=production, from
+                  the repository root, so that babel.config.js applies,
+                  and was called as Gulpfile.js's gulp-babel 8 calls it:
+                  transformAsync with filename set to the file's full
+                  path, filenameRelative and sourceFileName to its path
+                  from the root, sourceMap false and caller
+                  {name: "babel-gulp"}. Its code output is the file.
+  fetch-jsonp     build/fetch-jsonp.js, with babel and babel-core 5.8.38
+  libtess         libtess.min.js, with google-closure-compiler
+                  20151216.0.0's compiler.jar under Java 17, run directly,
+                  not through gulp. Its input is src/, in the order
+                  libtess.debug.js shows, then build/closure_exports.js,
+                  with build-min's replacement of every .dst() by
+                  .sym.org, passed as the gulp plugin passes it (a JSON
+                  list of files, --json_streams BOTH). Its options are the
+                  ones build-min gives it.
+  umd             index.js, with uglify-js 3.3.15 and brfs 1.5.0
+
+es6-promise's build was not run. The published dist/es6-promise.js gives
+its version as v4.2.8+1e68dce6: the release tag and the first eight
+characters of the commit it was built from. Its source map,
+dist/es6-promise.map, holds the Babel output of each of the twelve files
+in lib/ it is built from. Each matches the file at this commit in its
+comments, apart from their whitespace, and in its strings, apart from one
+Babel adds: the message of the class check it writes where a file defines
+a class.
 
 opentype.js's package holds its src/, rollup.config.js and
 package-lock.json; built from them on 2026-11-11, its dist/opentype.js,
