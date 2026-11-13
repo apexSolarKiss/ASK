@@ -86,9 +86,9 @@ canonical browser-icon set from design-system-ASK
                                  pinned byte-identical copy and not modified
                                  here. Presentation only; the CFW conclusions
                                  page consumes its surface axes, emphasis rail
-                                 and label, the asymptotic system key page and
-                                 its lineage page its disclosure, for six
-                                 sections each, and the
+                                 and label, the asymptotic system key page its
+                                 disclosure, for seven sections, and its
+                                 lineage page, for six, and the
                                  CFW mind map its controlled disclosure
                                  trigger, for the inspector's collapse control
                                  and the About and Legend triggers used where
@@ -254,9 +254,8 @@ says where a package publishes no license text or no copyright line.
                                  resize-image-data, MIT License; and a
                                  credit to Tone.js, MIT License, Yotam Mann
 
-The design portfolio images, documents and videos in assets/images/design/,
-assets/docs/design/ and assets/video/design/, and the project texts on the
-design portfolio's project pages under apex-solar-kiss/design/, document
+The design portfolio images in assets/images/design/, and the project texts
+on the design portfolio's project pages under apex-solar-kiss/design/, document
 design work, including work made for clients and collaborators, and are
 published here for display. Their terms follow the material, not the file:
 one image can hold open interface work and a reserved logo, and each thumb/
@@ -289,9 +288,9 @@ assets/images/design/rqwst/. The Voltaire pitch deck in voltaire/06.jpg and
 voltaire/06-full.jpg also carries presentation copy and figures, which keep
 their existing rights.
 
-All other material in assets/images/design/, assets/docs/design/ and
-assets/video/design/, and the project texts, are not licensed under the
-Apache License, Version 2.0; all rights remain with their respective owners.
+All other material in assets/images/design/, and the project texts, are not
+licensed under the Apache License, Version 2.0; all rights remain with their
+respective owners.
 This includes the identity work for other projects, the other branding,
 identity and graphic design work, and client and collaborator content such as
 presentation copy, figures, photography, illustration, video, documents and
@@ -304,6 +303,21 @@ third-party material shown in this work.
 The glyphsASK artwork images in assets/asymptotic/glyphsask/ are original
 artworks by Andrew S Klug // ASK (2024), published here for display. They are
 not licensed under the Apache License, Version 2.0; all rights reserved.
+
+The sociedade mecânica de futebol images, document and videos in
+assets/images/sociedade/, assets/docs/sociedade/ and assets/video/sociedade/,
+and the project texts on apex-solar-kiss/sociedade/, document a collaborative
+2022 project, including work by its contributors and third-party material, and
+are published here for display. They are not licensed under the Apache
+License, Version 2.0; all rights remain with their respective owners.
+
+The sociedadeMecanicaASK images in assets/asymptotic/sociedade-mecanica-ask/
+are artworks by Andrew S Klug // ASK (2022), made with the sociedade mecânica
+de futebol project's generative avatar system from avatar component
+illustrations by P R Soliver commissioned for the project, and published here
+for display. They are not
+licensed under the Apache License, Version 2.0, and this repository grants no
+license to them; rights remain with their respective holders.
 
 The production portfolio images in assets/images/askproduktion/ document
 productions ASKproduKtion worked on, including work made for clients and

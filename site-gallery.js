@@ -2,7 +2,8 @@
    ASK — gallery dialog (ASK-local, not vendored)
 
    The one gallery dialog for this site's image galleries: ASKproduKtion's
-   production portfolio and the apex solar kiss design portfolio. It was
+   production portfolio, the apex solar kiss design portfolio and the
+   sociedade mecânica de futebol page. It was
    inline on the ASKproduKtion page until the design portfolio became its
    second use; the behavior is unchanged for that page.
 
