@@ -40,6 +40,7 @@ supporting systems               method-ASK / control-surface / design-system-AS
 method + grounding               plus production-portfolio link
 other active work                urban-observatory
 research artifacts               CFW
+earlier work                     sociedade mecânica de futebol
 existing closing destinations
 ```
 

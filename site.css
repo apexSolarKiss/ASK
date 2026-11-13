@@ -239,7 +239,7 @@ html:has(> body > .shell) { overflow-x: clip; }
    treatment. The vendored module gives panel-level interaction only to
    `a.surface-panel`, which this is not, so no hover or transition arrives with
    it. The gallery card `.gal-card-trigger` is genuinely actionable and owns its
-   own transition. Every `.ext-card` — the asymptotic page's six and
+   own transition. Every `.ext-card` — the asymptotic page's seven and
    studioLeoV's ten — is an `a.surface-panel` and takes the module's
    interaction.
 
@@ -505,7 +505,8 @@ html:has(> body > .shell) { overflow-x: clip; }
 
 /* ---------- Design portfolio (apex solar kiss // design) ----------
    The design portfolio reuses the production portfolio's cards and gallery
-   dialog (site-gallery.js). What follows is only what that second use adds:
+   dialog (site-gallery.js), as does the sociedade mecânica de futebol page,
+   which sits outside the portfolio. What follows is only what that second use adds:
    project cards that are links to a project page rather than gallery
    triggers, artifact thumbnails shown whole, captions, lead and full-page
    images, videos, and the dialog's full-size link. The work keeps its own
@@ -591,22 +592,30 @@ a.gal-card-trigger:hover { opacity: 1; }
 }
 .p5-frame figcaption { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-3); }
 
-/* ---------- Asymptotic: glyphsASK panel ---------- */
+/* ---------- Asymptotic: glyphsASK + sociedadeMecanicaASK panels ---------- */
 /* Complete square compositions, never cropped or corner-masked: two columns where the payload
    holds them, one column on narrow screens. Each image links to its larger view. */
-#glyphsASK .gal-title { margin: var(--space-5) 0 var(--space-3); }
+#glyphsASK .gal-title,
+#sociedadeMecanicaASK .gal-title { margin: var(--space-5) 0 var(--space-3); }
+/* A sociedadeMecanicaASK heading leads straight into its own grid, so the grid takes no top margin. */
+#sociedadeMecanicaASK .gal-title + .glyph-works { margin-top: 0; }
 .glyph-works { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); margin-top: var(--space-6); }
 .glyph-frame { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); }
 .glyph-frame a { display: block; }
 .glyph-frame img { display: block; width: 100%; height: auto; border: 1px solid var(--line-1); }
 .glyph-frame figcaption { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-3); }
 @media (max-width: 640px) { .glyph-works { grid-template-columns: 1fr; } }
+/* sociedadeMecanicaASK's avatars read at a smaller size than a glyph grid: three columns, two on
+   narrow screens. */
+.glyph-works--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 640px) { .glyph-works--three { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 /* #glyphsask (lowercase) stays as an alias at the panel's top edge, because published links use it. */
 #glyphsASK { position: relative; }
 #glyphsASK > .anchor-alias { position: absolute; top: 0; left: 0; }
-/* The desktop shell pins the mark + fade band at the top; land either anchor below it. */
+/* The desktop shell pins the mark + fade band at the top; land each anchor below it. */
 :root[data-surface-nav-mode="desktop"] #glyphsASK,
-:root[data-surface-nav-mode="desktop"] #glyphsask { scroll-margin-top: calc(var(--surface-nav-top-depth) + var(--surface-nav-gap)); }
+:root[data-surface-nav-mode="desktop"] #glyphsask,
+:root[data-surface-nav-mode="desktop"] #sociedadeMecanicaASK { scroll-margin-top: calc(var(--surface-nav-top-depth) + var(--surface-nav-gap)); }
 
 /* ---------- Asymptotic: Like Art action ----------
    Like Art's disclosure is the section's one enclosure. The Facebook link
