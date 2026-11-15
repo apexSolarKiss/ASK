@@ -509,7 +509,8 @@ html:has(> body > .shell) { overflow-x: clip; }
    which sits outside the portfolio. What follows is only what that second use adds:
    project cards that are links to a project page rather than gallery
    triggers, artifact thumbnails shown whole, captions, lead and full-page
-   images, videos, and the dialog's full-size link. The work keeps its own
+   images, videos, the dialog's full-size link, and the landing of a card that
+   a link elsewhere targets. The work keeps its own
    appearance inside these frames; nothing here restyles it. No new token and
    no new color: existing tokens only, and the full-size link repeats the
    white of the dialog's other controls. */
@@ -537,6 +538,9 @@ a.gal-card-trigger:hover { opacity: 1; }
 .gal-cards--whole .gal-cover { object-fit: contain; }
 /* Same control-foreground restoration as .gal-card-trigger above. */
 .gal-thumb { color: inherit; }
+/* A card that a link elsewhere targets lands below the desktop shell's pinned
+   mark + fade band, as the asymptotic system key panels do. */
+:root[data-surface-nav-mode="desktop"] #composite-shapes { scroll-margin-top: calc(var(--surface-nav-top-depth) + var(--surface-nav-gap)); }
 
 /* A video stays a video, never a still. */
 .gal-media { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: var(--space-5); }
