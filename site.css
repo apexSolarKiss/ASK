@@ -592,13 +592,15 @@ a.gal-card-trigger:hover { opacity: 1; }
 }
 .p5-frame figcaption { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-3); }
 
-/* ---------- Asymptotic: glyphsASK + sociedadeMecanicaASK panels ---------- */
+/* ---------- Asymptotic: glyphsASK + sociedadeMecanicaASK + shapesASK panels ---------- */
 /* Complete square compositions, never cropped or corner-masked: two columns where the payload
    holds them, one column on narrow screens. Each image links to its larger view. */
 #glyphsASK .gal-title,
-#sociedadeMecanicaASK .gal-title { margin: var(--space-5) 0 var(--space-3); }
-/* A sociedadeMecanicaASK heading leads straight into its own grid, so the grid takes no top margin. */
-#sociedadeMecanicaASK .gal-title + .glyph-works { margin-top: 0; }
+#sociedadeMecanicaASK .gal-title,
+#shapesASK .gal-title { margin: var(--space-5) 0 var(--space-3); }
+/* A sociedadeMecanicaASK or shapesASK heading leads straight into its own grid, so the grid takes no top margin. */
+#sociedadeMecanicaASK .gal-title + .glyph-works,
+#shapesASK .gal-title + .glyph-works { margin-top: 0; }
 .glyph-works { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); margin-top: var(--space-6); }
 .glyph-frame { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); }
 .glyph-frame a { display: block; }
@@ -609,13 +611,17 @@ a.gal-card-trigger:hover { opacity: 1; }
    narrow screens. */
 .glyph-works--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 640px) { .glyph-works--three { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* shapesASK's 32-image run reads in four columns, two on narrow screens. */
+.glyph-works--four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 640px) { .glyph-works--four { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 /* #glyphsask (lowercase) stays as an alias at the panel's top edge, because published links use it. */
 #glyphsASK { position: relative; }
 #glyphsASK > .anchor-alias { position: absolute; top: 0; left: 0; }
 /* The desktop shell pins the mark + fade band at the top; land each anchor below it. */
 :root[data-surface-nav-mode="desktop"] #glyphsASK,
 :root[data-surface-nav-mode="desktop"] #glyphsask,
-:root[data-surface-nav-mode="desktop"] #sociedadeMecanicaASK { scroll-margin-top: calc(var(--surface-nav-top-depth) + var(--surface-nav-gap)); }
+:root[data-surface-nav-mode="desktop"] #sociedadeMecanicaASK,
+:root[data-surface-nav-mode="desktop"] #shapesASK { scroll-margin-top: calc(var(--surface-nav-top-depth) + var(--surface-nav-gap)); }
 
 /* ---------- Asymptotic: Like Art action ----------
    Like Art's disclosure is the section's one enclosure. The Facebook link
