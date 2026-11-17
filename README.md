@@ -112,9 +112,12 @@ layer, `cfw-map.css`, composes only the application bar: the ASK mark, the title
 block and the release stamp, and on a short landscape touch screen one row of
 controls, so the drawing keeps the height. Where the bar's controls do not all
 fit, in portrait as on a short landscape screen, their row scrolls sideways. The
-pattern takes one grammar from the treatments rule, the **controlled disclosure
-trigger**: a native button whose `aria-expanded` and `aria-controls` state the
-region it opens. The inspector's collapse control is one. On a canvas too small
+pattern takes two grammars from the treatments rule. One is its **fill paint**,
+which the pattern applies to every mark that asserts a governed state; a mark
+that asserts none keeps the pattern's own neutral wash. The other is the
+**controlled disclosure trigger**: a native button whose `aria-expanded` and
+`aria-controls` state the region it opens. The inspector's collapse control is
+one. On a canvas too small
 to keep the map's caption and legend open beside the HUD, those two panels close
 behind two more, About and Legend, beside or above the HUD, and open one at a
 time above the bottom controls; where a panel would have no readable room, its
@@ -175,7 +178,7 @@ surface-shell.js      vendored from design-system-ASK — the shell's optional N
 surface-text-link.css vendored from design-system-ASK — the unboxed-textual-link VISUAL RULE, pinned + byte-identical; opt-in by class; the homepage does not consume it
 surface-action.css    vendored from design-system-ASK — the compact-action VISUAL RULE, pinned + byte-identical; every page's compact controls consume it (the owner owns the base surface, foreground, border, geometry and interaction; ASK keeps the element semantics, destination, copy, row and placement); the gallery cards and thumbnails, video facades, p5 launch cards and gallery dialog controls take only its attention edge, by class
 surface-document.css  vendored from design-system-ASK — the document-register VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes the full register, while the apex solar kiss, asymptotic system key and studioLeoV pages consume its document-body and authored-inline-emphasis treatment in their opening paragraphs; the apex solar kiss, design, design portfolio project, ASKproduKtion and studioLeoV pages set their section headings in its section-title role, the bonAmi.ai portfolio page sets its feature headings in its subsection-title role, and the asymptotic system key page sets the Like Art founding statement, and the cryptoEATS portfolio page its tagline, as a quotation
-surface-treatments.css  vendored from design-system-ASK — the surface-treatments VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes its disclosure (thirteen blocks, six of them the held-question rulings), surface axes, emphasis rail and label, the asymptotic system key page its disclosure, for eight sections, and its lineage page, for six, and the CFW map its controlled disclosure trigger, for the inspector's collapse control and the About and Legend triggers used where the canvas cannot hold its caption and legend open
+surface-treatments.css  vendored from design-system-ASK — the surface-treatments VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes its disclosure (thirteen blocks, six of them the held-question rulings), surface axes, emphasis rail and label, the asymptotic system key page its disclosure, for eight sections, and its lineage page, for six, and the CFW map its fill paint, for the marks that assert a governed state, and its controlled disclosure trigger, for the inspector's collapse control and the About and Legend triggers used where the canvas cannot hold its caption and legend open
 surface-document-overflow.js  vendored from design-system-ASK — the document register's optional overflow-cue helper, pinned + byte-identical; the CFW conclusions page loads it
 colors_and_type.css   vendored from design-system-ASK (canonical tokens)
 fonts/                vendored Inter + JetBrains Mono (OFL)
