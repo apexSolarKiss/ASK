@@ -22,7 +22,7 @@
   if (!A || !Array.isArray(A.objects)) throw new Error('cfw-map: the published payload (atlas-data.public.js) is not loaded');
 
   /* the plate's stamp: the application bar's release stamp, as the page shows it (uppercase there) */
-  var STAMP = 'RELEASE 1.5 STRUCTURED SURVEY // FAMILY GENERATION V23';
+  var STAMP = 'RELEASE 1.6 STRUCTURED SURVEY // FAMILY GENERATION V26';
 
   /* ------------------------------------------------------------ the tables -- */
   var REGION_LABEL = {
