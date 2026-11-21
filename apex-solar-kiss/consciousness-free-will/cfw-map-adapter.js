@@ -12,9 +12,12 @@
    facets and inspector fields; what it changes is this page's identity: the plate carries the
    release stamp, the fonts come from the site's own /fonts, and nothing here names a captured copy.
    It transforms the payload deterministically and rewrites nothing in it: every identifier, label,
-   relation and field reaches the reader as published, except that a reference row shows the first
-   120 (evidence) or 90 (evidence for) characters of a label; the full label is the referenced
-   object's view. */
+   relation and field reaches the reader as published, with three stated exceptions. A reference row
+   shows the first 120 (an object's linked source records) or 90 (a source record's linked map
+   objects) characters of a label; the full label is the referenced object's view. Each of those two
+   lists names an entry once and says how many recorded references join the pair, where the payload
+   holds more than one. And an explicit NONE in a source record's "bears on" or "relation IDs" field
+   reads as words. The payload keeps every row and every value. */
 (function (root) {
   'use strict';
 
@@ -183,7 +186,8 @@
     if (byId.has(e.from) && byId.has(e.to)) edges.push({ from: e.from, to: e.to, plane: 'unedged', type: 'declared non-linkage', note: e.reason || '' });
   });
 
-  /* the order the CFW map lists "evidence for" in: each primary object by its first evidence link */
+  /* the order a source record lists its linked map objects in: each primary object by its first
+     recorded reference to any source */
   var firstEvidence = new Map();
   (A.recorded || []).forEach(function (e, i) {
     var a = byId.get(e.from), b = byId.get(e.to);
@@ -237,7 +241,8 @@
     back: '\u2190 back to {label}',
     backMax: 52,
     header: function (t) {
-      if (t.type === 'record') return { title: String(t.node.data.work || t.node.label), kind: 'CFW-S \u2014 evidence owner \u00B7 inspector plane' };
+      /* a source record says, before anything else, that it is one and that the map does not plot it */
+      if (t.type === 'record') return { title: String(t.node.data.work || t.node.label), kind: 'CFW-S // source record // not plotted on this map' };
       if (t.type === 'item') return { title: t.node.label };
       var g = groups.get(t.id);
       return { title: t.node.label, kind: t.type === 'root' ? 'root' : g.kind };
@@ -253,7 +258,7 @@
         ] }];
       }
       var o = t.node.data, sd = stateOf(t.node.state);
-      var ev = ctx.links(t.id).filter(function (l) { return l.other && l.other.kind === RECORD_CLASS; });
+      var ev = sourcesOf(t.id, ctx);
       var out = [{ type: 'state' }];
       if (o.ask_ruled || o.not_ask_ruled || o.authority_note) out.push({ type: 'fields', title: 'authority', fields: [
         { label: 'ASK ruled', value: o.ask_ruled, format: 'structured', tone: 'earned' },
@@ -277,29 +282,80 @@
                  tags: { registered: 'registered', recorded: 'recorded', unedged: 'unedged' },
                  never: 'declared non-linkage \u2014 deliberately not drawn',
                  outside: 'outside this section \u2014 the relation is unchanged' });
-      out.push({ type: 'references', title: 'evidence owners \u2014 {count}', head: 8, more: 'show all {count} evidence owners',
-                 items: ev.map(function (l) {
-                   var s = l.other.data || {};
-                   return { id: l.other.id, text: cap(l.other.label, 120), detail: s.fidelity ? 'fidelity ' + s.fidelity : undefined };
+      /* "linked", as on the source's side: a recorded reference may be this object's evidence, or only
+         a source that bears on a held question, and under a ruling the heading must not call it support */
+      out.push({ type: 'references', title: 'linked source records // {count}', head: 8, more: 'show all {count} linked source records',
+                 items: ev.map(function (e) {
+                   var s = e.other.data || {};
+                   var detail = [s.fidelity ? 'fidelity ' + s.fidelity : null, several(e.rows)].filter(Boolean).join('; ');
+                   return { id: e.other.id, text: cap(e.other.label, 120), detail: detail || undefined };
                  }) });
       return out;
     },
     announce: function (t, ctx) {
-      if (t.type === 'record') return 'Evidence owner ' + t.id + ', ' + cap(t.node.data.work || t.node.label, 80);
+      if (t.type === 'record') {
+        /* the title comes last, so a title cut at 80 characters ends the announcement */
+        var linked = linkedObjects(t.id, ctx).length;
+        return 'Source record ' + t.id + ', not plotted on this map, ' +
+               (linked ? linked + ' linked map object' + (linked === 1 ? '' : 's') : 'no recorded links to map objects') +
+               ', ' + cap(t.node.data.work || t.node.label, 80);
+      }
       if (t.type !== 'item') return (t.type === 'root' ? 'root' : groups.get(t.id).kind) + ' ' + t.node.label + ', ' + t.count + ' objects';
-      var ev = ctx.links(t.id).filter(function (l) { return l.other && l.other.kind === RECORD_CLASS; }).length;
-      return t.node.data['class'] + ' ' + t.id + ', ' + cap(t.node.label, 90) + (ev ? ', ' + ev + ' evidence owners' : '');
+      var ev = sourcesOf(t.id, ctx).length;
+      return t.node.data['class'] + ' ' + t.id + ', ' + cap(t.node.label, 90) + (ev ? ', ' + ev + ' linked source record' + (ev === 1 ? '' : 's') : '');
     }
   };
+  /* EACH PAIR ONCE. The payload may hold more than one recorded reference between one object and one
+     source, each a row of its own there. A list names the other end once, in the order of its first
+     reference, and carries the number of references so none is hidden; the count the reader sees and
+     the count the reader hears are both the number of distinct entries. Only the recorded plane is
+     read: a registered relation or a declared non-linkage is never listed as a recorded link. */
+  function paired(id, ctx, record) {
+    var seen = new Map(), out = [];
+    ctx.links(id).forEach(function (l) {
+      if (!l.other || !l.edge || l.edge.plane !== 'recorded' || (l.other.kind === RECORD_CLASS) !== record) return;
+      var e = seen.get(l.other.id);
+      if (e) { e.rows++; return; }
+      e = { other: l.other, rows: 1 };
+      seen.set(l.other.id, e); out.push(e);
+    });
+    return out;
+  }
+  function several(rows) { return rows > 1 ? rows + ' recorded references' : null; }
+  /* the source records linked to a map object */
+  function sourcesOf(id, ctx) { return paired(id, ctx, true); }
+  /* the map objects linked to a source record, in the order the map has always listed them */
+  function linkedObjects(id, ctx) {
+    return paired(id, ctx, false).sort(function (a, b) { return firstEvidence.get(a.other.id) - firstEvidence.get(b.other.id); });
+  }
+  /* AN EXPLICIT NONE. Where a source record's field holds exactly NONE, the record states that it
+     lists nothing there. It reads as words and keeps that meaning. A field the record does not carry
+     is a different fact and stays different: it has no value, so its row is not shown. */
+  function stated(v) { return typeof v === 'string' && v.trim() === 'NONE' ? 'none listed (stated in the record)' : v; }
+
   function recordSections(t, ctx) {
     var o = t.node.data;
-    var back = [];
-    ctx.links(t.id).forEach(function (l) {
-      if (l.other && l.other.kind !== RECORD_CLASS && back.indexOf(l.other.id) < 0) back.push(l.other.id);
-    });
-    back.sort(function (a, b) { return firstEvidence.get(a) - firstEvidence.get(b); });
-    var out = [
-      { type: 'fields', fields: [
+    var back = linkedObjects(t.id, ctx);
+    var out = [];
+    /* FIRST, WHAT THE PUBLISHED ATLAS LINKS THIS SOURCE TO. A source is not plotted, so its record
+       opens with no selection of its own; the panel says at once which map objects are joined to it
+       by a recorded reference, or that the atlas records none. "Linked" is deliberately neutral. A
+       recorded reference may be a node's or a claim's evidence, or only a held question the source
+       bears on, and this list promotes none of them into support for a ruling or a conclusion. A
+       source with no recorded link is not thereby shown to bear on nothing: the sentence states
+       what the published atlas records, and no more. */
+    if (back.length) {
+      out.push({ type: 'references', title: 'linked map objects // {count}', head: 8, more: 'show all {count} linked map objects',
+                 items: back.map(function (e) { return { id: e.other.id, text: cap(e.other.label, 90), detail: several(e.rows) || undefined }; }) });
+      out.push({ type: 'note', text: 'Recorded links in the published atlas. Choosing a link selects that object on the map.' });
+    } else {
+      out.push({ type: 'fields', title: 'linked map objects // 0', fields: [
+        { label: 'recorded links', value: 'The published atlas records no map-object links for this source.' }
+      ] });
+    }
+    out.push(
+      /* titled, so the record's own fields do not read as part of the links above them */
+      { type: 'fields', title: 'source', fields: [
         { label: 'identifier', value: o.id, mono: true },
         { label: 'source type', value: o.source_type },
         { label: 'author', value: o.author },
@@ -317,11 +373,11 @@
         { label: 'read scope', value: o.read_scope },
         { label: 'strongest', value: o.strongest }
       ] }
-    ];
+    );
     if (o.canonical_destination || o.bears_on || o.relation_ids) out.push({ type: 'fields', title: 'governed placement', fields: [
       { label: 'canonical destination', value: o.canonical_destination },
-      { label: 'bears on', value: o.bears_on, mono: true },
-      { label: 'relation IDs', value: o.relation_ids, mono: true },
+      { label: 'bears on', value: stated(o.bears_on), mono: true },
+      { label: 'relation IDs', value: stated(o.relation_ids), mono: true },
       { label: 'canonical row', value: o.canonical_row_id, mono: true }
     ] });
     out.push({ type: 'fields', title: 'carrier', fields: [
@@ -330,10 +386,8 @@
       { label: 'citation', labelLinked: 'source link', value: o.locator, format: 'locator' },
       { label: 'fields present', value: o.fields_present, format: 'list' }
     ] });
-    out.push({ type: 'references', title: 'evidence for \u2014 {count}',
-               items: back.map(function (k) { return { id: k, text: cap(byId.get(k).label, 90) }; }) });
-    out.push({ type: 'note', text: 'This evidence owner sits in the inspector plane by the atlas\u2019s declared plane assignment. ' +
-                                   'It is searchable and resolvable by exact identifier, and it is never promoted into the graph.' });
+    out.push({ type: 'note', text: 'This source record is an evidence owner. It sits in the inspector plane by the atlas\u2019s declared plane assignment: ' +
+                                   'it is searchable and resolvable by exact identifier, and it is never promoted into the graph.' });
     return out;
   }
 
@@ -342,7 +396,9 @@
     name: 'atlas',
     title: 'atlas',
     close: 'close atlas controls',
-    note: 'A filter bounds the map to a section and always reports its census. It is not level of detail, and it never changes a governed relation.',
+    note: 'A search result tagged object is selected and shown on the map. A result tagged source is a source record: it is not plotted, ' +
+          'and it opens its details in the inspector. A filter bounds the map to a section and always reports its census. ' +
+          'It is not level of detail, and it never changes a governed relation.',
     reset: 'reset to complete map',
     families: { items: 'projection', relations: 'relation view' },
     declared: [
@@ -383,7 +439,8 @@
                    reason: 'NOT STRUCTURED on primary objects \u2014 ' + axes + ' of ' + primary.length + ' carry it. ' +
                            'It is a CFW-S ledger field; it is shown in the evidence-owner inspector instead.' }],
     search: {
-      label: 'search \u2014 name or exact identifier',
+      /* the visible label is also the result list's accessible name, so it is one plain sentence */
+      label: 'search the map and its source records by name or identifier',
       placeholder: 'recourse \u00B7 CFW-Q-001 \u00B7 CFW-S-479',
       prefix: /^cfw-/i,
       text: function (e) {
@@ -395,7 +452,8 @@
         return [o.id, o.label, o.section, o.node_type, o.field_domain, o.author, o.work, o.question, o.region, o.evidence_class]
           .filter(Boolean).join(' ');
       },
-      tag: function (e) { return e.type === 'record' ? 'CFW-S' : e.type === 'container' ? groups.get(e.key).kind : 'object'; },
+      /* the tag says what a result is: an object the map draws, a source record it does not, or a section by its kind */
+      tag: function (e) { return e.type === 'record' ? 'source' : e.type === 'container' ? groups.get(e.key).kind : 'object'; },
       sub: function (e) { return e.type === 'container' ? e.count + ' objects' : e.key; },
       limit: 40,
       labelMax: 88
