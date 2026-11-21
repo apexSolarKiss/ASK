@@ -3,9 +3,11 @@
  * It renders the conclusions FROM THE PUBLISHED PAYLOAD, so the six rulings
  * cannot drift from the data they describe: the rulings, ASK's conclusion and
  * prospective axis, the counts, and the search over every object. A search
- * result opens its object on the map, which is a separate route drawn by the
+ * result opens on the map, which is a separate route drawn by the
  * design-system interactive radial pattern (map/, cfw-map.js); this file no
- * longer loads there and reaches nothing in it.
+ * longer loads there and reaches nothing in it. A result says which of two
+ * things it is: a map object, which the map selects and shows, or a source
+ * record, which is not plotted and opens its details in the map's inspector.
  */
 (function () {
   "use strict";
@@ -679,7 +681,7 @@
   }, 0);
   var COUNTS = [
     [primary, "primary objects on the map"],
-    [byClass["CFW-S"] || 0, "evidence owners, opened by exact identifier"],
+    [byClass["CFW-S"] || 0, "evidence owners: source records, never plotted, opened by name or identifier"],
     [D.registered.length, "registered relations — the only relation encoding drawn"],
     [D.recorded.length, "recorded references between objects and evidence"],
     [D.unedged.length, "explicit non-linkages: recorded as NOT a relation"],
@@ -698,13 +700,20 @@
   var INDEX = D.objects.map(function (o) {
     return { o: o, hay: ((o.id || "") + " " + (o.label || "") + " " + (o.work || "") + " " + (o.author || "")).toLowerCase() };
   });
+  /* a label as one spoken clause: cut on a word and marked as cut, or closed once */
+  function spoken(s, k) {
+    s = String(s || "").trim();
+    if (!s) return "";
+    if (s.length > k) return s.slice(0, k).replace(/\s+\S*$/, "").replace(/[\s,;:.\u2013\u2014-]+$/, "") + "\u2026";
+    return /[.?!\u2026]$/.test(s) ? s : s + ".";
+  }
   function search() {
     var q = oq.value.trim().toLowerCase();
     ores.textContent = "";
     if (q.length < 2) return;
     var hits = INDEX.filter(function (r) { return r.hay.indexOf(q) !== -1; }).slice(0, 25);
     if (!hits.length) {
-      ores.appendChild(text(el("p", "ores-none doc-body"), "No object or evidence owner matches that."));
+      ores.appendChild(text(el("p", "ores-none doc-body"), "No map object or source record matches that."));
       return;
     }
     hits.forEach(function (r) {
@@ -716,24 +725,37 @@
       d.setAttribute("data-open", r.o.id);
       var title = el("span", "ores-title doc-entry-title");
       text(title, r.o.label || r.o.work || r.o.id);
-      d.appendChild(text(el("span", "ores-id doc-meta"), r.o.id + "  ·  " + r.o.class));
+      /* WHAT THE RESULT IS, AND WHERE IT LEADS. The map draws the survey's objects;
+         a source record (class CFW-S, the map's evidence owner) is never drawn. So a
+         map object's result is selected and shown on the map, and a source record's
+         result opens its details there, with nothing selected. The line says which,
+         so neither is promised the other's outcome. The identifier stays first, and
+         the kind is joined to what it does by the structural separator. */
+      var source = r.o.class === "CFW-S";
+      d.appendChild(text(el("span", "ores-id doc-meta"), r.o.id + "  ·  " +
+        (source ? "source record // opens its details on the map page // not plotted"
+                : "map object // selects + shows it on the map")));
       d.appendChild(title);
       var meta = [r.o.author, r.o.evidence_class, r.o.access, r.o.fidelity]
         .filter(Boolean).join("  ·  ");
       if (meta) d.appendChild(text(el("span", "ores-meta doc-meta"), meta));
-      /* The record opens on the map, a separate route, so the label says so:
-         promising "the inspector" here would name a panel in the other document. */
-      d.setAttribute("aria-label", "open " + r.o.id + ", " +
-        String(r.o.label || r.o.work || "").slice(0, 90) + ", on the map");
+      /* The accessible name says the same two things as the visible line. The map
+         is a separate route, so it names the map page and never "the inspector",
+         a panel in the other document. */
+      var name = spoken(r.o.label || r.o.work, 90);
+      d.setAttribute("aria-label", (source ? "Source record " : "Map object ") + r.o.id + (name ? ", " + name : ".") +
+        (source ? " Opens its details on the map page; not plotted."
+                : " Opens the map page with it selected."));
       ores.appendChild(d);
     });
   }
   if (oq) oq.addEventListener("input", search);
 
-  /* Opening a record. The map is the other document, so activating a result
-     NAVIGATES to the map naming the record, and the map opens it on arrival
-     (cfw-map.js reads this link form). This is what keeps a result openable
-     rather than leaving a control that does nothing. */
+  /* Opening a result. The map is the other document, so activating a result
+     NAVIGATES to the map naming the object or record, and the map selects the
+     object or opens the record on arrival (cfw-map.js reads this link form).
+     This is what keeps a result openable rather than leaving a control that
+     does nothing. */
   if (ores) ores.addEventListener("click", function (ev) {
     var b = ev.target.closest ? ev.target.closest("button[data-open]") : null;
     if (!b) return;

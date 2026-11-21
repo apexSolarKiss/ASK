@@ -18,8 +18,17 @@
    from a changed address or from history. An empty, malformed or unknown address, an ordinary
    anchor, and every selection, hover, render or resize leave focus where it is.
 
+   A SOURCE RECORD OPENED ON ITS OWN CLEARS AN EARLIER SELECTION. A source record is not plotted, so
+   opening one selects nothing, and the pattern leaves an object that was already locked as it was:
+   its frame would stay on the map beside a record it has no stated relation to. So when a record
+   opens with no originating object (from the atlas search, a changed address or history) the
+   earlier selection is cleared and the record stays open. A record opened FROM a selected object,
+   by following that object's own reference, keeps the object selected and keeps the way back: the
+   pattern records the object as the record's origin, and the origin decides, never whether the two
+   happen to be linked.
+
    It reaches the pattern only through its documented surface: mount, the arrival form and event,
-   the reported state, and the export service. */
+   the inspector event, the reported state, the selection control, and the export service. */
 (function () {
   "use strict";
 
@@ -58,6 +67,16 @@
   var initial = map.report().arrival;                  /* made while the pattern mounted */
   if (initial) land(initial.id);
   map.on("arrival", function (ev) { land(ev.id); });
+
+  /* an independently opened record, with an earlier object still locked: clear the selection through
+     the pattern's own control; the record stays open. It never throws into the pattern's event. The
+     first arrival needs no pass: while the pattern mounts, nothing can be locked beside a record. */
+  map.on("inspector", function () {
+    try {
+      var s = map.state(), insp = s.inspector;
+      if (insp && insp.view === "record" && !insp.origin && s.selection && s.selection.locked) map.select(null);
+    } catch (e) { /* the record stays open and the selection stays as the pattern has it */ }
+  });
 
   window.addEventListener("hashchange", function () {
     var id = legacy(location.hash);

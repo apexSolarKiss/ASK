@@ -77,7 +77,10 @@
   <main class="radial-canvas" id="canvaswrap" tabindex="-1" data-radial-slot="canvas">
     <p class="radial-sr-only">The mind map is a visual projection. Every object it draws is
     reachable in text: use the atlas control to search all 1,054 objects by name or by
-    exact identifier, and the inspector reports the selected object in full.</p>
+    exact identifier, and the inspector reports the selected object in full. A search result
+    tagged object is a map object: choosing it selects it. A result tagged source is a source
+    record: it is not plotted, and choosing it opens its details in the inspector with nothing
+    selected.</p>
     <div class="radial-stage" id="radial-stage" data-radial-slot="stage"></div>
 
     <div class="radial-tick tl" aria-hidden="true"></div><div class="radial-tick tr" aria-hidden="true"></div>
@@ -108,8 +111,9 @@
       this surface.<br>
       <b>Level of detail is not filtering.</b> Zoom reveals concept names, then
       identifiers; all 548 primary objects stay on the map. A filter is explicit, bounds
-      the map to a section, and reports its census. The 506 evidence owners open from
-      <b>atlas</b> by exact identifier and never enter the graph.
+      the map to a section, and reports its census. The 506 evidence owners are source
+      records: they open in the inspector from <b>atlas</b>, by name or identifier, and
+      never enter the graph.
     </div>
 
     <div class="radial-sr-only" data-radial-slot="live" aria-live="polite"></div>
