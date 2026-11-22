@@ -669,7 +669,9 @@ a.gal-card-trigger:hover { opacity: 1; }
    collapsed/overlapped inside the flex panel) — uniform in both panel + studioLeoV */
 
 /* ---------- p5 launch cards (live preview) ----------
-   A click opens the category page, or the sketch fullscreen in a new tab. */
+   A click opens the category page, or the sketch fullscreen or a hosted
+   instrument in a new tab. An instrument with no sketch that previews it
+   shows its own sharing card instead, as a still image. */
 .p5-launch {
   display: block; position: relative; aspect-ratio: 4 / 3;
   border: 1px solid var(--line-1); border-radius: var(--radius-lg); overflow: hidden;
@@ -679,6 +681,7 @@ a.gal-card-trigger:hover { opacity: 1; }
 /* The hover border is the shared attention edge's, taken by class. */
 .p5-launch:hover { transform: translateY(-4px); }
 .p5-launch iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none; }
+.p5-launch img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .p5-hint {
   position: absolute; bottom: var(--space-3); right: var(--space-3);
   font-family: var(--font-mono); font-size: var(--fs-caption); color: #fff;
