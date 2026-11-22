@@ -1,12 +1,12 @@
 # ASK site // content architecture
 
-**Status:** target posture for the public source-of-truth flip (Notion → ASK site/repo), authorized by ASK 2026-06-27. This repo is the **intended public canonical** for the ASK public layer. Migration is phased + governed; the detailed migration inventory and sequencing memo is retained operator-side.
+**Status:** the public source-of-truth flip (Notion → ASK site/repo), authorized by ASK 2026-06-27, is complete. This repo is the **public canonical** for the ASK public layer. The content model below is still a proposal.
 
 ## Source of truth
 
-- A-S-K.studio / this repo is the intended public canonical for ASK public content.
-- Notion is a **named legacy / staging / exception surface** only — no page stays canonical on Notion by inertia.
-- Retained Notion exceptions are scoped to content, not whole sub-brands: ASKproduKtion retains the Timberland videos. The apex solar kiss **design portfolio** is native at `/apex-solar-kiss/design/`; its former Notion board is no longer linked from the site and is not a source of truth, and the UI/UX and logo/branding comp boards are retired from public wayfinding. The apex solar kiss **builder landing / object map** is native at `/apex-solar-kiss/`.
+- A-S-K.studio / this repo is the public canonical for ASK public content.
+- Notion is **retired** as a public source. Every former ASK public Notion surface has been migrated or retired; none is a source of truth, a staging surface or a maintained mirror, and no migration is pending.
+- The one remaining Notion dependency is ASKproduKtion's Timberland video page, which hosts those films and carries no other part of ASKproduKtion. Former Notion pages that are still reachable are historical and are not maintained. The apex solar kiss **design portfolio** is native at `/apex-solar-kiss/design/`, the **builder landing / object map** at `/apex-solar-kiss/`, and the UI/UX and logo/branding comp boards are retired.
 - Strategic/private brand context is maintained operator-side and is mirror-not-lead for this public canonical.
 
 ## Content model (proposed; finalized in Phase 2)
