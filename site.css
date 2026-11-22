@@ -670,8 +670,8 @@ a.gal-card-trigger:hover { opacity: 1; }
 
 /* ---------- p5 launch cards (live preview) ----------
    A click opens the category page, or the sketch fullscreen or a hosted
-   instrument in a new tab. An instrument with no sketch that previews it
-   shows its own sharing card instead, as a still image. */
+   instrument in a new tab. A hosted instrument's card shows the instrument's
+   own sharing card, from its origin, as a still image. */
 .p5-launch {
   display: block; position: relative; aspect-ratio: 4 / 3;
   border: 1px solid var(--line-1); border-radius: var(--radius-lg); overflow: hidden;

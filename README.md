@@ -157,7 +157,7 @@ theme selector is **not** vendored here.
 | Tier | Surface | Links to |
 | --- | --- | --- |
 | builder | **apex solar kiss** | AP-ASK at `https://asset-pipeline.a-s-k.studio/` (direct project destination) + native `/apex-solar-kiss/` (the object map) + GitHub `@apexSolarKiss` + native `/apex-solar-kiss/design/` (live design-system surfaces + the design portfolio) |
-| artistic practice | **asymptotic system key** | native `/asymptotic-system-key/` (Lightroom stills + YouTube motion as named external media) + the hosted instruments at `https://mazes.a-s-k.studio/` and `https://cubes.a-s-k.studio/` (the cubes card shows cubes-ASK's own sharing card, `og-image.jpg`, from that origin) |
+| artistic practice | **asymptotic system key** | native `/asymptotic-system-key/` (Lightroom stills + YouTube motion as named external media) + the hosted instruments at `https://mazes.a-s-k.studio/` and `https://cubes.a-s-k.studio/` (each card shows that instrument's own sharing card, `og-image.jpg`, from its origin) |
 | creative production | **ASKproduKtion** | native `/askproduktion/` (Timberland films = named external-video exception) |
 
 The homepage leads with systems for creative operations + commercial visual production. Its apex solar kiss card names information architecture + workflow systems and links directly to AP-ASK. The builder page presents AP first, then the supporting method, execution-protocol + visual-system layers, the underlying method, other active work, research and earlier work. The other two practices retain their own identities and portfolios; UO remains active and reachable.
