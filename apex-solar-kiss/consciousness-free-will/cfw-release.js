@@ -1,4 +1,4 @@
-/* cfw-release.js — ASK-local release behaviour for the conclusions page.
+/* cfw-release.js — ASK-local release behavior for the conclusions page.
  *
  * It renders the conclusions FROM THE PUBLISHED PAYLOAD, so the six rulings
  * cannot drift from the data they describe: the rulings, ASK's conclusion and
@@ -258,7 +258,7 @@
      prose copy in index.html — via textContent only, so nothing in the payload can
      inject markup.
 
-     THE VOCABULARY IS CLOSED AT RUNTIME. An unrecognised inline kind, block kind or
+     THE VOCABULARY IS CLOSED AT RUNTIME. An unrecognized inline kind, block kind or
      malformed section FAILS THAT SECTION COMPLETELY: the section is built into a
      detached fragment and attached only if all of it succeeds, otherwise one bounded
      error replaces it. Part of a section is not the section.
@@ -665,12 +665,12 @@
 
   renderStructuredSection("ask_conclusion", "askc", "askc-title",
     "The ASK conclusion could not be displayed: this page received it in a form it does " +
-    "not recognise, or did not receive it at all. Nothing partial is shown, because part " +
+    "not recognize, or did not receive it at all. Nothing partial is shown, because part " +
     "of a conclusion is not the conclusion. The research findings above are unaffected.");
 
   renderStructuredSection("ask_next_axis", "nextaxis", "nextaxis-title",
     "The ASK prospective axis could not be displayed: this page received it in a form it " +
-    "does not recognise, or did not receive it at all. Nothing partial is shown. The " +
+    "does not recognize, or did not receive it at all. Nothing partial is shown. The " +
     "research findings and the ASK conclusion above are unaffected.");
 
   /* ---- counts ---------------------------------------------------------- */
@@ -682,7 +682,7 @@
   var COUNTS = [
     [primary, "primary objects on the map"],
     [byClass["CFW-S"] || 0, "evidence owners: source records, never plotted, opened by name or identifier"],
-    [D.registered.length, "registered relations — the only relation encoding drawn"],
+    [D.registered.length, "registered relations: the only relation lines always drawn"],
     [D.recorded.length, "recorded references between objects and evidence"],
     [D.unedged.length, "explicit non-linkages: recorded as NOT a relation"],
     [questions.length, "held questions"]
