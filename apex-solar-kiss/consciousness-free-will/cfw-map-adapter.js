@@ -58,7 +58,7 @@
     'CFW-N': 'node \u2014 a survey position, argument, tradition or distinction',
     'CFW-C': 'consciousness claim', 'CFW-B': 'bridge claim', 'CFW-M': 'machine + personhood claim',
     'CFW-F': 'free-will claim', 'CFW-A': 'ASK mapping row', 'CFW-Q': 'held question',
-    'CFW-X': 'architecture-pressure item \u2014 a premise or test obligation', 'CFW-T': 'theory card', 'CFW-S': 'evidence owner (inspector plane)'
+    'CFW-X': 'architecture-pressure item \u2014 a premise or test obligation', 'CFW-T': 'theory card', 'CFW-S': 'source record (inspector plane)'
   };
   var ROOT = { id: 'ROOT', label: 'Consciousness + free will' };
   var RECORD_CLASS = 'CFW-S';                 /* evidence owners: undrawn records, resolvable by identifier */
@@ -173,7 +173,9 @@
   var records = evidence.map(function (o) { return { id: o.id, label: String(o.label || o.id), kind: o['class'], data: o }; });
 
   /* relations by plane. Registered: canonical, directed. Recorded: a carrier field; an edge to an
-     evidence owner becomes a record link, never drawn. Unedged: a declared non-linkage. */
+     evidence owner becomes a record link, never drawn as a line (a source record opened on its own
+     frames the map objects it links to: inspector.linkPlanes below). Unedged: a declared
+     non-linkage. */
   var edges = [];
   (A.registered || []).forEach(function (e) {
     if (byId.has(e.from) && byId.has(e.to))
@@ -240,6 +242,9 @@
           n(A.objects.length) + ' objects by name or exact identifier, or to bound the map to a section.',
     back: '\u2190 back to {label}',
     backMax: 52,
+    /* a source record opened on its own frames each map object it links to on the recorded plane, the
+       only plane that joins a source to an object. A frame states a recorded link, not support. */
+    linkPlanes: ['recorded'],
     header: function (t) {
       /* a source record says, before anything else, that it is one and that the map does not plot it */
       if (t.type === 'record') return { title: String(t.node.data.work || t.node.label), kind: 'CFW-S // source record // not plotted on this map' };
@@ -348,6 +353,15 @@
       out.push({ type: 'references', title: 'linked map objects // {count}', head: 8, more: 'show all {count} linked map objects',
                  items: back.map(function (e) { return { id: e.other.id, text: cap(e.other.label, 90), detail: several(e.rows) || undefined }; }) });
       out.push({ type: 'note', text: 'Recorded links in the published atlas. Choosing a link selects that object on the map.' });
+      /* under a filter, how many of those objects the map shows, so a link not shown does not read as
+         a link not recorded */
+      if (ctx.filtered()) {
+        var shown = back.filter(function (e) { return ctx.visible(e.other.id); }).length;
+        if (shown < back.length) out.push({ type: 'note', text: back.length === 1
+          ? 'The one linked map object is not shown under the current filter.'
+          : shown ? shown + ' of the ' + back.length + ' linked map objects ' + (shown === 1 ? 'is' : 'are') + ' shown under the current filter.'
+          : 'None of the ' + back.length + ' linked map objects is shown under the current filter.' });
+      }
     } else {
       out.push({ type: 'fields', title: 'linked map objects // 0', fields: [
         { label: 'recorded links', value: 'The published atlas records no map-object links for this source.' }
@@ -386,7 +400,7 @@
       { label: 'citation', labelLinked: 'source link', value: o.locator, format: 'locator' },
       { label: 'fields present', value: o.fields_present, format: 'list' }
     ] });
-    out.push({ type: 'note', text: 'This source record is an evidence owner. It sits in the inspector plane by the atlas\u2019s declared plane assignment: ' +
+    out.push({ type: 'note', text: 'This source record sits in the inspector plane by the atlas\u2019s declared plane assignment: ' +
                                    'it is searchable and resolvable by exact identifier, and it is never promoted into the graph.' });
     return out;
   }
@@ -495,7 +509,7 @@
       notes: { planes: { registered: 'CFW-R, canonical, directed', recorded: 'a carrier field \u2014 resolves on selection',
                          unedged: 'a declared NON-linkage \u2014 never drawn; in the inspector' } },
       shapes: 'circle node \u00B7 square claim and frame families \u00B7 diamond ASK articulation \u00B7 hexagon question \u00B7 triangle cross-cutting \u00B7 ring topology',
-      bound: 'Edges are the only relation encoding. Distance, width, position and adjacency claim nothing \u2014 see the caption.'
+      bound: 'Edges are the only relation lines; while a source record is open on its own, a frame around an object marks a recorded link. Distance, width, position and adjacency claim nothing // see the caption.'
     },
     chrome: { panels: [{ slot: 'caption', trigger: 'About' }, { slot: 'legend', trigger: 'Legend' }] },
     export: {

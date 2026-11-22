@@ -6,7 +6,7 @@
    conclusions search links that way, and so do published pages elsewhere. The pattern's own
    deep-link form is #node=<id>. A bare hash naming a payload object is rewritten to that form in
    place, before the instance mounts and on every later change, and the pattern's own arrival then
-   selects and centres the object, or opens an evidence owner's record. Only a known payload id is
+   selects and centers the object, or opens an evidence owner's record. Only a known payload id is
    rewritten: the skip target, an empty hash and an unknown id are left alone, so they land on the
    ordinary map as before. ?export=png and ?export=png-diagram still run the page or the diagram
    plate once the map is drawn, through the pattern's export service.
@@ -18,17 +18,13 @@
    from a changed address or from history. An empty, malformed or unknown address, an ordinary
    anchor, and every selection, hover, render or resize leave focus where it is.
 
-   A SOURCE RECORD OPENED ON ITS OWN CLEARS AN EARLIER SELECTION. A source record is not plotted, so
-   opening one selects nothing, and the pattern leaves an object that was already locked as it was:
-   its frame would stay on the map beside a record it has no stated relation to. So when a record
-   opens with no originating object (from the atlas search, a changed address or history) the
-   earlier selection is cleared and the record stays open. A record opened FROM a selected object,
-   by following that object's own reference, keeps the object selected and keeps the way back: the
-   pattern records the object as the record's origin, and the origin decides, never whether the two
-   happen to be linked.
+   A SOURCE RECORD OPENED ON ITS OWN is the pattern's to handle: it clears an earlier selection that
+   is not the record's origin before the record opens, and it frames the shown map objects the record
+   links to through the plane the adapter names (inspector.linkPlanes in cfw-map-adapter.js). This
+   instance keeps no second clearing of its own.
 
    It reaches the pattern only through its documented surface: mount, the arrival form and event,
-   the inspector event, the reported state, the selection control, and the export service. */
+   the reported state, and the export service. */
 (function () {
   "use strict";
 
@@ -67,16 +63,6 @@
   var initial = map.report().arrival;                  /* made while the pattern mounted */
   if (initial) land(initial.id);
   map.on("arrival", function (ev) { land(ev.id); });
-
-  /* an independently opened record, with an earlier object still locked: clear the selection through
-     the pattern's own control; the record stays open. It never throws into the pattern's event. The
-     first arrival needs no pass: while the pattern mounts, nothing can be locked beside a record. */
-  map.on("inspector", function () {
-    try {
-      var s = map.state(), insp = s.inspector;
-      if (insp && insp.view === "record" && !insp.origin && s.selection && s.selection.locked) map.select(null);
-    } catch (e) { /* the record stays open and the selection stays as the pattern has it */ }
-  });
 
   window.addEventListener("hashchange", function () {
     var id = legacy(location.hash);
