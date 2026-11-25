@@ -6,7 +6,7 @@
 
 - A-S-K.studio / this repo is the public canonical for ASK public content.
 - Notion is **retired** as a public source. Every former ASK public Notion surface has been migrated or retired; none is a source of truth, a staging surface or a maintained mirror, and no migration is pending.
-- The one remaining Notion dependency is ASKproduKtion's Timberland video page, which hosts those films and carries no other part of ASKproduKtion. Former Notion pages that are still reachable are historical and are not maintained. The apex solar kiss **design portfolio** is native at `/apex-solar-kiss/design/`, the **builder landing / object map** at `/apex-solar-kiss/`, and the UI/UX and logo/branding comp boards are retired.
+- The sole retained ASK public media-hosting exception is ASKproduKtion's Timberland video page, which hosts those films and carries no other part of ASKproduKtion. The sociedade mecânica de futebol page (`/apex-solar-kiss/sociedade/`) separately retains links to that collaborative project's historical external records; these are not maintained ASK mirrors or pending migration work. Former Notion pages that are still reachable are historical and are not maintained. The apex solar kiss **design portfolio** is native at `/apex-solar-kiss/design/`, the **builder landing / object map** at `/apex-solar-kiss/`, and the UI/UX and logo/branding comp boards are retired.
 - Strategic/private brand context is maintained operator-side and is mirror-not-lead for this public canonical.
 
 ## Content model (proposed; finalized in Phase 2)
