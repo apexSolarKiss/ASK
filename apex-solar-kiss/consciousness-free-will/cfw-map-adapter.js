@@ -9,9 +9,9 @@
    assert a governed state, which relations sit on which plane, and every word, field and facet
    the reader sees. The owner modules know none of it.
 
-   It began as the pattern's own CFW reference adapter and keeps that adapter's projection, words,
-   facets and inspector fields; what it changes is this page's identity: the plate carries the
-   release stamp, the fonts come from the site's own /fonts, and nothing here names a captured copy.
+   It began as the pattern's own CFW reference adapter. This site adapts its wording,
+   inspector presentation and page identity: the plate carries the release stamp,
+   the fonts come from the site's own /fonts, and nothing here names a captured copy.
    It transforms the payload deterministically and rewrites nothing in it: every identifier, label,
    relation and field reaches the reader as published, with four stated exceptions. A reference row
    shows the first 120 (an object's linked source records) or 90 (a source record's linked map
