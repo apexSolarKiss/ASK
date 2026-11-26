@@ -12,12 +12,20 @@
    facets and inspector fields; what it changes is this page's identity: the plate carries the
    release stamp, the fonts come from the site's own /fonts, and nothing here names a captured copy.
    It transforms the payload deterministically and rewrites nothing in it: every identifier, label,
-   relation and field reaches the reader as published, with three stated exceptions. A reference row
+   relation and field reaches the reader as published, with four stated exceptions. A reference row
    shows the first 120 (an object's linked source records) or 90 (a source record's linked map
    objects) characters of a label; the full label is the referenced object's view. Each of those two
    lists names an entry once and says how many recorded references join the pair, where the payload
    holds more than one. And an explicit NONE in a source record's "bears on" or "relation IDs" field
-   reads as words. The payload keeps every row and every value. */
+   reads as words. The payload keeps every row and every value.
+
+   Fourth, a recorded reference adopted after extraction (from Release 1.8, the three on CFW-N-121)
+   names its read event and grades in its note, and its proposition's numeral where its edge line
+   numbers its propositions. For each, the table ADOPTED below states in
+   public words what it grounds, how much of the source its read covered, its quotation restriction
+   and what it does not establish, keyed by that note. Where every reference of a pair is one of
+   these, the object's list shows the read event in place of the source's own fidelity and the
+   source record's list adds it, and a section after either list gives one block per reference. */
 (function (root) {
   'use strict';
 
@@ -25,7 +33,7 @@
   if (!A || !Array.isArray(A.objects)) throw new Error('cfw-map: the published payload (atlas-data.public.js) is not loaded');
 
   /* the plate's stamp: the application bar's release stamp, as the page shows it (uppercase there) */
-  var STAMP = 'RELEASE 1.7 STRUCTURED SURVEY // FAMILY GENERATION V27';
+  var STAMP = 'RELEASE 1.8 STRUCTURED SURVEY // FAMILY GENERATION V29';
 
   /* ------------------------------------------------------------ the tables -- */
   var REGION_LABEL = {
@@ -198,6 +206,64 @@
     if (p && p['class'] !== RECORD_CLASS && !firstEvidence.has(p.id)) firstEvidence.set(p.id, i);
   });
 
+  /* THE ADOPTED REFERENCES. A recorded reference adopted after extraction names its read event and
+     grades in its note, and its proposition's numeral where its edge line numbers them. This table, keyed by object, source and note, states in public
+     words what each grounds, how much of the source its read covered, its quotation restriction and
+     what it does not establish. The words paraphrase the family's record, which is itself paraphrase
+     not verified against the sources' wording, and the quotation line says so. The public derivation
+     pins the record each entry renders, so a changed record stops the build until its entry is
+     re-read. A reference with no entry shows its read event and says its wording is missing, and the
+     console reports it. */
+  var ADOPTED_FIELD = 'node.EXACT SOURCE LINKAGE (adopted after extraction, v29)';
+  var ADOPTED_QUOTATION = 'paraphrase, not verified against the source’s wording // no quotation permission';
+  var ADOPTED_ELSEWHERE = 'Nothing else CFW-N-121 states is grounded by this link, and nothing on Orch-OR’s own ' +
+                          'theory card, CFW-T-020.';
+  var ADOPTED = {
+    'CFW-N-121|CFW-S-052|proposition (i) · event 2 · CONTENT-VERIFIED · RE-VERIFY-BEFORE-QUOTE': {
+      grounds: 'Orch-OR’s locus as the originators give it in their abstract: quantum coherence, orchestrated by ' +
+               'biology, in the microtubules of neurons; and the theory’s attribution to Penrose and Hameroff.',
+      read_limit: 'the abstract only // the body was not read',
+      does_not_establish: 'That the mechanism is real or evidenced, or that any quantum process occurs in a brain. ' +
+                          'Orch-OR’s place among the quantum approaches is the reference work’s classification, not ' +
+                          'this source’s. The abstract’s regulation, termination, space-time, EEG and cosmological ' +
+                          'clauses ground nothing here. ' + ADOPTED_ELSEWHERE
+    },
+    'CFW-N-121|CFW-S-052|proposition (ii) · event 2 · CONTENT-VERIFIED · RE-VERIFY-BEFORE-QUOTE': {
+      grounds: 'The originators’ thesis, as they state it in their abstract, that consciousness depends on those ' +
+               'processes: they take each orchestrated reduction to yield a conscious moment, of awareness, of choice or of both.',
+      read_limit: 'the abstract only // the body was not read',
+      does_not_establish: 'That the thesis holds: it carries weight only as what the originators state. It grounds ' +
+                          'dependence, not manifestation, the word CFW-N-121 uses for the first family. The abstract’s ' +
+                          'other clauses ground nothing here. ' + ADOPTED_ELSEWHERE
+    },
+    'CFW-N-121|CFW-S-150|event 2 · CONTENT-READ · NOT QUOTABLE': {
+      grounds: 'The reference work’s classification of quantum approaches to consciousness into three families. On the ' +
+               'first, consciousness is a manifestation of quantum processes at brain level; the second applies quantum ' +
+               'concepts to conscious mental life without appeal to the brain; the third treats matter and consciousness ' +
+               'as two aspects of a single underlying reality. The first family is divided by neurophysiological level, ' +
+               'and the classification endorses no family.',
+      read_limit: 'the entry’s unnumbered lead, §1, §2, the lead of §3 and §3.1, in its substantive ' +
+                  'revision of 2024-05-13 // nothing else in the entry',
+      does_not_establish: 'That any family is correct. Where the classification places named programs among the levels, ' +
+                          'though that was read. That the families are incompatible, or routinely merged. The entry’s ' +
+                          'caution about narrative uses of quantum theory, CFW-N-121’s own gloss of the second family as ' +
+                          'formal analogy, and any decoherence, termination or regulation claim. ' + ADOPTED_ELSEWHERE
+    }
+  };
+  /* the adopted references, per object/source pair in payload order, so either list can find them */
+  var adopted = new Map();
+  (A.recorded || []).forEach(function (e) {
+    if (e.source_field !== ADOPTED_FIELD) return;
+    var a = byId.get(e.from), b = byId.get(e.to);
+    if (!a || !b || (a['class'] === RECORD_CLASS) === (b['class'] === RECORD_CLASS)) return;
+    var k = a['class'] === RECORD_CLASS ? b.id + '|' + a.id : a.id + '|' + b.id;
+    if (!adopted.has(k)) adopted.set(k, []);
+    adopted.get(k).push(e);
+  });
+  function adoptedOf(objectId, sourceId) { return adopted.get(objectId + '|' + sourceId) || []; }
+  /* the read event a note names, without its proposition numeral */
+  function readEventOf(note) { return String(note || '').replace(/^proposition \([ivx]+\) · /, ''); }
+
   /* held-question bearing: a held question, or a registered or recorded relation to one */
   var bearing = new Set();
   primary.forEach(function (o) { if (o['class'] === 'CFW-Q') bearing.add(o.id); });
@@ -292,9 +358,14 @@
       out.push({ type: 'references', title: 'linked source records // {count}', head: 8, more: 'show all {count} linked source records',
                  items: ev.map(function (e) {
                    var s = e.other.data || {};
-                   var detail = [s.fidelity ? 'fidelity ' + s.fidelity : null, several(e.rows)].filter(Boolean).join('; ');
+                   /* a pair whose every reference names its read event shows that event, not the
+                      source's own fidelity */
+                   var detail = [readEvents(adoptedOf(t.id, e.other.id), e.rows) ||
+                                 (s.fidelity ? 'fidelity ' + s.fidelity : null), several(e.rows)].filter(Boolean).join('; ');
                    return { id: e.other.id, text: cap(e.other.label, 120), detail: detail || undefined };
                  }) });
+      var qf = qualificationFields(ev, function (e) { return adoptedOf(t.id, e.other.id); });
+      if (qf.length) out.push({ type: 'fields', title: QUALIFIED_TITLE, fields: qf });
       return out;
     },
     announce: function (t, ctx) {
@@ -327,6 +398,34 @@
     return out;
   }
   function several(rows) { return rows > 1 ? rows + ' recorded references' : null; }
+  /* the read events of a pair's references, once each, where every reference of the pair is adopted;
+     otherwise null, and the entry keeps what it showed before */
+  function readEvents(qs, rows) {
+    if (!qs.length || qs.length !== rows) return null;
+    var seen = [];
+    qs.forEach(function (r) { var ev = readEventOf(r.note); if (seen.indexOf(ev) < 0) seen.push(ev); });
+    return 'read ' + seen.join(' // ');
+  }
+  /* one block per adopted reference, in the list's order, labeled with the entry it qualifies */
+  var QUALIFIED_TITLE = 'what each qualified link grounds';
+  function qualificationFields(entries, rowsOf) {
+    var out = [];
+    entries.forEach(function (e) {
+      var qs = rowsOf(e);
+      qs.forEach(function (r, k) {
+        var w = ADOPTED[r.from + '|' + r.to + '|' + r.note];
+        if (!w && root.console) root.console.error('cfw-map: no published wording for the adopted reference ' +
+                                                   r.from + ' > ' + r.to + ' (' + r.note + ')');
+        out.push({ label: e.other.id + (qs.length > 1 ? ' // reference ' + (k + 1) + ' of ' + qs.length : ''),
+                   format: 'structured',
+                   value: w ? { grounds: w.grounds, read_event: readEventOf(r.note), read_limit: w.read_limit,
+                                quotation: ADOPTED_QUOTATION, does_not_establish: w.does_not_establish }
+                            : { read_event: readEventOf(r.note),
+                                wording: 'missing from this page: this link is shown without what it grounds' } });
+      });
+    });
+    return out;
+  }
   /* the source records linked to a map object */
   function sourcesOf(id, ctx) { return paired(id, ctx, true); }
   /* the map objects linked to a source record, in the order the map has always listed them */
@@ -351,7 +450,10 @@
        what the published atlas records, and no more. */
     if (back.length) {
       out.push({ type: 'references', title: 'linked map objects // {count}', head: 8, more: 'show all {count} linked map objects',
-                 items: back.map(function (e) { return { id: e.other.id, text: cap(e.other.label, 90), detail: several(e.rows) || undefined }; }) });
+                 items: back.map(function (e) {
+                   var detail = [readEvents(adoptedOf(e.other.id, t.id), e.rows), several(e.rows)].filter(Boolean).join('; ');
+                   return { id: e.other.id, text: cap(e.other.label, 90), detail: detail || undefined };
+                 }) });
       out.push({ type: 'note', text: 'Recorded links in the published atlas. Choosing a link selects that object on the map.' });
       /* under a filter, how many of those objects the map shows, so a link not shown does not read as
          a link not recorded */
@@ -362,6 +464,8 @@
           : shown ? shown + ' of the ' + back.length + ' linked map objects ' + (shown === 1 ? 'is' : 'are') + ' shown under the current filter.'
           : 'None of the ' + back.length + ' linked map objects is shown under the current filter.' });
       }
+      var qf = qualificationFields(back, function (e) { return adoptedOf(e.other.id, t.id); });
+      if (qf.length) out.push({ type: 'fields', title: QUALIFIED_TITLE, fields: qf });
     } else {
       out.push({ type: 'fields', title: 'linked map objects // 0', fields: [
         { label: 'recorded links', value: 'The published atlas records no map-object links for this source.' }
