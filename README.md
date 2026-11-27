@@ -101,13 +101,16 @@ hand-edited here. The conclusions page consumes all three, and the panel rule
 for the material and free corners of its disclosures and panels and for each
 held-question ruling's title; its own layer,
 `cfw-conclusions.css`, keeps only the reading measure, rows and grids, count
-figures, search, section error line and the space the register's compositions do
+figures, the search field's width and its results, section error line and the
+space the register's compositions do
 not set after a list and before each compression panel. Six of the thirteen
 disclosures, each labeled "the ruling as recorded", hold the held-question
 rulings: each disclosure's enclosure is its ruling's one surface, and the record
 keeps its text roles and field layout and takes no surface of its own. The map's panels,
 inspector, atlas drawer, controls and their coordination are the vendored radial
-pattern's, and the map adopts neither the register nor its overflow cue. Its own
+pattern's, and the map adopts neither the register nor its overflow cue. The
+drawer's search field takes the shared text input, `surface-input.css`, vendored
+the same way. The map's own
 layer, `cfw-map.css`, composes only the application bar: the ASK mark, the title
 block and the release stamp, and on a short landscape touch screen one row of
 controls, so the drawing keeps the height. Where the bar's controls do not all
@@ -177,6 +180,7 @@ surface-panel.css     vendored from design-system-ASK — the live-content-panel
 surface-shell.js      vendored from design-system-ASK — the shell's optional NAVIGATION RUNTIME, pinned + byte-identical; opt-in per page through template.surface-nav-source
 surface-text-link.css vendored from design-system-ASK — the unboxed-textual-link VISUAL RULE, pinned + byte-identical; opt-in by class; the homepage does not consume it
 surface-action.css    vendored from design-system-ASK — the compact-action VISUAL RULE, pinned + byte-identical; every page's compact controls consume it (the owner owns the base surface, foreground, border, geometry and interaction; ASK keeps the element semantics, destination, copy, row and placement); the gallery cards and thumbnails, video facades, p5 launch cards and gallery dialog controls take only its attention edge, by class
+surface-input.css     vendored from design-system-ASK — the single-line text-input VISUAL RULE, pinned + byte-identical; the CFW conclusions page's search field takes it in its query role, and the CFW map's atlas drawer search takes it, in the vendored radial pattern's own markup, at its compact density and in its query role; both take surface-action.css's attention edge for hover and focus
 surface-document.css  vendored from design-system-ASK — the document-register VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes the full register, while the apex solar kiss, asymptotic system key and studioLeoV pages consume its document-body and authored-inline-emphasis treatment in their opening paragraphs; the apex solar kiss, design, design portfolio project, ASKproduKtion and studioLeoV pages set their section headings in its section-title role, the bonAmi.ai portfolio page sets its feature headings in its subsection-title role, and the asymptotic system key page sets the Like Art founding statement, and the cryptoEATS portfolio page its tagline, as a quotation
 surface-treatments.css  vendored from design-system-ASK — the surface-treatments VISUAL RULE, pinned + byte-identical; the CFW conclusions page consumes its disclosure (thirteen blocks, six of them the held-question rulings), surface axes, emphasis rail and label, the asymptotic system key page its disclosure, for nine sections, and its lineage page, for six, and the CFW map its fill paint, for the marks that assert a governed state, and its controlled disclosure trigger, for the inspector's collapse control and the About and Legend triggers used where the canvas cannot hold its caption and legend open
 surface-document-overflow.js  vendored from design-system-ASK — the document register's optional overflow-cue helper, pinned + byte-identical; the CFW conclusions page loads it
@@ -212,10 +216,10 @@ plain static hosting anywhere (e.g. GitHub Pages with a `.nojekyll`).
 
 A reference implementation of the [ASK design family](https://github.com/apexSolarKiss/design-system-ASK):
 it vendors the canonical foundations (tokens, fonts, wordmark) and browser-icon
-set, **the `surface-shell` pattern**, and **five visual rules** — `surface-panel`,
+set, **the `surface-shell` pattern**, and **six visual rules** — `surface-panel`,
 `surface-action`, `surface-text-link`, `surface-document` (the document register,
-with its optional overflow helper) and `surface-treatments` — then adds its own
-payload layout and instance adaptations around them.
+with its optional overflow helper), `surface-treatments` and `surface-input` —
+then adds its own payload layout and instance adaptations around them.
 The shared page chrome is owned upstream, not here. The CFW map named above is
 the one full-viewport application exception to that chrome, and it vendors the
 design-system interactive radial pattern that draws it,

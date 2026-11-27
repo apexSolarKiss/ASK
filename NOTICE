@@ -4,7 +4,7 @@ Copyright 2026 Andrew S Klug // ASK
 The ASK meta-brand public landing site — a reference implementation of the
 ASK design family.
 
-This product vendors foundations, two patterns, five visual rules with one
+This product vendors foundations, two patterns, six visual rules with one
 optional helper, the spectral-state primitive the CFW mind map carries, and the
 canonical browser-icon set from design-system-ASK
 (github.com/apexSolarKiss/design-system-ASK):
@@ -63,6 +63,16 @@ canonical browser-icon set from design-system-ASK
                                  deliberately sets NO foreground: the
                                  contextual text colour remains this site's to
                                  choose, supplied by the consuming region
+  - surface-input.css          — the shared single-line text input, vendored as
+                                 a pinned byte-identical copy and not modified
+                                 here. Presentation and interaction only: it owns
+                                 no label, width, placement or behavior. The CFW
+                                 conclusions page's search field takes it in its
+                                 query role, and the CFW mind map's atlas drawer
+                                 search takes it, in the vendored radial
+                                 pattern's own markup, at its compact density and
+                                 in its query role; their hover and focus edge is
+                                 the attention edge of surface-action.css
   - surface-document.css       — the shared document register, vendored as a
                                  pinned byte-identical copy and not modified
                                  here. Presentation only: text roles, the space
@@ -85,8 +95,9 @@ canonical browser-icon set from design-system-ASK
   - surface-treatments.css     — the shared surface treatments, vendored as a
                                  pinned byte-identical copy and not modified
                                  here. Presentation only; the CFW conclusions
-                                 page consumes its surface axes, emphasis rail
-                                 and label, the asymptotic system key page its
+                                 page consumes its disclosure, for thirteen
+                                 blocks, its surface axes, emphasis rail and
+                                 label, the asymptotic system key page its
                                  disclosure, for nine sections, and its
                                  lineage page, for six, and the
                                  CFW mind map its fill paint, for the marks
