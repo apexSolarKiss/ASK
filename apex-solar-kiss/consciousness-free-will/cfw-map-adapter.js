@@ -585,7 +585,7 @@
     search: {
       /* the visible label is also the result list's accessible name, so it is one plain sentence */
       label: 'search the map and its source records by name or identifier',
-      placeholder: 'recourse \u00B7 CFW-Q-001 \u00B7 CFW-S-479',
+      placeholder: 'e.g. Dworkin, CFW-S-479',
       prefix: /^cfw-/i,
       text: function (e) {
         if (e.type === 'container') {

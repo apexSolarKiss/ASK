@@ -39,6 +39,9 @@
   <!-- The guide's inline links take the vendored unboxed-textual-link rule, opt-in
        by class, so a link inside running prose reads as a link and nothing more. -->
   <link rel="stylesheet" href="/surface-text-link.css">
+  <!-- The search field takes the vendored text input in its query role. It adopts
+       the attention edge of surface-action.css, loaded above. -->
+  <link rel="stylesheet" href="/surface-input.css">
   <link rel="stylesheet" href="/surface-shell.css">
   <!-- The conclusions take their presentation from three more root-vendored visual
        rules: the panel rule and the surface treatments for the panels of each
@@ -50,8 +53,9 @@
        rails, and the document register for every heading, paragraph, label,
        quotation and structured block. They load in the owner's order, before
        this page's own layer, which keeps the page's layout, count figures,
-       search and section error line. The map's layers (the design-system radial
-       pattern and cfw-map.css) are not loaded here. -->
+       search field width, search results and section error line. The map's
+       layers (the design-system radial pattern and cfw-map.css) are not loaded
+       here. -->
   <link rel="stylesheet" href="/surface-panel.css">
   <link rel="stylesheet" href="/surface-document.css">
   <link rel="stylesheet" href="/surface-treatments.css">
@@ -483,10 +487,11 @@
           calls evidence owners, by name or by identifier. Each result says which it is: a map
           object is selected and shown on the map, and a source record, which is not plotted, opens
           its details there.</p>
-          <div class="orient-search">
-            <input id="oq" type="search" autocomplete="off" spellcheck="false"
-                   placeholder="e.g. bounded discretion, CFW-Q-003, Dworkin"
-                   aria-label="search map objects and source records">
+          <div class="orient-search doc-labeled">
+            <label class="doc-label" for="oq">search by name or identifier</label>
+            <input id="oq" class="surface-input surface-input--query surface-attention-edge"
+                   type="search" autocomplete="off" spellcheck="false"
+                   placeholder="e.g. bounded discretion, CFW-Q-003, Dworkin">
           </div>
           <div class="orient-results" id="ores" role="region" aria-live="polite"></div>
         </div>
